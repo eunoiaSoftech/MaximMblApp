@@ -1,0 +1,16 @@
+# Flutter/Dart/Pub related
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+build/
+ios/Pods/
+
+# IDE related
+.idea/
+.vscode/
+
+# Other
+*.log
+*.swp
