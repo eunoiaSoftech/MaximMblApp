@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:logistics_app/core/res/app_storage.dart';
 import 'package:logistics_app/features/profile/model/get_profile_model.dart';
+import '../../../core/res/app_functions.dart';
 import '../../../core/services/api_services.dart';
+import '../../auth/presentation/ui/login_screen.dart';
 
 class ProfileController extends GetxController {
   var isLoading = false.obs;
@@ -59,6 +62,22 @@ class ProfileController extends GetxController {
     } catch (e) {
       isLoading(false);
       return;
+    }
+  }
+
+  Future<void> logout(BuildContext context) async {
+    var response = Rx<Response?>(null);
+    var userDetails = AppStorage().getUserDetails;
+
+    log("_checkForUserSession() >> $userDetails");
+    response.value = await _apiService.post(
+        "/api/api/UserAccountDeactivate?fk_UserId=${userDetails['userId']}&fk_UserTypeId=${userDetails['userType'] ?? ''}",
+        {});
+
+    if (response.value?.statusCode == 200) {
+      Navigator.pop(context);
+      AppStorage().clear();
+      Navigator.of(context).pushReplacement(goToRoute(const LoginScreen()));
     }
   }
 }

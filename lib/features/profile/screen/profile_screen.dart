@@ -9,9 +9,12 @@ import '../../../core/res/app_colors.dart';
 import '../../../core/res/app_functions.dart';
 import '../../../core/res/app_storage.dart';
 import '../../../core/res/app_styles.dart';
+import '../../../core/shared/widgets/app_alert_widget.dart';
 import '../../../core/shared/widgets/app_bottom_action_widget.dart';
+import '../../../core/shared/widgets/app_commmon_dialog.dart';
 import '../../auth/presentation/ui/login_screen.dart';
 import '../../home/controller/main_controller.dart';
+import '../../home/presentation/ui/widgets/drawer.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -342,7 +345,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 50),
                           ],
                         ),
                       ),
@@ -358,7 +360,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(
                       height: 30,
                     ),
-                    _buildDrawerItem(
+                    buildDrawerItem(
                         "Logout", "assets/images/new/Group 9720.png", () {
                       AppBottomSheet.show(
                           context: context,
@@ -371,6 +373,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               },
                               successLabel: "Logout",
                               message: "Are you sure you want to logout?",
+                              isError: false,
+                              isCancel: true),
+                          then: (v) {});
+                    }, context),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    buildDrawerItem(
+                        "Delete Account", "assets/images/new/Group 9720.png",
+                        () {
+                      AppBottomSheet.show(
+                          context: context,
+                          child: AppBottomActionWidget(
+                              onSuccess: () {
+                                profileController.logout(context);
+                              },
+                              successLabel: "Delete",
+                              message:
+                                  "Are you sure you want to delete your account? This action cannot be undone.",
                               isError: false,
                               isCancel: true),
                           then: (v) {});
@@ -638,59 +659,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 50),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDrawerItem(
-      String itemName, String assetPath, VoidCallback onTap, context) {
-    return GestureDetector(
-      onTap: () {
-        onTap();
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              height: 25,
-              padding: const EdgeInsets.only(left: 30),
-              child: Image(
-                image: AssetImage(
-                  assetPath,
-                ),
-              ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: Text(
-                itemName,
-                style: AppStyles.titleTextStyle(context).copyWith(
-                  color: AppColors.textBlackColor,
-                  fontSize: appSize(context) / 80,
-                ),
-              ),
-            )
-          ],
         ),
       ),
     );

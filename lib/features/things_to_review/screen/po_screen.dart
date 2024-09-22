@@ -508,39 +508,39 @@ class _VerticalStepProgressDialogState
                 const SizedBox(
                   height: 15,
                 ),
-                _buildDrawerItem("Transaction No. : 023476874", () {}, context),
+                buildDrawerItem("Transaction No. : 023476874", () {}, context),
                 SizedBox(
                   height: 15,
                 ),
-                _buildDrawerItem("Transaction Date. : 09-08-2024", () {}, context),
+                buildDrawerItem("Transaction Date. : 09-08-2024", () {}, context),
                 SizedBox(
                   height: 15,
                 ),
-                _buildDrawerItem("Fm in Name Of : Owner", () {}, context),
+                buildDrawerItem("Fm in Name Of : Owner", () {}, context),
                 SizedBox(
                   height: 15,
                 ),
-                _buildDrawerItem("Owner/Broker : Harpal Matholiya", () {}, context),
+                buildDrawerItem("Owner/Broker : Harpal Matholiya", () {}, context),
                 SizedBox(
                   height: 15,
                 ),
-                _buildDrawerItem("Booking Rate : 600", () {}, context),
+                buildDrawerItem("Booking Rate : 600", () {}, context),
                 SizedBox(
                   height: 15,
                 ),
-                _buildDrawerItem("Charged Rate. : 680", () {}, context),
+                buildDrawerItem("Charged Rate. : 680", () {}, context),
                 SizedBox(
                   height: 15,
                 ),
-                _buildDrawerItem("Rate Confirm By : Armin", () {}, context),
+                buildDrawerItem("Rate Confirm By : Armin", () {}, context),
                 SizedBox(
                   height: 15,
                 ),
-                _buildDrawerItem("Create By : Shweta", () {}, context),
+                buildDrawerItem("Create By : Shweta", () {}, context),
                 SizedBox(
                   height: 15,
                 ),
-                _buildDrawerItem("Created On : 06-05-2024", () {}, context),
+                buildDrawerItem("Created On : 06-05-2024", () {}, context),
                 SizedBox(
                   height: 15,
                 ),
@@ -645,7 +645,7 @@ class _VerticalStepProgressDialogState
     );
   }
 
-  Widget _buildDrawerItem(String itemName, VoidCallback onTap, context) {
+  Widget buildDrawerItem(String itemName, VoidCallback onTap, context) {
     return GestureDetector(
       onTap: () {
         onTap();

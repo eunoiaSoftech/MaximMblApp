@@ -65,9 +65,10 @@ class AppBottomActionWidget extends StatelessWidget {
                   child: AppButton(
                       verticalPadding: 10,
                       onPressed: () {
-                        if(onSuccess != null){
+                        if (onSuccess != null) {
                           onSuccess!();
-                        } else{Navigator.of(context).pop();
+                        } else {
+                          Navigator.of(context).pop();
                         }
                       },
                       text: successLabel ?? "Okay"),

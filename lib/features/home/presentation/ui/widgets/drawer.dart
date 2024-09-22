@@ -99,7 +99,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   Obx(() {
                     return mainController.index.value == 10
                         ? Container()
-                        : _buildDrawerItem(
+                        : buildDrawerItem(
                             "Profile", "assets/images/new/Group 9706.png", () {
                             mainController.index.value = 2;
                             print(
@@ -110,7 +110,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   const SizedBox(
                     height: 15,
                   ),
-                  _buildDrawerItem("Logout", "assets/images/new/Group 9720.png",
+                  buildDrawerItem("Logout", "assets/images/new/Group 9720.png",
                       () {
                     AppBottomSheet.show(
                         context: context,
@@ -358,54 +358,54 @@ class _AppDrawerState extends State<AppDrawer> {
       ),
     );
   }
+}
 
-  Widget _buildDrawerItem(
-      String itemName, String assetPath, VoidCallback onTap, context) {
-    return GestureDetector(
-      onTap: () {
-        onTap();
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              height: 25,
-              padding: const EdgeInsets.only(left: 30),
-              child: Image(
-                image: AssetImage(
-                  assetPath,
-                ),
-              ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: Text(
-                itemName,
-                style: AppStyles.titleTextStyle(context).copyWith(
-                  color: AppColors.textBlackColor,
-                  fontSize: appSize(context) / 80,
-                ),
-              ),
-            )
-          ],
-        ),
+Widget buildDrawerItem(
+    String itemName, String assetPath, VoidCallback onTap, context) {
+  return GestureDetector(
+    onTap: () {
+      onTap();
+    },
+    child: Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-    );
-  }
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            height: 25,
+            padding: const EdgeInsets.only(left: 30),
+            child: Image(
+              image: AssetImage(
+                assetPath,
+              ),
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Text(
+              itemName,
+              style: AppStyles.titleTextStyle(context).copyWith(
+                color: AppColors.textBlackColor,
+                fontSize: appSize(context) / 80,
+              ),
+            ),
+          )
+        ],
+      ),
+    ),
+  );
 }

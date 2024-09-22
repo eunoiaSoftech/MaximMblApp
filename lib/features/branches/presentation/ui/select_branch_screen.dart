@@ -18,6 +18,7 @@ import 'package:logistics_app/features/branches/presentation/bloc/branch_events/
 import 'package:logistics_app/features/branches/presentation/bloc/branch_states/branch.dart';
 import 'package:logistics_app/features/branches/presentation/bloc/branch_states/branch_states.dart';
 import 'package:logistics_app/features/home/presentation/ui/home_screen.dart';
+import 'package:svg_flutter/svg.dart';
 import 'dart:math' as math;
 
 import '../../../home/presentation/ui/main_screen.dart';
@@ -157,7 +158,7 @@ class _SelectBranchScreenState extends State<SelectBranchScreen> {
       );
 
   Widget _imageStack() =>
-      Image.asset(AppIcons.kIconLogo, width: appSize(context) / 9);
+      SvgPicture.asset(AppIcons.kNewIconLogo, width: appSize(context) / 9);
 
   Widget _welcomeLine() => Column(
         mainAxisSize: MainAxisSize.min,

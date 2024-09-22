@@ -25,6 +25,7 @@ import 'package:logistics_app/features/auth/presentation/bloc/auth_states/loginw
 import 'package:logistics_app/features/branches/presentation/ui/select_branch_screen.dart';
 import 'package:logistics_app/features/home/presentation/ui/home_screen.dart';
 import 'package:pinput/pinput.dart';
+import 'package:svg_flutter/svg.dart';
 import 'dart:math' as math;
 
 import '../../../home/presentation/ui/main_screen.dart';
@@ -890,7 +891,7 @@ class _LoginScreenState extends State<LoginScreen> {
   //       ),
   //     );
 
-  _imageStack() => Image.asset(AppIcons.kIconLogo, width: appSize(context) / 9);
+  _imageStack() => SvgPicture.asset(AppIcons.kNewIconLogo, width: appSize(context) / 9);
 
   _welcomeLine() => Column(
         mainAxisSize: MainAxisSize.min,
