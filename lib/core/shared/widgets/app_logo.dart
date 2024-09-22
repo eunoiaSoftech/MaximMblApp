@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logistics_app/core/res/app_functions.dart';
 import 'package:logistics_app/core/res/app_icons.dart';
 import 'package:logistics_app/core/res/app_images.dart';
+import 'package:svg_flutter/svg.dart';
 
 class AppLogo extends StatelessWidget {
   const AppLogo({super.key});
@@ -24,8 +25,8 @@ class AppLogo extends StatelessWidget {
           //   shape: BoxShape.circle,
           //   color: Colors.white12,
           // ),
-          child: Image.asset(
-            AppIcons.kIconLogo,
+          child: SvgPicture.asset(
+            AppIcons.kNewIconLogo,
             width: appSize(context) / 4.5,
             fit: BoxFit.cover,
           ),

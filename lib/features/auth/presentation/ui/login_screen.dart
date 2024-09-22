@@ -305,17 +305,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           int? branchId = state.resp.data1?[0].iBranchFlag;
                           int? userid = state.resp.data1?[0].iPKUSRID;
 
-                          Navigator.of(context)
-                              .pushReplacement(goToRoute(const MainScreen()));
+                          // Navigator.of(context)
+                          //     .pushReplacement(goToRoute(const MainScreen()));
 
-                          // if (branchId != null && branchId == 0) {
-                          //   Navigator.of(context).pushReplacement(
-                          //       goToRoute(SelectBranchScreen(userId: userid)));
-                          //   // .pushReplacement(goToRoute(const HomeScreen()));
-                          // } else {
-                          //   Navigator.of(context).push(
-                          //       goToRoute(SelectBranchScreen(userId: userid)));
-                          // }
+                          if (branchId != null && branchId == 0) {
+                            Navigator.of(context).pushReplacement(
+                                goToRoute(SelectBranchScreen(userId: userid)));
+                            // .pushReplacement(goToRoute(const HomeScreen()));
+                          } else {
+                            Navigator.of(context).push(
+                                goToRoute(SelectBranchScreen(userId: userid)));
+                          }
                         }
                       },
                       builder: (context, state) {

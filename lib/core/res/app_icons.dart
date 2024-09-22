@@ -38,6 +38,7 @@ class AppIcons {
   static const String kIconLocation = "assets/images/new/location.png";
   static const String kIconLock = "assets/images/new/lock.png";
   static const String kIconLogo = "assets/images/new/logo.png";
+  static const String kNewIconLogo = "assets/logo/app_logo.svg";
   static const String kIconMailBox = "assets/images/new/mail_box.png";
   static const String kIconNewMenu = "assets/images/new/menu.png";
   static const String kIconMicrophone = "assets/images/new/microphone.png";
