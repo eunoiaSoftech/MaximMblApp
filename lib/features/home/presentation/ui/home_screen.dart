@@ -11,6 +11,8 @@ import 'package:logistics_app/features/home/presentation/ui/widgets/home_screen_
 import 'package:logistics_app/features/home/presentation/ui/widgets/stats_widget.dart';
 import 'package:logistics_app/features/things_to_review/screen/things_to_review_screen.dart';
 
+import '../../../trip/presentation/screen/my_trip_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -55,9 +57,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Row(
                         children: [
-                          _tab("My Trip", AppIcons.kIconTruckTablet, () {}),
+                          _tab("My Trip", AppIcons.kIconTruckTablet, () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const MyTripScreen()));
+                          }),
                           _tab("Legal", AppIcons.kIconUpward, () {}),
-                          _tab("Salary", AppIcons.kIconWallet, () {}),
+                          _tab("Fuel", AppIcons.kIconWallet, () {}),
                         ],
                       ),
                       Row(

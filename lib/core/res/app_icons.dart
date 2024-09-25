@@ -58,4 +58,6 @@ class AppIcons {
   static const String kIconBackground = "assets/images/new/background.png";
   static const String kIconTruckScan = "assets/images/new/truck_scan.png";
   static const String kIconUpward = "assets/images/new/upward_tab.png";
+  static const String kProfileIcons = "assets/images/new/Group 9706.png";
+  static const String kLogoutIcon = "assets/images/new/Group 9720.png";
 }

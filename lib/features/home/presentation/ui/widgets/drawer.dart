@@ -1,145 +1,91 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logistics_app/core/res/app_colors.dart';
-import 'package:logistics_app/core/res/app_functions.dart';
-import 'package:logistics_app/core/res/app_images.dart';
-import 'package:logistics_app/core/res/app_storage.dart';
 import 'package:logistics_app/core/res/app_styles.dart';
-import 'package:logistics_app/core/services/func_sertives.dart';
 import 'package:logistics_app/features/auth/presentation/ui/login_screen.dart';
 import 'package:logistics_app/features/home/controller/main_controller.dart';
-import 'package:logistics_app/features/profile/screen/profile_screen.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../../../../core/res/app_functions.dart';
+import '../../../../../core/res/app_icons.dart';
+import '../../../../../core/services/func_sertives.dart';
+import '../../../../profile/presentation/bloc/profile_bloc.dart';
 
-import '../../../../../core/res/app_bottomsheet.dart';
-import '../../../../../core/shared/widgets/app_bottom_action_widget.dart';
-import '../../../../profile/controller/profile_controller.dart';
-
-class AppDrawer extends StatefulWidget {
+class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
   @override
-  State<AppDrawer> createState() => _AppDrawerState();
-}
-
-class _AppDrawerState extends State<AppDrawer> {
-  MainController mainController = MainController();
-  ProfileController profileController = Get.put(ProfileController());
-
-  @override
   Widget build(BuildContext context) {
+    final mainController = MainController();
     return Drawer(
       backgroundColor: Colors.transparent,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: Column(
         children: [
-          // Container with top-left and bottom-right rounded corners
           Container(
             decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(topRight: Radius.circular(80))),
-            child: Container(
-              padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-              decoration: const BoxDecoration(
-                color: AppColors.newLightBlue,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(80),
-                  bottomLeft: Radius.circular(80),
-                ),
+              color: AppColors.newLightBlue,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(80),
+                bottomLeft: Radius.circular(0),
               ),
-              child: SafeArea(
-                child: Obx(() {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Back button
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.arrow_back,
-                              color: AppColors.iconWhiteColor,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 0),
-
-                      // User avatar and name
-
-                      profileController.isLoading.value
-                          ? _userDetailsLoadingWidget()
-                          : _userDetailsWidget(),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                    ],
-                  );
-                }),
+            ),
+            child: SafeArea(
+              child: BlocProvider(
+                create: (context) => ProfileBloc()..add(FetchProfileEvent()),
+                child: BlocBuilder<ProfileBloc, ProfileState>(
+                  builder: (context, state) {
+                    if (state is ProfileLoading) {
+                      return _userDetailsLoadingWidget(context);
+                    } else {
+                      if (state is ProfileLoaded) {
+                        return _userDetailsWidget(context, state);
+                      } else {
+                        return Container();
+                      }
+                    }
+                  },
+                ),
               ),
             ),
           ),
           Expanded(
-              child: Container(
-            color: Colors.white,
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Obx(() {
-                    return mainController.index.value == 10
-                        ? Container()
-                        : buildDrawerItem(
-                            "Profile", "assets/images/new/Group 9706.png", () {
-                            mainController.index.value = 2;
-                            print(
-                                'check mainController.index.value ${mainController.index.value}');
-                            // Get.back();
-                          }, context);
-                  }),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  buildDrawerItem("Logout", "assets/images/new/Group 9720.png",
-                      () {
-                    AppBottomSheet.show(
-                        context: context,
-                        child: AppBottomActionWidget(
-                            onSuccess: () {
-                              Navigator.pop(context);
-                              AppStorage().clear();
-                              Navigator.of(context).pushReplacement(
-                                  goToRoute(const LoginScreen()));
-                            },
-                            successLabel: "Logout",
-                            message: "Are you sure you want to logout?",
-                            isError: false,
-                            isCancel: true),
-                        then: (v) {});
-                  }, context),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                ],
+            child: Container(
+              color: Colors.white,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 30),
+                    buildDrawerItem("Profile", AppIcons.kProfileIcons, () {
+                      mainController.index.value = 2;
+                      // Add any navigation logic here if needed
+                    }, context),
+                    const SizedBox(height: 15),
+                    buildDrawerItem("Salary", AppIcons.kIconWallet, () {
+                      mainController.index.value = 2;
+                      // Add any navigation logic here if needed
+                    }, context),
+                    const SizedBox(height: 15),
+                    buildDrawerItem("Logout", AppIcons.kLogoutIcon, () {
+                      // Logout logic
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) => const LoginScreen()),
+                      );
+                    }, context),
+                    const SizedBox(height: 15),
+                  ],
+                ),
               ),
             ),
-          ))
+          ),
         ],
       ),
     );
   }
 
-  Widget _userDetailsWidget() {
+  Widget _userDetailsLoadingWidget(BuildContext context) {
     return Center(
       child: Column(
         children: [
@@ -168,119 +114,6 @@ class _AppDrawerState extends State<AppDrawer> {
             ),
           ),
           const SizedBox(height: 5),
-          Text(
-            getValidatedString(profileController.response.value?.data['data1']
-                [0]['sUserName']),
-            style: AppStyles.titleTextStyle(context).copyWith(
-              color: AppColors.textWhiteColor,
-              fontWeight: FontWeight.bold,
-              fontSize: appSize(context) / 70,
-            ),
-          ),
-          Text(
-            getValidatedString(profileController.response.value?.data['data1']
-                [0]['sUserMobileNo']),
-            style: AppStyles.titleTextStyle(context).copyWith(
-              color: AppColors.textWhiteColor,
-              fontWeight: FontWeight.bold,
-              fontSize: appSize(context) / 70,
-            ),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          if (profileController.isDriver.value)
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Mobile No.: ${getValidatedString(profileController.response.value?.data['data1'][0]['sUserMobileNo'])}', // Replace with actual user name
-                          style: AppStyles.titleTextStyle(context).copyWith(
-                            color: AppColors.textWhiteColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: appSize(context) / 80,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'License No.: ${getValidatedString(profileController.response.value?.data['data1'][0]['sDriverLicense'])}', // Replace with actual user name
-                          style: AppStyles.titleTextStyle(context).copyWith(
-                            color: AppColors.textWhiteColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: appSize(context) / 80,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'license Expiry On : ${getValidatedString(profileController.response.value?.data['data1'][0]['sDriverLicenseExpDate'])}', // Replace with actual user name
-                          style: AppStyles.titleTextStyle(context).copyWith(
-                            color: AppColors.textWhiteColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: appSize(context) / 80,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            )
-        ],
-      ),
-    );
-  }
-
-  Widget _userDetailsLoadingWidget() {
-    return Center(
-      child: Column(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-            ),
-            child: ClipOval(
-              child: CachedNetworkImage(
-                imageUrl: "https://randomuser.me/api/portraits/men/32.jpg",
-                placeholder: (context, url) => Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(
-                    width: 80,
-                    height: 80,
-                    color: Colors.grey[300], // Shimmer color while loading
-                  ),
-                ),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-                imageBuilder: (context, imageProvider) => CircleAvatar(
-                  radius: 40,
-                  backgroundImage: imageProvider,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 5),
-          Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
-            child: Text(
-              "Loading...",
-              style: AppStyles.titleTextStyle(context).copyWith(
-                color: AppColors.textWhiteColor,
-                fontWeight: FontWeight.bold,
-                fontSize: appSize(context) / 70,
-              ),
-            ),
-          ),
           Shimmer.fromColors(
             baseColor: Colors.grey[300]!,
             highlightColor: Colors.grey[100]!,
@@ -296,7 +129,118 @@ class _AppDrawerState extends State<AppDrawer> {
           SizedBox(
             height: 5,
           ),
-          if (profileController.isDriver.value)
+          // if(profileController.isDriver.value)
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Text(
+                          'Mobile No.: Loading...',
+                          style: AppStyles.titleTextStyle(context).copyWith(
+                            color: AppColors.textWhiteColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: appSize(context) / 80,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Text(
+                          'License No.: Loading...', // Replace with actual user name
+                          style: AppStyles.titleTextStyle(context).copyWith(
+                            color: AppColors.textWhiteColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: appSize(context) / 80,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Text(
+                          'license Expiry On : Loading...', // Replace with actual user name
+                          style: AppStyles.titleTextStyle(context).copyWith(
+                            color: AppColors.textWhiteColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: appSize(context) / 80,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _userDetailsWidget(BuildContext context, ProfileLoaded state) {
+    return Center(
+      child: Column(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+            ),
+            child: ClipOval(
+              child: CachedNetworkImage(
+                imageUrl: "https://randomuser.me/api/portraits/men/32.jpg",
+                placeholder: (context, url) => Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    color: Colors.grey[300], // Shimmer color while loading
+                  ),
+                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                imageBuilder: (context, imageProvider) => CircleAvatar(
+                  radius: 40,
+                  backgroundImage: imageProvider,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            getValidatedString(state.profileData['data1'][0]['sUserName']),
+            style: AppStyles.titleTextStyle(context).copyWith(
+              color: AppColors.textWhiteColor,
+              fontWeight: FontWeight.bold,
+              fontSize: appSize(context) / 70,
+            ),
+          ),
+          Text(
+            getValidatedString(state.profileData['data1'][0]['sUserMobileNo']),
+            style: AppStyles.titleTextStyle(context).copyWith(
+              color: AppColors.textWhiteColor,
+              fontWeight: FontWeight.bold,
+              fontSize: appSize(context) / 70,
+            ),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          if (state.profileData['data1'][0]['sDriverLicense'] != "")
             Row(
               children: [
                 Container(
@@ -306,46 +250,34 @@ class _AppDrawerState extends State<AppDrawer> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Text(
-                            'Mobile No.: Loading...',
-                            style: AppStyles.titleTextStyle(context).copyWith(
-                              color: AppColors.textWhiteColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: appSize(context) / 80,
-                            ),
+                        Text(
+                          'Mobile No.: ${getValidatedString(state.profileData['data1'][0]['sUserMobileNo'])}', // Replace with actual user name
+                          style: AppStyles.titleTextStyle(context).copyWith(
+                            color: AppColors.textWhiteColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: appSize(context) / 80,
                           ),
                         ),
                         const SizedBox(
                           height: 10,
                         ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Text(
-                            'License No.: Loading...', // Replace with actual user name
-                            style: AppStyles.titleTextStyle(context).copyWith(
-                              color: AppColors.textWhiteColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: appSize(context) / 80,
-                            ),
+                        Text(
+                          'License No.: ${getValidatedString(state.profileData['data1'][0]['sDriverLicense'])}', // Replace with actual user name
+                          style: AppStyles.titleTextStyle(context).copyWith(
+                            color: AppColors.textWhiteColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: appSize(context) / 80,
                           ),
                         ),
                         const SizedBox(
                           height: 10,
                         ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Text(
-                            'license Expiry On : Loading...', // Replace with actual user name
-                            style: AppStyles.titleTextStyle(context).copyWith(
-                              color: AppColors.textWhiteColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: appSize(context) / 80,
-                            ),
+                        Text(
+                          'license Expiry On : ${getValidatedString(state.profileData['data1'][0]['sDriverLicenseExpDate'])}', // Replace with actual user name
+                          style: AppStyles.titleTextStyle(context).copyWith(
+                            color: AppColors.textWhiteColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: appSize(context) / 80,
                           ),
                         ),
                       ],
