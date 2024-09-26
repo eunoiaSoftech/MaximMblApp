@@ -37,8 +37,14 @@ class _MainScreenState extends State<MainScreen> {
   Widget _bottomBar(context) => Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 24),
         margin: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(55)),
+        decoration: BoxDecoration(boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(.3),
+            offset: const Offset(0, 2),
+            spreadRadius: 2,
+            blurRadius: 4,
+          )
+        ], color: Colors.white, borderRadius: BorderRadius.circular(55)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
