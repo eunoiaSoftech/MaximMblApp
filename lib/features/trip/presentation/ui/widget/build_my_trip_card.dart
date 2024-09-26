@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import '../../../../core/res/app_colors.dart';
-import '../../../../core/res/app_styles.dart';
+import '../../../../../core/res/app_colors.dart';
+import '../../../../../core/res/app_styles.dart';
+import '../../../data/models/trip_model.dart';
 import 'custom_trip_button.dart';
 
 class BuildMyTripCard extends StatelessWidget {
-  const BuildMyTripCard({super.key});
+  final Trip trip;
+
+  const BuildMyTripCard({required this.trip, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +17,7 @@ class BuildMyTripCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
@@ -21,7 +25,7 @@ class BuildMyTripCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Ahmedabad',
+                      trip.fromCity,
                       textAlign: TextAlign.center,
                       style: AppStyles.titleTextStyle(context).copyWith(
                         color: Colors.black,
@@ -30,7 +34,7 @@ class BuildMyTripCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Gujarat',
+                      trip.fromState,
                       textAlign: TextAlign.center,
                       style: AppStyles.titleTextStyle(context).copyWith(
                         color: Colors.black.withOpacity(0.8),
@@ -49,7 +53,7 @@ class BuildMyTripCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      'Mumbai',
+                      trip.toCity,
                       textAlign: TextAlign.center,
                       style: AppStyles.titleTextStyle(context).copyWith(
                         color: Colors.black,
@@ -58,7 +62,7 @@ class BuildMyTripCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Maharashtra',
+                      trip.toState,
                       textAlign: TextAlign.center,
                       style: AppStyles.titleTextStyle(context).copyWith(
                         color: Colors.black.withOpacity(0.8),
@@ -83,7 +87,7 @@ class BuildMyTripCard extends StatelessWidget {
                   width: 7,
                 ),
                 Text(
-                  'Coal',
+                  trip.cargo,
                   textAlign: TextAlign.center,
                   style: AppStyles.titleTextStyle(context).copyWith(
                     color: Colors.black.withOpacity(0.8),
@@ -100,7 +104,7 @@ class BuildMyTripCard extends StatelessWidget {
                   width: 7,
                 ),
                 Text(
-                  'Open Body',
+                  trip.vehicleType,
                   textAlign: TextAlign.center,
                   style: AppStyles.titleTextStyle(context).copyWith(
                     color: Colors.black.withOpacity(0.8),
@@ -117,7 +121,7 @@ class BuildMyTripCard extends StatelessWidget {
                   width: 7,
                 ),
                 Text(
-                  '80 Tons',
+                  '${trip.weight} Tons',
                   textAlign: TextAlign.center,
                   style: AppStyles.titleTextStyle(context).copyWith(
                     color: Colors.black.withOpacity(0.8),
@@ -128,19 +132,13 @@ class BuildMyTripCard extends StatelessWidget {
               ],
             ),
             const SizedBox(
-              height: 5,
+              height: 10,
             ),
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset(
-                  'assets/icons/calendar.png',
-                  height: 18,
-                ),
-                const SizedBox(
-                  width: 7,
-                ),
                 Text(
-                  'Lr date : 24/06/2024',
+                  'Lr date : ${trip.lrDate}',
                   textAlign: TextAlign.center,
                   style: AppStyles.titleTextStyle(context).copyWith(
                     color: Colors.black.withOpacity(0.8),
@@ -148,9 +146,8 @@ class BuildMyTripCard extends StatelessWidget {
                     fontSize: 13,
                   ),
                 ),
-                const Spacer(),
                 Text(
-                  'Lr number : LR123456',
+                  'Lr number : ${trip.lrNumber}',
                   textAlign: TextAlign.center,
                   style: AppStyles.titleTextStyle(context).copyWith(
                     color: Colors.black.withOpacity(0.8),
@@ -176,7 +173,9 @@ class BuildMyTripCard extends StatelessWidget {
                     backgroundColor: AppColors.newBlue,
                   ),
                 ),
-                const SizedBox(width: 10,),
+                const SizedBox(
+                  width: 10,
+                ),
                 Expanded(
                   child: CustomButton(
                     text: "Expenses",
@@ -187,7 +186,9 @@ class BuildMyTripCard extends StatelessWidget {
                     backgroundColor: AppColors.green,
                   ),
                 ),
-                const SizedBox(width: 10,),
+                const SizedBox(
+                  width: 10,
+                ),
                 Expanded(
                   child: CustomButton(
                     text: "POD",

@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:logistics_app/features/profile/presentation/ui/profile_details_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../core/res/app_bottomsheet.dart';
 import '../../../../core/res/app_colors.dart';
 import '../../../../core/res/app_functions.dart';
+import '../../../../core/res/app_icons.dart';
 import '../../../../core/res/app_storage.dart';
 import '../../../../core/res/app_styles.dart';
 import '../../../../core/shared/widgets/app_bottom_action_widget.dart';
@@ -345,6 +347,12 @@ class ProfileScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           const SizedBox(height: 30),
+                          buildDrawerItem("Profile Details",
+                              AppIcons.kProfileIcons, () {
+                            Navigator.of(context)
+                                .push(goToRoute(const ProfileDetailsScreen()));
+                          }, context),
+                          const SizedBox(height: 15),
                           buildDrawerItem(
                               "Logout", "assets/images/new/Group 9720.png", () {
                             AppBottomSheet.show(

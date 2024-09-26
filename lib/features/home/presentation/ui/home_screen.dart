@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:logistics_app/core/constants/globals.dart';
 import 'package:logistics_app/core/res/app_functions.dart';
 import 'package:logistics_app/core/res/app_icons.dart';
@@ -10,8 +9,7 @@ import 'package:logistics_app/features/home/presentation/ui/widgets/drawer.dart'
 import 'package:logistics_app/features/home/presentation/ui/widgets/home_screen_appbar.dart';
 import 'package:logistics_app/features/home/presentation/ui/widgets/stats_widget.dart';
 import 'package:logistics_app/features/things_to_review/screen/things_to_review_screen.dart';
-
-import '../../../trip/presentation/screen/my_trip_screen.dart';
+import '../../../trip/presentation/ui/screen/my_trip_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

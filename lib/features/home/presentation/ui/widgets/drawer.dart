@@ -67,6 +67,16 @@ class AppDrawer extends StatelessWidget {
                       // Add any navigation logic here if needed
                     }, context),
                     const SizedBox(height: 15),
+                    buildDrawerItem("Blacklist details", "", () {
+                      mainController.index.value = 2;
+                      // Add any navigation logic here if needed
+                    }, context),
+                    const SizedBox(height: 15),
+                    buildDrawerItem("E-Challan", "", () {
+                      mainController.index.value = 2;
+                      // Add any navigation logic here if needed
+                    }, context),
+                    const SizedBox(height: 15),
                     buildDrawerItem("Logout", AppIcons.kLogoutIcon, () {
                       // Logout logic
                       Navigator.of(context).pushReplacement(
@@ -315,15 +325,16 @@ Widget buildDrawerItem(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            height: 25,
-            padding: const EdgeInsets.only(left: 30),
-            child: Image(
-              image: AssetImage(
-                assetPath,
+          if (assetPath != "")
+            Container(
+              height: 25,
+              padding: const EdgeInsets.only(left: 30),
+              child: Image(
+                image: AssetImage(
+                  assetPath,
+                ),
               ),
             ),
-          ),
           const SizedBox(
             width: 10,
           ),

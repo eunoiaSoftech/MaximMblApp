@@ -5,6 +5,7 @@ class Urls {
   static const String branchList = "$_baseUrl/Branch/GetBranchMasterUserwise";
   static const String vehicleList = "$_baseUrl/Api/GetVehicleDetailsM";
   static const String approvalsListList = "$_baseUrl/Api/PoApprovalM";
+  static const String trips = "$_baseUrl/api/GetMyTrips?Fk_DriverId=2806";
 
 // static const String apiKey = "58a8591c9aa4421ca6d73805240105";
 }
