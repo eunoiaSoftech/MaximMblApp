@@ -38,7 +38,6 @@ class AppIcons {
   static const String kIconLocation = "assets/images/new/location.png";
   static const String kIconLock = "assets/images/new/lock.png";
   static const String kIconLogo = "assets/images/new/logo.png";
-  static const String kNewIconLogo = "assets/logo/app_logo.svg";
   static const String kIconMailBox = "assets/images/new/mail_box.png";
   static const String kIconNewMenu = "assets/images/new/menu.png";
   static const String kIconMicrophone = "assets/images/new/microphone.png";
@@ -59,5 +58,6 @@ class AppIcons {
   static const String kIconTruckScan = "assets/images/new/truck_scan.png";
   static const String kIconUpward = "assets/images/new/upward_tab.png";
   static const String kProfileIcons = "assets/images/new/Group 9706.png";
-  static const String kLogoutIcon = "assets/images/new/Group 9720.png";
+  static const String kNewIconLogo = "assets/logo/app_logo.svg";
+
 }

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:logistics_app/core/shared/widgets/app_textfield.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../core/res/app_colors.dart';
 import '../../../core/res/app_functions.dart';
@@ -134,31 +135,31 @@ class _FmRateApprovalScreenState extends State<FmRateApprovalScreen> {
         children: [
           Row(
             children: [
-              Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                child: ClipOval(
-                  child: CachedNetworkImage(
-                    imageUrl: "https://randomuser.me/api/portraits/men/32.jpg",
-                    placeholder: (context, url) => Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        width: 30,
-                        height: 30,
-                        color: Colors.grey[300], // Shimmer color while loading
-                      ),
-                    ),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                    imageBuilder: (context, imageProvider) => CircleAvatar(
-                      radius: 25,
-                      backgroundImage: imageProvider,
-                    ),
-                  ),
-                ),
-              ),
+              // Container(
+              //   decoration: const BoxDecoration(
+              //     shape: BoxShape.circle,
+              //   ),
+              //   child: ClipOval(
+              //     child: CachedNetworkImage(
+              //       imageUrl: "https://randomuser.me/api/portraits/men/32.jpg",
+              //       placeholder: (context, url) => Shimmer.fromColors(
+              //         baseColor: Colors.grey[300]!,
+              //         highlightColor: Colors.grey[100]!,
+              //         child: Container(
+              //           width: 30,
+              //           height: 30,
+              //           color: Colors.grey[300], // Shimmer color while loading
+              //         ),
+              //       ),
+              //       errorWidget: (context, url, error) =>
+              //           const Icon(Icons.error),
+              //       imageBuilder: (context, imageProvider) => CircleAvatar(
+              //         radius: 25,
+              //         backgroundImage: imageProvider,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               const SizedBox(
                 width: 10,
               ),
@@ -166,7 +167,7 @@ class _FmRateApprovalScreenState extends State<FmRateApprovalScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Harpal Matholiya', // Replace with actual user name
+                    'A00060', // Replace with actual user name
                     style: AppStyles.titleTextStyle(context).copyWith(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -174,7 +175,7 @@ class _FmRateApprovalScreenState extends State<FmRateApprovalScreen> {
                     ),
                   ),
                   Text(
-                    'A00060', // Replace with actual user name
+                    '6 Sep, 2024', // Replace with actual user name
                     style: AppStyles.titleTextStyle(context).copyWith(
                       color: Colors.black.withOpacity(0.3),
                       fontWeight: FontWeight.w700,
@@ -182,38 +183,6 @@ class _FmRateApprovalScreenState extends State<FmRateApprovalScreen> {
                     ),
                   ),
                 ],
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.newLightBlue,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    '600/-', // Replace with actual user name
-                    style: AppStyles.titleTextStyle(context).copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ),
-              Text(
-                'Rate', // Replace with actual user name
-                style: AppStyles.titleTextStyle(context).copyWith(
-                  color: Colors.black.withOpacity(0.3),
-                  fontWeight: FontWeight.w700,
-                  fontSize: 15,
-                ),
               ),
               const Spacer(),
               GestureDetector(
@@ -245,96 +214,125 @@ class _FmRateApprovalScreenState extends State<FmRateApprovalScreen> {
             ],
           ),
           const SizedBox(
-            height: 15,
+            height: 10,
           ),
           Row(
             children: [
-              Column(
-                children: [
-                  Text(
-                    '6 sept 2024',
-                    textAlign: TextAlign.center,
-                    style: AppStyles.titleTextStyle(context).copyWith(
-                      color: Colors.black.withOpacity(0.3),
-                      fontWeight: FontWeight.w700,
-                      fontSize: 15,
-                    ),
-                  ),
-                  Text(
-                    'session 1',
-                    textAlign: TextAlign.center,
-                    style: AppStyles.titleTextStyle(context).copyWith(
-                      color: Colors.black.withOpacity(0.3),
-                      fontWeight: FontWeight.w700,
-                      fontSize: 13,
-                    ),
-                  ),
-                ],
-              ),
-              Expanded(
-                  child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 20,
-                      height: 1,
-                      color: AppColors.newLightBlue,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            color: AppColors.newLightBlue,
-                          ),
-                          borderRadius: BorderRadius.circular(30)),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 8),
-                        child: Text(
-                          '9 Days', // Replace with actual user name
-                          style: AppStyles.titleTextStyle(context).copyWith(
-                            color: Colors.black.withOpacity(0.3),
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 20,
-                      height: 1,
-                      color: AppColors.newLightBlue,
-                    ),
-                  ],
-                ),
-              )),
-              Column(
-                children: [
-                  Text(
-                    '10 sept 2024',
-                    textAlign: TextAlign.center,
-                    style: AppStyles.titleTextStyle(context).copyWith(
-                      color: Colors.black.withOpacity(0.3),
-                      fontWeight: FontWeight.w700,
-                      fontSize: 15,
-                    ),
-                  ),
-                  Text(
-                    'session 2',
-                    textAlign: TextAlign.center,
-                    style: AppStyles.titleTextStyle(context).copyWith(
-                      color: Colors.black.withOpacity(0.3),
-                      fontWeight: FontWeight.w700,
-                      fontSize: 13,
-                    ),
-                  ),
-                ],
-              )
+              // Container(
+              //   decoration: const BoxDecoration(
+              //     shape: BoxShape.circle,
+              //     color: AppColors.newLightBlue,
+              //   ),
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(10.0),
+              //     child: Text(
+              //       '600/-', // Replace with actual user name
+              //       style: AppStyles.titleTextStyle(context).copyWith(
+              //         color: Colors.white,
+              //         fontWeight: FontWeight.w700,
+              //         fontSize: 12,
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              // Text(
+              //   'Rate', // Replace with actual user name
+              //   style: AppStyles.titleTextStyle(context).copyWith(
+              //     color: Colors.black.withOpacity(0.3),
+              //     fontWeight: FontWeight.w700,
+              //     fontSize: 15,
+              //   ),
+              // ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
+          // Row(
+          //   children: [
+          //     Column(
+          //       children: [
+          //         Text(
+          //           '6 sept 2024',
+          //           textAlign: TextAlign.center,
+          //           style: AppStyles.titleTextStyle(context).copyWith(
+          //             color: Colors.black.withOpacity(0.3),
+          //             fontWeight: FontWeight.w700,
+          //             fontSize: 15,
+          //           ),
+          //         ),
+          //         // Text(
+          //         //   'session 1',
+          //         //   textAlign: TextAlign.center,
+          //         //   style: AppStyles.titleTextStyle(context).copyWith(
+          //         //     color: Colors.black.withOpacity(0.3),
+          //         //     fontWeight: FontWeight.w700,
+          //         //     fontSize: 13,
+          //         //   ),
+          //         // ),
+          //       ],
+          //     ),
+          //     Expanded(
+          //         child: Container(
+          //       child: Row(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           Container(
+          //             width: 20,
+          //             height: 1,
+          //             color: AppColors.newLightBlue,
+          //           ),
+          //           Container(
+          //             decoration: BoxDecoration(
+          //                 border: Border.all(
+          //                   color: AppColors.newLightBlue,
+          //                 ),
+          //                 borderRadius: BorderRadius.circular(30)),
+          //             child: Padding(
+          //               padding: const EdgeInsets.symmetric(
+          //                   horizontal: 10, vertical: 8),
+          //               child: Text(
+          //                 '9 Days', // Replace with actual user name
+          //                 style: AppStyles.titleTextStyle(context).copyWith(
+          //                   color: Colors.black.withOpacity(0.3),
+          //                   fontWeight: FontWeight.w700,
+          //                   fontSize: 14,
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //           Container(
+          //             width: 20,
+          //             height: 1,
+          //             color: AppColors.newLightBlue,
+          //           ),
+          //         ],
+          //       ),
+          //     )),
+          //     Column(
+          //       children: [
+          //         Text(
+          //           '10 sept 2024',
+          //           textAlign: TextAlign.center,
+          //           style: AppStyles.titleTextStyle(context).copyWith(
+          //             color: Colors.black.withOpacity(0.3),
+          //             fontWeight: FontWeight.w700,
+          //             fontSize: 15,
+          //           ),
+          //         ),
+          //         // Text(
+          //         //   'session 2',
+          //         //   textAlign: TextAlign.center,
+          //         //   style: AppStyles.titleTextStyle(context).copyWith(
+          //         //     color: Colors.black.withOpacity(0.3),
+          //         //     fontWeight: FontWeight.w700,
+          //         //     fontSize: 13,
+          //         //   ),
+          //         // ),
+          //       ],
+          //     )
+          //   ],
+          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -360,7 +358,7 @@ class _FmRateApprovalScreenState extends State<FmRateApprovalScreen> {
                         style: AppStyles.titleTextStyle(context).copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
-                          fontSize: 14,
+                          fontSize: 12,
                         ),
                       ),
                     ],
@@ -389,7 +387,7 @@ class _FmRateApprovalScreenState extends State<FmRateApprovalScreen> {
                         style: AppStyles.titleTextStyle(context).copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
-                          fontSize: 14,
+                          fontSize: 12,
                         ),
                       ),
                     ],
@@ -418,7 +416,7 @@ class _FmRateApprovalScreenState extends State<FmRateApprovalScreen> {
                         style: AppStyles.titleTextStyle(context).copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
-                          fontSize: 14,
+                          fontSize: 12,
                         ),
                       ),
                     ],
@@ -537,18 +535,29 @@ class StepWidget extends StatelessWidget {
               ),
           ],
         ),
-        SizedBox(width: 10), // Spacing between the circle and the text
+        const SizedBox(width: 10), // Spacing between the circle and the text
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: isCompleted ? FontWeight.bold : FontWeight.normal,
-                color: isCompleted ? Colors.green : Colors.grey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight:
+                        isCompleted ? FontWeight.bold : FontWeight.normal,
+                    color: isCompleted ? Colors.green : Colors.grey,
+                  ),
+                ),
               ),
-            ),
+              if (stepNumber == 2)
+                AppTextField(
+                  hintText: "Write here",
+                  contentPadding: EdgeInsets.fromLTRB(22, 2, 12, 10),
+                )
+            ],
           ),
         ),
       ],

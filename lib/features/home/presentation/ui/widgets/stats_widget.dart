@@ -1,6 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:logistics_app/core/res/app_colors.dart';
 import 'package:logistics_app/core/res/app_functions.dart';
 import 'package:logistics_app/core/res/app_styles.dart';
+import 'package:logistics_app/core/shared/widgets/app_button.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ChartData {
@@ -23,7 +27,7 @@ class StatsWidget extends StatelessWidget {
     return Stack(
       children: [
         SizedBox(
-          height: appSize(context) / 4.2,
+          height: appSize(context) / 3.8,
           // width: appSize(context)/10,
           child: Card(
             elevation: 3,
@@ -46,7 +50,7 @@ class StatsWidget extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text("My Trip",
+                            Text("Current Trip",
                                 style: AppStyles.hintTextStyle(context)
                                     .copyWith(height: 1.2, color: Colors.blue)),
                             const Icon(Icons.keyboard_arrow_down,
@@ -55,26 +59,111 @@ class StatsWidget extends StatelessWidget {
                         ),
                       ),
                       const Spacer(flex: 2),
-                      Text("06",
+                      Text("LR/009",
                           style: AppStyles.titleTextStyle(context).copyWith(
-                              fontSize: appSize(context) / 40,
+                              fontSize: appSize(context) / 50,
                               color: Colors.blue,
                               fontWeight: FontWeight.w800)),
-                      Text("Today's Trip",
+                      Text("12/03/2024",
                           style: AppStyles.titleTextStyle(context).copyWith(
                               color: Colors.black,
                               fontWeight: FontWeight.w500)),
-                      const Spacer(flex: 2),
-                      Text("Total 85 Kms",
-                          style: AppStyles.titleTextStyle(context).copyWith(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500)),
+                      // const Spacer(flex: 2),
+                      Row(mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text("Transit Time: ",
+                              style: AppStyles.titleTextStyle(context).copyWith(
+                                  color: Colors.black38,
+                                  fontSize: appSize(context)/95,
+                                  fontWeight: FontWeight.w500)),
+                          Text("32 HRS",
+                              style: AppStyles.titleTextStyle(context).copyWith(
+                                  color: Colors.black,
+                                  fontSize: appSize(context)/95,
+                                  fontWeight: FontWeight.w500)),
+
+                        ],
+                      ),
+                      // const Spacer(flex: 2),
+                      Row(mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text("Total: ",
+                              style: AppStyles.titleTextStyle(context).copyWith(
+                                  color: Colors.black38,
+                                  fontSize: appSize(context)/95,
+                                  fontWeight: FontWeight.w500)),
+                          Text("80 Kms",
+                              style: AppStyles.titleTextStyle(context).copyWith(
+                                  color: Colors.black,
+                                  fontSize: appSize(context)/95,
+                                  fontWeight: FontWeight.w500)),
+
+                        ],
+                      ),
+                      // Text("Total 85 Kms",
+                      //     style: AppStyles.titleTextStyle(context).copyWith(
+                      //         color: Colors.black,
+                      //         fontWeight: FontWeight.w500)),
+
                       const Spacer(),
-                      Text("You have to do 2 more trips for a day",
-                          style: AppStyles.titleTextStyle(context).copyWith(
-                              color: Colors.amber,
-                              fontWeight: FontWeight.w500)),
+                      Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Customer:",
+                                  style: AppStyles.titleTextStyle(context)
+                                      .copyWith(
+                                          color: Colors.amber,
+                                          fontWeight: FontWeight.w500)),
+                              Text("Route:",
+                                  style: AppStyles.titleTextStyle(context)
+                                      .copyWith(
+                                          color: Colors.amber,
+                                          fontWeight: FontWeight.w500)),
+
+                              Text("Product:",
+                                  style: AppStyles.titleTextStyle(context)
+                                      .copyWith(
+                                          color: Colors.amber,
+                                          fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Row(
+                        children: [
+                          _statsButton(
+                              context,
+                              "START",
+                              AppColors.greenLight,
+                              AppColors.textWhiteColor,
+                              () {}),
+                          const SizedBox(width: 12),
+                          _statsButton(
+                              context,
+                              "EXPENSE",
+                              AppColors.newLightBlue.withOpacity(.3),
+                              AppColors.textBlackColor,
+                              () {}),
+                        ],
+                      ),
+
+                      // AppButton(onPressed: (){}, text: "BOOK EXPENSE"),
+
                       // const Spacer(),
+                      // Row(
+                      //   children: [
+                      //     Expanded(
+                      //       child: AppButton(
+                      //           btnColor: Colors.black,
+                      //           textColor: Colors.black,
+                      //           onPressed: (){}, text: "START TRIP"),
+                      //     ),
+                      //   ],
+                      // ),
+                      // AppButton(onPressed: (){}, text: "BOOK EXPENSE"),
                     ],
                   ),
                 ],
@@ -92,10 +181,10 @@ class StatsWidget extends StatelessWidget {
                     widget: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('62%',
+                    Text('32 Hrs',
                         style: TextStyle(
-                            color: Color.fromRGBO(0, 0, 0, 0.5), fontSize: 25)),
-                    Text('in 13 days',
+                            color: Color.fromRGBO(0, 0, 0, 0.5), fontSize: 22)),
+                    Text('11 Hrs Left',
                         style: TextStyle(
                             height: 1,
                             color: Color.fromRGBO(0, 0, 0, 0.5),
@@ -117,4 +206,21 @@ class StatsWidget extends StatelessWidget {
       ],
     );
   }
+
+  _statsButton(BuildContext context, btnTitle, btnColor, textColor, onTap) =>
+      InkWell(
+        borderRadius: BorderRadius.circular(22),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+          decoration: BoxDecoration(
+              color: btnColor,
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(color: btnColor)),
+          child: Text(btnTitle,
+              style: AppStyles.titleTextStyle(context).copyWith(
+                  fontSize: appSize(context) / 80,
+                  color: textColor,
+                  fontWeight: FontWeight.bold)),
+        ),
+      );
 }

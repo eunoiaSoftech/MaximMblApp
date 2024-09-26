@@ -14,9 +14,10 @@ class AuthRepository {
     return LoginResponseModel.fromJson(response.data);
   }
 
-  Future<LoginWithOTPResp> loginWithOTPRepo(
-      LoginWithOTPRequestModel params) async {
+  Future<LoginWithOTPResp> loginWithOTPRepo(LoginWithOTPRequestModel params) async {
     final response = await _remoteDataSource.loginWithOTP(params);
     return LoginWithOTPResp.fromJson(response.data);
   }
+
+
 }
