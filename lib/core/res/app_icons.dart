@@ -59,5 +59,6 @@ class AppIcons {
   static const String kIconUpward = "assets/images/new/upward_tab.png";
   static const String kProfileIcons = "assets/images/new/Group 9706.png";
   static const String kNewIconLogo = "assets/logo/app_logo.svg";
+  static const String kLogoutIcon = "assets/images/new/Group 9720.png";
 
 }
