@@ -1,16 +1,16 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:logistics_app/core/res/app_colors.dart';
 import 'package:logistics_app/core/res/app_functions.dart';
 import 'package:logistics_app/core/res/app_icons.dart';
+import 'package:logistics_app/core/res/app_images.dart';
 import 'package:logistics_app/core/res/app_storage.dart';
 import 'package:logistics_app/core/shared/widgets/app_logo.dart';
-import 'package:logistics_app/features/auth/presentation/ui/login_screen.dart';
 import 'package:logistics_app/features/home/presentation/ui/home_screen.dart';
-import 'package:logistics_app/features/onboarding/screen/onboarding_screen.dart';
-
-import 'home/presentation/ui/main_screen.dart';
+import 'package:logistics_app/features/home/presentation/ui/main_screen.dart';
+import 'package:logistics_app/features/onboarding/presentation/ui/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -20,11 +20,11 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  void _callLogin() async {
+  void _callOnBoarding() async {
     Future.delayed(
         const Duration(milliseconds: 3000),
         () => Navigator.of(context)
-            .pushReplacement(goToRoute(const LoginScreen())));
+            .pushReplacement(goToRoute(const OnBoardingScreen())));
   }
 
   void _navigateToHomeScreen() async {
@@ -35,29 +35,13 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _checkForUserSession() async {
-    // Get user details and onboarding status
     var userDetails = AppStorage().getUserDetails;
-    bool onBoardingCompleted = AppStorage().onBoarding;
-
-    log("_checkForUserSession() >> $userDetails, Onboarding: $onBoardingCompleted");
-
-    // Check if onboarding is not completed
-    if (!onBoardingCompleted) {
-      _navigateToOnBoardingScreen(); // Redirect to onboarding page
-    }
-    // Check if user is logged in and the widget is mounted
-    else if (userDetails != null && mounted) {
-      _navigateToHomeScreen(); // Redirect to home page if user session exists
+    log("_checkForUserSession() >> $userDetails");
+    if (userDetails != null && mounted) {
+      _navigateToHomeScreen();
     } else {
-      _callLogin(); // Redirect to login page if no session
+      _callOnBoarding();
     }
-  }
-
-  void _navigateToOnBoardingScreen() {
-    Future.delayed(
-        const Duration(milliseconds: 3000),
-        () => Navigator.of(context)
-            .pushReplacement(goToRoute(OnboardingScreen())));
   }
 
   @override

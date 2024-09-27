@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import '../../profile/presentation/ui/profile_screen.dart';
+import 'package:logistics_app/features/profile/screen/profile_screen.dart';
 import '../presentation/ui/home_screen.dart';
 
 class MainController extends GetxController {

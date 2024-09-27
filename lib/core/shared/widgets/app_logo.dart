@@ -5,7 +5,9 @@ import 'package:logistics_app/core/res/app_images.dart';
 import 'package:svg_flutter/svg.dart';
 
 class AppLogo extends StatelessWidget {
-  const AppLogo({super.key});
+  const AppLogo({super.key, this.width});
+
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class AppLogo extends StatelessWidget {
           // ),
           child: SvgPicture.asset(
             AppIcons.kNewIconLogo,
-            width: appSize(context) / 4.5,
+            width: width ?? appSize(context) / 4.5,
             fit: BoxFit.cover,
           ),
         ),

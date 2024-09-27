@@ -168,7 +168,8 @@ class AppDrawer extends StatelessWidget {
                         baseColor: Colors.grey[300]!,
                         highlightColor: Colors.grey[100]!,
                         child: Text(
-                          'License No.: Loading...', // Replace with actual user name
+                          'License No.: Loading...',
+                          // Replace with actual user name
                           style: AppStyles.titleTextStyle(context).copyWith(
                             color: AppColors.textWhiteColor,
                             fontWeight: FontWeight.bold,
@@ -183,7 +184,8 @@ class AppDrawer extends StatelessWidget {
                         baseColor: Colors.grey[300]!,
                         highlightColor: Colors.grey[100]!,
                         child: Text(
-                          'license Expiry On : Loading...', // Replace with actual user name
+                          'license Expiry On : Loading...',
+                          // Replace with actual user name
                           style: AppStyles.titleTextStyle(context).copyWith(
                             color: AppColors.textWhiteColor,
                             fontWeight: FontWeight.bold,
@@ -261,7 +263,8 @@ class AppDrawer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Mobile No.: ${getValidatedString(state.profileData['data1'][0]['sUserMobileNo'])}', // Replace with actual user name
+                          'Mobile No.: ${getValidatedString(state.profileData['data1'][0]['sUserMobileNo'])}',
+                          // Replace with actual user name
                           style: AppStyles.titleTextStyle(context).copyWith(
                             color: AppColors.textWhiteColor,
                             fontWeight: FontWeight.bold,
@@ -272,7 +275,8 @@ class AppDrawer extends StatelessWidget {
                           height: 10,
                         ),
                         Text(
-                          'License No.: ${getValidatedString(state.profileData['data1'][0]['sDriverLicense'])}', // Replace with actual user name
+                          'License No.: ${getValidatedString(state.profileData['data1'][0]['sDriverLicense'])}',
+                          // Replace with actual user name
                           style: AppStyles.titleTextStyle(context).copyWith(
                             color: AppColors.textWhiteColor,
                             fontWeight: FontWeight.bold,
@@ -283,7 +287,8 @@ class AppDrawer extends StatelessWidget {
                           height: 10,
                         ),
                         Text(
-                          'license Expiry On : ${getValidatedString(state.profileData['data1'][0]['sDriverLicenseExpDate'])}', // Replace with actual user name
+                          'license Expiry On : ${getValidatedString(state.profileData['data1'][0]['sDriverLicenseExpDate'])}',
+                          // Replace with actual user name
                           style: AppStyles.titleTextStyle(context).copyWith(
                             color: AppColors.textWhiteColor,
                             fontWeight: FontWeight.bold,

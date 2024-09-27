@@ -15,7 +15,7 @@ class MenuAppbar extends StatelessWidget implements PreferredSizeWidget {
     return Stack(
       children: [
         AppBar(
-          backgroundColor: AppColors.lightViolet,
+          backgroundColor: AppColors.newLightBlue,
           leading: Align(
             alignment: Alignment.topLeft,
             child: IconButton(

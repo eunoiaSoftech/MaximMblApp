@@ -1,4 +1,5 @@
 import 'package:get_storage/get_storage.dart';
+import 'package:logistics_app/core/shared/data/user.dart';
 
 class AppStorage {
   final _box = GetStorage();
@@ -12,22 +13,21 @@ class AppStorage {
   /// read
   int get getUserId => _box.read(_userID);
   int get getBranchId => _box.read(_branchID);
-  String get getPhone => _box.read(_phone); // Updated to String
+  int get getPhone => _box.read(_phone);
+  dynamic get getUserDetails => _box.read(_userDetails);
   bool get onBoarding =>
       _box.read(_onBoardingKey) ?? false; // Updated to use string key
-  dynamic get getUserDetails => _box.read(_userDetails);
 
   /// write
-  saveUserId(int userId) => _box.write(_userID, userId);
-  saveBranchId(int branchId) => _box.write(_branchID, branchId);
+  saveUserId(int userid) => _box.write(_userID, userid);
+  saveBranchId(int branchid) => _box.write(_branchID, branchid);
   savePhone(String phone) => _box.write(_phone, phone);
+  saveUserDetails(Map<String, dynamic> userDetails) => _box.write(_userDetails, userDetails);
   saveOnBoarding(bool onBoarding) =>
       _box.write(_onBoardingKey, onBoarding); // Updated to use string key
-  saveUserDetails(Map<String, dynamic> userDetails) =>
-      _box.write(_userDetails, userDetails);
 
-  /// clear
-  void clear() async {
+
+  void clear()async {
     await _box.erase();
   }
 }

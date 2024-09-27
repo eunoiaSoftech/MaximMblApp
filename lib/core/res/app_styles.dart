@@ -3,9 +3,8 @@ import 'package:logistics_app/core/res/app_colors.dart';
 import 'package:logistics_app/core/res/app_functions.dart';
 
 class AppStyles {
-  static TextStyle titleTextStyle(context) => TextStyle(
-      fontSize: appSize(context) / 80,
-      color: AppColors.borderColor,
+  static TextStyle titleTextStyle(context) =>
+      TextStyle(fontSize: appSize(context) / 80, color: AppColors.borderColor,
       fontFamily: "aileron");
 
   static TextStyle hintTextStyle(context) => TextStyle(
