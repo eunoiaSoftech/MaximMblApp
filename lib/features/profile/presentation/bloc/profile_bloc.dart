@@ -26,8 +26,9 @@ class ProfileLoading extends ProfileState {}
 
 class ProfileLoaded extends ProfileState {
   final Map<String, dynamic> profileData;
+  final Map<String, dynamic> newProfileData;
 
-  ProfileLoaded(this.profileData);
+  ProfileLoaded(this.profileData, this.newProfileData);
 }
 
 class ProfileError extends ProfileState {
@@ -50,8 +51,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         var response = await ApiService().post(
             "/api/api/ProfileDetM?fk_UserId=${userDetails['userId']}&fk_UserTypeId=${userDetails['userType'] ?? ''}",
             {});
-        if (response.statusCode == 200) {
-          emit(ProfileLoaded(response.data));
+
+        var newProfileResponse = await ApiService().get(
+            "/api/api/GetProfileDetails?Fk_DriverId=${userDetails['userId']}&iFK_UserTypeId=${userDetails['userType'] ?? ''}");
+
+        print('check response ${response}');
+        print('check response ${newProfileResponse}');
+
+        if (response.statusCode == 200 &&
+            newProfileResponse.statusCode == 200) {
+          emit(ProfileLoaded(response.data, newProfileResponse.data));
         } else {
           emit(ProfileError("Failed to fetch profile"));
         }
