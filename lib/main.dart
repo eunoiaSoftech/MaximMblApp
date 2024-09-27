@@ -18,13 +18,13 @@ void main() async {
   await GetStorage.init();
   final authRemoteDataSource = AuthRemoteDataSource(BaseApi(Dio()));
   final branchRemoteDataSource = BranchRemoteDataSource(BaseApi(Dio()));
-  final tripsRemoteDataSource = TripsRemoteDataSource(BaseApi(Dio()));  // Added for trips
-
+  final tripsRemoteDataSource =
+      TripsRemoteDataSource(BaseApi(Dio())); // Added for trips
 
   final authRepository = AuthRepository(authRemoteDataSource);
   final branchRepository = BranchRepository(branchRemoteDataSource);
-  final tripsRepository = TripsRepository(tripsRemoteDataSource);  // Added for trips
-
+  final tripsRepository =
+      TripsRepository(tripsRemoteDataSource); // Added for trips
 
   runApp(MultiBlocProvider(
     providers: [
@@ -32,8 +32,8 @@ void main() async {
         create: (context) => BranchBloc(branchRepository),
       ),
       BlocProvider(create: (context) => AuthBloc(authRepository)),
-      BlocProvider(create: (context) => TripsBloc(tripsRepository)),  // Added for trips
-
+      BlocProvider(
+          create: (context) => TripsBloc(tripsRepository)), // Added for trips
     ],
     child: const MyApp(),
   ));

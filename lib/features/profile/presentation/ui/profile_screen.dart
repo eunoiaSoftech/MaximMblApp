@@ -347,11 +347,14 @@ class ProfileScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           const SizedBox(height: 30),
-                          buildDrawerItem("Profile Details",
-                              AppIcons.kProfileIcons, () {
-                            Navigator.of(context)
-                                .push(goToRoute(const ProfileDetailsScreen()));
-                          }, context),
+                          if (state is ProfileLoaded)
+                            buildDrawerItem(
+                                "Profile Details", AppIcons.kProfileIcons, () {
+                              Navigator.of(context)
+                                  .push(goToRoute(ProfileDetailsScreen(
+                                response: state.newProfileData,
+                              )));
+                            }, context),
                           const SizedBox(height: 15),
                           buildDrawerItem(
                               "Logout", "assets/images/new/Group 9720.png", () {
