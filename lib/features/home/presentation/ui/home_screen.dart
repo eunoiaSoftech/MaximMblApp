@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        backgroundColor: const Color(0xffE3F2FD),
+        // backgroundColor: const Color(0xffE3F2FD),
         resizeToAvoidBottomInset: true,
         appBar: const HomeScreenAppbar(),
         body: SingleChildScrollView(

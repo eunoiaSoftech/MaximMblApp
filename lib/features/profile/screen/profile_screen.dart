@@ -370,6 +370,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         "Logout", "assets/images/new/Group 9720.png", () {
                       AppBottomSheet.show(
                           context: context,
+                          isList: false,
                           child: AppBottomActionWidget(
                               onSuccess: () {
                                 Navigator.pop(context);

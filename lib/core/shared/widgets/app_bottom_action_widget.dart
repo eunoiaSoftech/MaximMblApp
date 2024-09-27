@@ -27,7 +27,7 @@ class AppBottomActionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 33),
+      padding: const EdgeInsets.only(bottom: 22,right: 22,left: 22),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -65,9 +65,10 @@ class AppBottomActionWidget extends StatelessWidget {
                   child: AppButton(
                       verticalPadding: 10,
                       onPressed: () {
-                        if(onSuccess != null){
+                        if (onSuccess != null) {
                           onSuccess!();
-                        } else{Navigator.of(context).pop();
+                        } else {
+                          Navigator.of(context).pop();
                         }
                       },
                       text: successLabel ?? "Okay"),

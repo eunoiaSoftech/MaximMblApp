@@ -141,6 +141,8 @@ class _LegalScreenState extends State<LegalScreen> {
                                         context: context,
                                         showDragHandle: true,
                                         color: AppColors.textColor,
+                                        title: "Select Vehicle Number",
+                                        titleColor: Colors.white,
                                         child: SingleChildScrollView(
                                           child: Column(
                                             children: state.resp.data1
