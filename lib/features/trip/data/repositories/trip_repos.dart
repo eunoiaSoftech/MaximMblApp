@@ -10,7 +10,6 @@ class TripsRepository {
     final response = await tripsRemoteDataSource.getTrips();
     if (response.statusCode == 200) {
       final List<dynamic> tripsJson = response.data['data1'];
-      print('check api response for ${tripsJson.map((trip) => Trip.fromJson(trip)).toList()}');
       return tripsJson.map((trip) => Trip.fromJson(trip)).toList();
     } else {
       throw Exception("Failed to load trips");
