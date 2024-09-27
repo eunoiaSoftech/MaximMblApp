@@ -37,7 +37,7 @@ class AppButton extends StatelessWidget {
         children: [
           Expanded(
             child: MaterialButton(
-              padding: EdgeInsets.symmetric(vertical: verticalPadding ?? 16),
+                padding: EdgeInsets.symmetric(vertical: verticalPadding ?? 16),
               // elevation: isBorder ? 0 : 4.0,
               shape: RoundedRectangleBorder(
                   side: BorderSide(

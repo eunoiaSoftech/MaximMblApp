@@ -22,10 +22,13 @@ import 'package:logistics_app/features/auth/presentation/bloc/auth_events/loginw
 import 'package:logistics_app/features/auth/presentation/bloc/auth_states/auth.dart';
 import 'package:logistics_app/features/auth/presentation/bloc/auth_states/login_states.dart';
 import 'package:logistics_app/features/auth/presentation/bloc/auth_states/loginwith_otp_states.dart';
-import 'package:logistics_app/features/branches_n_locations/presentation/ui/select_branch_screen.dart';
+import 'package:logistics_app/features/branches/presentation/ui/select_branch_screen.dart';
 import 'package:logistics_app/features/home/presentation/ui/home_screen.dart';
 import 'package:pinput/pinput.dart';
+import 'package:svg_flutter/svg.dart';
 import 'dart:math' as math;
+
+import '../../../home/presentation/ui/main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -284,6 +287,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: BlocConsumer<AuthBloc, AuthState>(
                       listener: (context, state) {
                         if (state is LoginLoaded) {
+                          print('check state login data ${state}');
+                          print('check state login data ${state.resp.data1}');
+
                           AppStorage().saveUserId(
                               state.resp.data1?.first.iPKUSRID ?? 0);
                           AppStorage().saveBranchId(
@@ -299,6 +305,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           int? branchId = state.resp.data1?[0].iBranchFlag;
                           int? userid = state.resp.data1?[0].iPKUSRID;
+
+                          // Navigator.of(context)
+                          //     .pushReplacement(goToRoute(const MainScreen()));
+
                           if (branchId != null && branchId == 0) {
                             Navigator.of(context).pushReplacement(
                                 goToRoute(SelectBranchScreen(userId: userid)));
@@ -694,7 +704,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         Future.delayed(const Duration(milliseconds: 2000), () {
                           Navigator.of(context)
-                              .pushReplacement(goToRoute(const HomeScreen()));
+                              .pushReplacement(goToRoute(const MainScreen()));
                         });
                       }
                     },
@@ -881,7 +891,7 @@ class _LoginScreenState extends State<LoginScreen> {
   //       ),
   //     );
 
-  _imageStack() => Image.asset(AppIcons.kIconLogo, width: appSize(context) / 9);
+  _imageStack() => SvgPicture.asset(AppIcons.kNewIconLogo, width: appSize(context) / 9);
 
   _welcomeLine() => Column(
         mainAxisSize: MainAxisSize.min,

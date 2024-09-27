@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:logistics_app/core/constants/globals.dart';
-import 'package:logistics_app/core/res/app_colors.dart';
 import 'package:logistics_app/features/home/controller/main_controller.dart';
-import 'package:logistics_app/features/home/presentation/ui/widgets/drawer.dart';
 import '../../../../core/res/app_functions.dart';
 import '../../../../core/res/app_icons.dart';
 
@@ -20,14 +17,15 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: Globals.homeScreenScaffoldKey,
-      drawer: const AppDrawer(),
-      body: Stack(
-        alignment: Alignment.bottomCenter,
+      body: Obx(
+        () {
+          return mainController.screens[mainController.index.value];
+        }
+      ),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Obx(() {
-            return mainController.screens[mainController.index.value];
-          }),
           _bottomBar(context),
         ],
       ),
@@ -35,7 +33,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _bottomBar(context) => Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 24),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 22),
         margin: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(55)),
@@ -63,7 +61,6 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
       );
-
   _bottomBarTab(context, title, icon, onTap, iconColor) => GestureDetector(
         onTap: onTap,
         child: Column(
@@ -71,7 +68,7 @@ class _MainScreenState extends State<MainScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(icon, width: appSize(context) / 55, color: iconColor),
+            Image.asset(icon, width: appSize(context) / 48, color: iconColor),
             Text(title,
                 style: TextStyle(
                     fontSize: appSize(context) / 100, color: iconColor))

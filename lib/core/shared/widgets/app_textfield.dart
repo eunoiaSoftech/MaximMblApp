@@ -11,18 +11,14 @@ class AppTextField extends StatelessWidget {
       this.controller,
       this.hintText,
       this.enabled,
-      this.height = 40,
+      this.height,
       this.onTap,
       this.obscureText,
       this.suffix,
       this.prefix,
-      this.keyboardType,
-      this.hintTextStyle,
-      this.contentPadding,
-      this.inputTextStyle});
+      this.keyboardType});
 
   final TextEditingController? controller;
-  final EdgeInsetsGeometry? contentPadding;
   final TextInputType? keyboardType;
   final String? hintText;
   final double? height;
@@ -30,8 +26,6 @@ class AppTextField extends StatelessWidget {
   final bool? enabled;
   final Widget? suffix;
   final Widget? prefix;
-  final TextStyle? hintTextStyle;
-  final TextStyle? inputTextStyle;
   final Function()? onTap;
 
   final double circular = 44.0;
@@ -39,7 +33,7 @@ class AppTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height,
+      // height: height,
       padding: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
           color: Colors.white,
@@ -57,6 +51,7 @@ class AppTextField extends StatelessWidget {
         children: [
           if (prefix != null) const SizedBox(width: 22),
           prefix ?? const SizedBox.shrink(),
+          if (prefix != null) const SizedBox(width: 8),
           Expanded(
             child: TextFormField(
               enabled: enabled ?? true,
@@ -66,8 +61,6 @@ class AppTextField extends StatelessWidget {
               // selectionHeightStyle:BoxHeightStyle.includeLineSpacingMiddle,
               controller: controller,
               decoration: InputDecoration(
-                contentPadding:
-                    contentPadding ?? const EdgeInsets.fromLTRB(22, 2, 12, 10),
                 // prefix: prefix,
                 // prefixIcon: prefix,
                 suffixIcon: Row(
@@ -80,9 +73,9 @@ class AppTextField extends StatelessWidget {
                 filled: true,
                 border: InputBorder.none,
                 hintText: hintText,
-                hintStyle: hintTextStyle ?? AppStyles.hintTextStyle(context),
+                hintStyle: AppStyles.hintTextStyle(context),
               ),
-              style: inputTextStyle ?? AppStyles.inputTextStyle(context),
+              style: AppStyles.inputTextStyle(context),
             ),
           ),
         ],

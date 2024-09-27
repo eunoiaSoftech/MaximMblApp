@@ -57,8 +57,6 @@ dependencies:
   smooth_page_indicator: ^1.0.0+2
   get:
   svg_flutter:
-  json_annotation: ^4.9.0
-  shared_preferences: ^2.2.3
 
 
 dev_dependencies:
