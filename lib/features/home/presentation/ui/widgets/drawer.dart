@@ -9,6 +9,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../../core/res/app_functions.dart';
 import '../../../../../core/res/app_icons.dart';
 import '../../../../../core/services/func_sertives.dart';
+import '../../../../daily_log/presentation/daily_log_screen.dart';
 import '../../../../profile/presentation/bloc/profile_bloc.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -62,18 +63,22 @@ class AppDrawer extends StatelessWidget {
                       // Add any navigation logic here if needed
                     }, context),
                     const SizedBox(height: 15),
+                    buildDrawerItem("Daily Log", AppIcons.kIconWallet, () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const DailyLogScreen()));
+                    }, context),
+                    const SizedBox(height: 15),
                     buildDrawerItem("Salary", AppIcons.kIconWallet, () {
-                      mainController.index.value = 2;
                       // Add any navigation logic here if needed
                     }, context),
                     const SizedBox(height: 15),
                     buildDrawerItem("Blacklist details", "", () {
-                      mainController.index.value = 2;
                       // Add any navigation logic here if needed
                     }, context),
                     const SizedBox(height: 15),
                     buildDrawerItem("E-Challan", "", () {
-                      mainController.index.value = 2;
                       // Add any navigation logic here if needed
                     }, context),
                     const SizedBox(height: 15),

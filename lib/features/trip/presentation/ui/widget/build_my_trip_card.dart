@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../../core/res/app_colors.dart';
 import '../../../../../core/res/app_styles.dart';
 import '../../../data/models/trip_model.dart';
+import '../screen/fuel_detail_screen.dart';
 import 'custom_trip_button.dart';
 
 class BuildMyTripCard extends StatelessWidget {
@@ -165,8 +166,15 @@ class BuildMyTripCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: CustomButton(
-                    text: "LR DTL",
-                    onPressed: () {},
+                    text: "Fuel",
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FuelDetailScreen(
+                                    trip: trip,
+                                  )));
+                    },
                     borderRadius: 50,
                     borderColor: Colors.grey,
                     textColor: Colors.white,
