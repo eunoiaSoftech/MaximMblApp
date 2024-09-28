@@ -5,6 +5,7 @@ import 'package:logistics_app/core/res/app_colors.dart';
 import 'package:logistics_app/core/res/app_functions.dart';
 import 'package:logistics_app/core/res/app_styles.dart';
 import 'package:logistics_app/core/shared/widgets/app_button.dart';
+import 'package:logistics_app/features/expense/presentation/ui/expense_booking_screen.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ChartData {
@@ -69,35 +70,35 @@ class StatsWidget extends StatelessWidget {
                               color: Colors.black,
                               fontWeight: FontWeight.w500)),
                       // const Spacer(flex: 2),
-                      Row(mainAxisSize: MainAxisSize.min,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Text("Transit Time: ",
                               style: AppStyles.titleTextStyle(context).copyWith(
                                   color: Colors.black38,
-                                  fontSize: appSize(context)/95,
+                                  fontSize: appSize(context) / 95,
                                   fontWeight: FontWeight.w500)),
                           Text("32 HRS",
                               style: AppStyles.titleTextStyle(context).copyWith(
                                   color: Colors.black,
-                                  fontSize: appSize(context)/95,
+                                  fontSize: appSize(context) / 95,
                                   fontWeight: FontWeight.w500)),
-
                         ],
                       ),
                       // const Spacer(flex: 2),
-                      Row(mainAxisSize: MainAxisSize.min,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Text("Total: ",
                               style: AppStyles.titleTextStyle(context).copyWith(
                                   color: Colors.black38,
-                                  fontSize: appSize(context)/95,
+                                  fontSize: appSize(context) / 95,
                                   fontWeight: FontWeight.w500)),
                           Text("80 Kms",
                               style: AppStyles.titleTextStyle(context).copyWith(
                                   color: Colors.black,
-                                  fontSize: appSize(context)/95,
+                                  fontSize: appSize(context) / 95,
                                   fontWeight: FontWeight.w500)),
-
                         ],
                       ),
                       // Text("Total 85 Kms",
@@ -121,7 +122,6 @@ class StatsWidget extends StatelessWidget {
                                       .copyWith(
                                           color: Colors.amber,
                                           fontWeight: FontWeight.w500)),
-
                               Text("Product:",
                                   style: AppStyles.titleTextStyle(context)
                                       .copyWith(
@@ -134,19 +134,17 @@ class StatsWidget extends StatelessWidget {
                       const Spacer(),
                       Row(
                         children: [
-                          _statsButton(
-                              context,
-                              "START",
-                              AppColors.greenLight,
-                              AppColors.textWhiteColor,
-                              () {}),
+                          _statsButton(context, "START", AppColors.greenLight,
+                              AppColors.textWhiteColor, () {}),
                           const SizedBox(width: 12),
                           _statsButton(
                               context,
                               "EXPENSE",
                               AppColors.newLightBlue.withOpacity(.3),
-                              AppColors.textBlackColor,
-                              () {}),
+                              AppColors.textBlackColor, () {
+                            Navigator.of(context)
+                                .push(goToRoute(const ExpenseBookingScreen()));
+                          }),
                         ],
                       ),
 
@@ -209,6 +207,7 @@ class StatsWidget extends StatelessWidget {
 
   _statsButton(BuildContext context, btnTitle, btnColor, textColor, onTap) =>
       InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(22),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),

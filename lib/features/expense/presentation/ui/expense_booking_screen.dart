@@ -90,7 +90,7 @@ class _ExpenseBookingScreenState extends State<ExpenseBookingScreen> {
                   expenseMenuList.length,
                   (index) => _menuContainer(
                       bgColor: (expenseMenuList[index].selected)
-                          ? AppColors.lightViolet.withOpacity(.6)
+                          ? AppColors.newBlue.withOpacity(.3)
                           : Colors.transparent,
                       imgAsset: expenseMenuList[index].image,
                       title: expenseMenuList[index].name,
@@ -481,7 +481,7 @@ class _ExpenseBookingScreenState extends State<ExpenseBookingScreen> {
           margin: const EdgeInsets.symmetric(horizontal: 3),
           decoration: BoxDecoration(
               color: selected
-                  ? AppColors.lightViolet.withOpacity(.6)
+                  ? AppColors.newLightBlue.withOpacity(.3)
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(22),
               border: Border.all(color: Colors.grey, width: 0.8)),
@@ -490,7 +490,7 @@ class _ExpenseBookingScreenState extends State<ExpenseBookingScreen> {
               if (selected)
                 Icon(
                   Icons.check_circle,
-                  color: AppColors.greenLight,
+                  color: AppColors.green,
                   size: appSize(context) / 80,
                 ),
               if (selected) const SizedBox(width: 6),
@@ -517,7 +517,7 @@ class _ExpenseBookingScreenState extends State<ExpenseBookingScreen> {
           decoration: BoxDecoration(
               color: bgColor,
               borderRadius: BorderRadius.circular(22),
-              border: Border.all(color: Colors.grey)),
+              border: Border.all(color: Colors.grey.withOpacity(.3))),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

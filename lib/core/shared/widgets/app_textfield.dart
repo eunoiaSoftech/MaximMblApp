@@ -34,7 +34,7 @@ class AppTextField extends StatelessWidget {
   final TextStyle? inputTextStyle;
   final Function()? onTap;
 
-  final double circular = 44.0;
+  final double circular = 22.0;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class AppTextField extends StatelessWidget {
               controller: controller,
               decoration: InputDecoration(
                 contentPadding:
-                    contentPadding ?? const EdgeInsets.fromLTRB(22, 2, 12, 10),
+                    contentPadding ?? const EdgeInsets.fromLTRB(22, 12, 12, 10),
                 // prefix: prefix,
                 // prefixIcon: prefix,
                 suffixIcon: Row(

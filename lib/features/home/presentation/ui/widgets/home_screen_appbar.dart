@@ -17,7 +17,7 @@ class HomeScreenAppbar extends StatelessWidget implements PreferredSizeWidget {
         AppBar(
           shape: const RoundedRectangleBorder(
               borderRadius:
-                  BorderRadius.only(bottomLeft: Radius.circular(100))),
+                  BorderRadius.only(bottomLeft: Radius.circular(40))),
           // surfaceTintColor: Colors.blue,
           backgroundColor: AppColors.newLightBlue,
           leading: IconButton(
@@ -48,21 +48,21 @@ class HomeScreenAppbar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ],
         ),
-        Positioned(
-            top: appSize(context) / 11,
-            right: appSize(context) / 60,
-            left: appSize(context) / 20,
-            child: AppTextField(
-              suffix: Image.asset(AppIcons.kIconMicrophone,
-                  width: appSize(context) / 90),
-              prefix: Image.asset(AppIcons.kIconNewSearch,
-                  width: appSize(context) / 60),
-              hintText: "Please Search here",
-            ))
+        // Positioned(
+        //     top: appSize(context) / 11,
+        //     right: appSize(context) / 60,
+        //     left: appSize(context) / 20,
+        //     child: AppTextField(
+        //       suffix: Image.asset(AppIcons.kIconMicrophone,
+        //           width: appSize(context) / 90),
+        //       prefix: Image.asset(AppIcons.kIconNewSearch,
+        //           width: appSize(context) / 60),
+        //       hintText: "Please Search here",
+        //     ))
       ],
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 100);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight+20);
 }
