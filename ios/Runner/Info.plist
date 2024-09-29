@@ -28,6 +28,20 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+
+<key>NSCameraUsageDescription</key>
+<string>We need access to your camera to take photos or record videos.</string>
+
+<key>NSMicrophoneUsageDescription</key>
+<string>We need access to your microphone for recording audio with videos.</string>
+
+<key>NSPhotoLibraryUsageDescription</key>
+<string>We need access to your photo library to pick and save photos and videos.</string>
+
+<key>NSPhotoLibraryAddUsageDescription</key>
+<string>We need access to your photo library to save media from the app.</string>
+
+
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

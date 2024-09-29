@@ -46,12 +46,12 @@ class AppTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(circular),
           // border: Border.all(color: AppColors.borderColor),
           boxShadow: [
-            // BoxShadow(
-            //   color: Colors.grey.withOpacity(.5),
-            //   offset: const Offset(2, 2),
-            //   spreadRadius: 1,
-            //   blurRadius: 2,
-            // )
+            BoxShadow(
+              color: Colors.grey.withOpacity(.5),
+              offset: const Offset(2, 2),
+              spreadRadius: 1,
+              blurRadius: 2,
+            )
           ]),
       child: Row(
         children: [
@@ -66,16 +66,6 @@ class AppTextField extends StatelessWidget {
               // selectionHeightStyle:BoxHeightStyle.includeLineSpacingMiddle,
               controller: controller,
               decoration: InputDecoration(
-                border: InputBorder.none,
-                // Set static border
-                enabledBorder: UnderlineInputBorder(
-                  borderRadius: BorderRadius.circular(0),
-                  borderSide: const BorderSide(color: Colors.grey, width: 1),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderRadius: BorderRadius.circular(0),
-                  borderSide: const BorderSide(color: Colors.grey, width: 1),
-                ),
                 contentPadding:
                     contentPadding ?? const EdgeInsets.fromLTRB(22, 12, 12, 10),
                 // prefix: prefix,
@@ -88,6 +78,7 @@ class AppTextField extends StatelessWidget {
                 ),
                 fillColor: Colors.transparent,
                 filled: true,
+                border: InputBorder.none,
                 hintText: hintText,
                 hintStyle: hintTextStyle ?? AppStyles.hintTextStyle(context),
               ),

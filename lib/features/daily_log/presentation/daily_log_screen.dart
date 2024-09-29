@@ -38,57 +38,58 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
             SizedBox(height: appSize(context) / 70),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: DropdownMenu<DailyLogModel>(
-                trailingIcon: const Icon(Icons.keyboard_arrow_down_rounded,
-                    color: Colors.black87),
-                enabled: true,
-                inputDecorationTheme: const InputDecorationTheme(
-                  // border: UnderlineInputBorder(),
-                  focusedBorder: UnderlineInputBorder(
-                      // borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.black38)),
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black38)),
-                  // outlineBorder: BorderSide(color: Colors.black)
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(.5),
+                      offset: const Offset(2, 2),
+                      spreadRadius: 1,
+                      blurRadius: 2,
+                    )
+                  ],
+                  borderRadius: BorderRadius.circular(22), // Optional: round corners
                 ),
-                expandedInsets: const EdgeInsets.symmetric(horizontal: 0),
-                textStyle: const TextStyle(color: Colors.black),
-                //initialSelection: menuItems.first,
-                controller: vehicleController,
-                // width: width,
-                hintText: "Search Vehicle",
-                requestFocusOnTap: true,
-                enableFilter: true,
-                menuStyle: MenuStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(AppColors.textColor),
-                ),
-
-                label: const Text(
-                  'Select Vehicle',
-                  style: TextStyle(color: Colors.black87),
-                ),
-                onSelected: (DailyLogModel? menu) {
-                  // setState(() {
-                  //   selectedMenu = menu;
-                  //   menuController.text = menu?.label ?? "";
-                  // });
-                },
-                dropdownMenuEntries:
-                    vehicleList.map<DropdownMenuEntry<DailyLogModel>>((menu) {
-                  return DropdownMenuEntry(
+                child: DropdownMenu<DailyLogModel>(
+                  trailingIcon: const Icon(Icons.keyboard_arrow_down_rounded,
+                      color: Colors.black87),
+                  enabled: true,
+                  inputDecorationTheme: const InputDecorationTheme(
+                    border: InputBorder.none, // Removes underline
+                    focusedBorder: InputBorder.none, // Removes focused underline
+                    enabledBorder: InputBorder.none, // Removes enabled underline
+                  ),
+                  expandedInsets: const EdgeInsets.symmetric(horizontal: 0),
+                  textStyle: const TextStyle(color: Colors.black),
+                  controller: vehicleController,
+                  hintText: "Search Vehicle",
+                  requestFocusOnTap: true,
+                  enableFilter: true,
+                  menuStyle: MenuStyle(
+                    backgroundColor:
+                    MaterialStateProperty.all<Color>(AppColors.textColor),
+                  ),
+                  label: const Text(
+                    'Select Vehicle',
+                    style: TextStyle(color: Colors.black87),
+                  ),
+                  onSelected: (DailyLogModel? menu) {
+                    // Handle selected item
+                  },
+                  dropdownMenuEntries:
+                  vehicleList.map<DropdownMenuEntry<DailyLogModel>>((menu) {
+                    return DropdownMenuEntry(
                       value: menu,
                       label: menu.lrNo,
                       labelWidget: Row(
                         children: [
                           Container(
-                            // color: Colors.pink,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 0, vertical: 4),
+                            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
                             decoration: const BoxDecoration(
                                 border: Border(
-                                    bottom: BorderSide(
-                                        color: Colors.white, width: 0.8))),
+                                    bottom: BorderSide(color: Colors.white, width: 0.8))),
                             width: appSize(context) / 4,
                             child: Text(
                               menu.lrNo,
@@ -97,33 +98,68 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                             ),
                           ),
                         ],
-                      ));
-                }).toList(),
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
             ),
+
             SizedBox(height: appSize(context) / 70),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
               child: AppTextFieldWithTitle(
+                assestImage: "assets/icons/user.png",
                   inputType: TextInputType.text,
                   textFieldHeight: appSize(context) / 22,
-                  hint: "Driver Name",
+                  hint: "Enter Driver Name",
                   readOnly: false,
-                  textFieldName: "Enter Driver Name",
+                  textFieldName: "Driver Name",
                   maxLines: 1),
             ),
             SizedBox(height: appSize(context) / 80),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
+              child: AppTextFieldWithTitle(
+                  assestImage: "assets/icons/Icon Group.png",
+
+                  inputType: TextInputType.text,
+                  textFieldHeight: appSize(context) / 22,
+                  hint: "Enter From Location",
+                  readOnly: false,
+                  textFieldName: "From Location",
+                  maxLines: 1),
+            ),
+            SizedBox(height: appSize(context) / 80),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
+              child: AppTextFieldWithTitle(
+                  assestImage: "assets/icons/Icon Group.png",
+                  inputType: TextInputType.text,
+                  textFieldHeight: appSize(context) / 22,
+                  hint: "Enter To Location",
+                  readOnly: false,
+                  textFieldName: "To Location",
+                  maxLines: 1),
+            ),
+
+            SizedBox(height: appSize(context) / 80),
+
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
               child: Row(
                 children: [
                   Expanded(
                     child: AppTextFieldWithTitle(
+                        assestImage: "assets/icons/Group 10013.png",
+
                         inputType: TextInputType.text,
                         textFieldHeight: appSize(context) / 22,
-                        hint: "Log Date",
+                        hint: "Enter Start Km",
                         readOnly: false,
-                        textFieldName: "Enter Log Date",
+                        textFieldName: "Start Km",
                         maxLines: 1),
                   ),
                   const SizedBox(
@@ -131,11 +167,13 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   ),
                   Expanded(
                     child: AppTextFieldWithTitle(
+                        assestImage: "assets/icons/Group 10014.png",
+
                         inputType: TextInputType.text,
                         textFieldHeight: appSize(context) / 22,
-                        hint: "Opening Km",
+                        hint: "Enter End Km",
                         readOnly: false,
-                        textFieldName: "Enter Opening Km",
+                        textFieldName: "End Km",
                         maxLines: 1),
                   )
                 ],
@@ -144,37 +182,16 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
             SizedBox(height: appSize(context) / 80),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
-              child: AppTextFieldWithTitle(
-                  inputType: TextInputType.text,
-                  textFieldHeight: appSize(context) / 22,
-                  hint: "From Location",
-                  readOnly: false,
-                  textFieldName: "Enter From Location",
-                  maxLines: 1),
-            ),
-            SizedBox(height: appSize(context) / 80),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
-              child: AppTextFieldWithTitle(
-                  inputType: TextInputType.text,
-                  textFieldHeight: appSize(context) / 22,
-                  hint: "To Location",
-                  readOnly: false,
-                  textFieldName: "Enter To Location",
-                  maxLines: 1),
-            ),
-            SizedBox(height: appSize(context) / 80),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
               child: Row(
                 children: [
                   Expanded(
                     child: AppTextFieldWithTitle(
+                        assestImage: "assets/icons/Group 9720.png",
                         inputType: TextInputType.text,
                         textFieldHeight: appSize(context) / 22,
-                        hint: "Start Km",
+                        hint: "Enter Log Date",
                         readOnly: false,
-                        textFieldName: "Enter Start Km",
+                        textFieldName: "Log Date",
                         maxLines: 1),
                   ),
                   const SizedBox(
@@ -182,25 +199,44 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   ),
                   Expanded(
                     child: AppTextFieldWithTitle(
+                        assestImage: "assets/icons/Group 10015.png",
+
                         inputType: TextInputType.text,
                         textFieldHeight: appSize(context) / 22,
-                        hint: "End Km",
+                        hint: "Enter Opening Km",
                         readOnly: false,
-                        textFieldName: "Enter End Km",
+                        textFieldName: "Opening Km",
                         maxLines: 1),
                   )
                 ],
               ),
             ),
             SizedBox(height: appSize(context) / 80),
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
               child: AppTextFieldWithTitle(
+                  assestImage: "assets/icons/Group 10015.png",
+
                   inputType: TextInputType.text,
                   textFieldHeight: appSize(context) / 22,
                   hint: "Total km",
                   readOnly: false,
                   textFieldName: "Total Km",
+                  maxLines: 1),
+            ),
+            SizedBox(height: appSize(context) / 80),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
+              child: AppTextFieldWithTitle(
+                  assestImage: "assets/icons/Group 10017.png",
+
+                  inputType: TextInputType.text,
+                  textFieldHeight: appSize(context) / 22,
+                  hint: "Enter Reason for trip",
+                  readOnly: false,
+                  textFieldName: "Reason for trip",
                   maxLines: 1),
             ),
             SizedBox(height: appSize(context) / 70),
@@ -209,100 +245,189 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Upload",
-                      style: AppStyles.hintTextStyle(context).copyWith()),
-                  SizedBox(height: appSize(context) / 100),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            border:
-                                Border.all(color: Colors.grey.withOpacity(.3)),
-                          ),
-                          child: Stack(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.all(6),
-                                child: SingleChildScrollView(
-                                  reverse: true,
-                                  scrollDirection: Axis.horizontal,
-                                  padding: const EdgeInsets.only(left: 88),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      ...List.generate(
-                                          imageFileList?.length ?? 0, (index) {
-                                        return Stack(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                showCupertinoDialog(
-                                                    barrierDismissible: true,
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return Container(
-                                                        child: Image.file(File(
-                                                            imageFileList?[
-                                                                        index]
-                                                                    .path ??
-                                                                "")),
-                                                      );
-                                                    });
-                                              },
-                                              child: Container(
-                                                height: 80,
-                                                width: 80,
-                                                margin:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 3),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                    border: Border.all(
-                                                        color: Colors.grey),
-                                                    image: DecorationImage(
-                                                        image: FileImage(File(
-                                                            imageFileList?[
-                                                                        index]
-                                                                    .path ??
-                                                                "")),
-                                                        fit: BoxFit.cover)),
-                                              ),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                imageFileList?.removeAt(index);
-                                                setState(() {});
-                                              },
-                                              child: CircleAvatar(
-                                                radius: appSize(context) / 100,
-                                                backgroundColor: Colors.red,
-                                                child: Icon(Icons.close_rounded,
-                                                    color: Colors.white,
-                                                    size:
-                                                        appSize(context) / 80),
-                                              ),
-                                            )
-                                          ],
-                                        );
-                                      })
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              _pickImage()
-                            ],
-                          ),
-                        ),
+                      const Padding(
+                        padding: EdgeInsets.only(right: 10, left: 20),
+                        child: Image(image: AssetImage("assets/icons/Group 10020.png",), height: 18,),
                       ),
+                      Text("Upload",
+                          style: AppStyles.hintTextStyle(context).copyWith()),
                     ],
                   ),
+                  SizedBox(height: appSize(context) / 100),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(.5),
+                          offset: const Offset(2, 2),
+                          spreadRadius: 1,
+                          blurRadius: 2,
+                        )
+                      ],
+                      borderRadius: BorderRadius.circular(22), // Optional: round corners
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+
+
+                        Text("Upload File",
+                            style: AppStyles.hintTextStyle(context).copyWith()),
+                        Spacer(),
+
+                        GestureDetector(
+                          onTap: (){
+                            openCamera();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(.5),
+                                  offset: const Offset(2, 2),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(22), // Optional: round corners
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                              child: Row(
+                                children: [
+                                  const Image(image: AssetImage("assets/icons/Group 10021.png",), height: 15,),
+                                  const SizedBox(width: 10,),
+                                  Text("Camera",
+                                      style: AppStyles.hintTextStyle(context).copyWith(fontSize: 13)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(width: 10,),
+                        GestureDetector(
+                          onTap: (){
+                            selectImages();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(.5),
+                                  offset: const Offset(2, 2),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(22), // Optional: round corners
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                              child: Row(
+                                children: [
+                                  const Image(image: AssetImage("assets/icons/Group 10022.png",), height: 15,),
+                                  const SizedBox(width: 10,),
+                                  Text("Photo",
+                                      style: AppStyles.hintTextStyle(context).copyWith(fontSize: 13)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(12),
+                  //     border:
+                  //     Border.all(color: Colors.grey.withOpacity(.3)),
+                  //   ),
+                  //   child: Stack(
+                  //     children: [
+                  //       Container(
+                  //         margin: const EdgeInsets.all(6),
+                  //         child: SingleChildScrollView(
+                  //           reverse: true,
+                  //           scrollDirection: Axis.horizontal,
+                  //           padding: const EdgeInsets.only(left: 88),
+                  //           child: Row(
+                  //             crossAxisAlignment:
+                  //             CrossAxisAlignment.center,
+                  //             // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  //             children: [
+                  //               ...List.generate(
+                  //                   imageFileList?.length ?? 0, (index) {
+                  //                 return Stack(
+                  //                   children: [
+                  //                     GestureDetector(
+                  //                       onTap: () {
+                  //                         showCupertinoDialog(
+                  //                             barrierDismissible: true,
+                  //                             context: context,
+                  //                             builder: (context) {
+                  //                               return Container(
+                  //                                 child: Image.file(File(
+                  //                                     imageFileList?[
+                  //                                     index]
+                  //                                         .path ??
+                  //                                         "")),
+                  //                               );
+                  //                             });
+                  //                       },
+                  //                       child: Container(
+                  //                         height: 80,
+                  //                         width: 80,
+                  //                         margin:
+                  //                         const EdgeInsets.symmetric(
+                  //                             horizontal: 3),
+                  //                         decoration: BoxDecoration(
+                  //                             borderRadius:
+                  //                             BorderRadius.circular(
+                  //                                 12),
+                  //                             border: Border.all(
+                  //                                 color: Colors.grey),
+                  //                             image: DecorationImage(
+                  //                                 image: FileImage(File(
+                  //                                     imageFileList?[
+                  //                                     index]
+                  //                                         .path ??
+                  //                                         "")),
+                  //                                 fit: BoxFit.cover)),
+                  //                       ),
+                  //                     ),
+                  //                     GestureDetector(
+                  //                       onTap: () {
+                  //                         imageFileList?.removeAt(index);
+                  //                         setState(() {});
+                  //                       },
+                  //                       child: CircleAvatar(
+                  //                         radius: appSize(context) / 100,
+                  //                         backgroundColor: Colors.red,
+                  //                         child: Icon(Icons.close_rounded,
+                  //                             color: Colors.white,
+                  //                             size:
+                  //                             appSize(context) / 80),
+                  //                       ),
+                  //                     )
+                  //                   ],
+                  //                 );
+                  //               })
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                 ],
               ),
             ),

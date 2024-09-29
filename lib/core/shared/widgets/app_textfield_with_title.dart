@@ -29,6 +29,7 @@ class AppTextFieldWithTitle extends StatelessWidget {
       this.focusNode,
       this.textFieldHeight = 44,
       this.validator,
+      this.assestImage,
       this.onSaved,
       this.fillColor,
       this.titleColor});
@@ -48,6 +49,7 @@ class AppTextFieldWithTitle extends StatelessWidget {
   final Function()? onTap;
   final String? errorText;
   final String textFieldName;
+  final String? assestImage;
   final EdgeInsets contentPadding;
   final double iconHorizontalPadding;
   final double iconSize;
@@ -69,8 +71,15 @@ class AppTextFieldWithTitle extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+
+            if(assestImage != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 10, left: 20),
+              child: Image(image: AssetImage(assestImage!,), height: 18,),
+            ),
+
             Text(
               textFieldName,
               style: AppStyles.titleTextStyle(context),
