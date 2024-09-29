@@ -74,11 +74,11 @@ class AppDrawer extends StatelessWidget {
                       // Add any navigation logic here if needed
                     }, context),
                     const SizedBox(height: 15),
-                    buildDrawerItem("Blacklist details", "", () {
+                    buildDrawerItem("Blacklist details", "assets/icons/Black loist.png", () {
                       // Add any navigation logic here if needed
                     }, context),
                     const SizedBox(height: 15),
-                    buildDrawerItem("E-Challan", "", () {
+                    buildDrawerItem("E-Challan", "assets/icons/E challan.png", () {
                       // Add any navigation logic here if needed
                     }, context),
                     const SizedBox(height: 15),
