@@ -8,12 +8,29 @@ import 'package:logistics_app/features/home/controller/main_controller.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../core/res/app_functions.dart';
 import '../../../../../core/res/app_icons.dart';
+import '../../../../../core/res/app_storage.dart';
 import '../../../../../core/services/func_sertives.dart';
 import '../../../../daily_log/presentation/daily_log_screen.dart';
 import '../../../../profile/presentation/bloc/profile_bloc.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
+
+  @override
+  State<AppDrawer> createState() => _AppDrawerState();
+}
+
+class _AppDrawerState extends State<AppDrawer> {
+  var userType;
+
+  @override
+  void initState() {
+    var userDetails = AppStorage().getUserDetails;
+
+    userType = userDetails['userType'];
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,11 +91,14 @@ class AppDrawer extends StatelessWidget {
                       // Add any navigation logic here if needed
                     }, context),
                     const SizedBox(height: 15),
-                    buildDrawerItem("Blacklist details", "assets/icons/Black loist.png", () {
+                    buildDrawerItem(
+                        "Blacklist details", "assets/icons/Black loist.png",
+                        () {
                       // Add any navigation logic here if needed
                     }, context),
                     const SizedBox(height: 15),
-                    buildDrawerItem("E-Challan", "assets/icons/E challan.png", () {
+                    buildDrawerItem("E-Challan", "assets/icons/E challan.png",
+                        () {
                       // Add any navigation logic here if needed
                     }, context),
                     const SizedBox(height: 15),
@@ -141,69 +161,82 @@ class AppDrawer extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
-            height: 5,
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Text(
+              "Loading...",
+              style: AppStyles.titleTextStyle(context).copyWith(
+                color: AppColors.textWhiteColor,
+                fontWeight: FontWeight.bold,
+                fontSize: appSize(context) / 70,
+              ),
+            ),
           ),
-          // if(profileController.isDriver.value)
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Text(
-                          'Mobile No.: Loading...',
-                          style: AppStyles.titleTextStyle(context).copyWith(
-                            color: AppColors.textWhiteColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: appSize(context) / 80,
+          if (userType == "2")
+            SizedBox(
+              height: 5,
+            ),
+          if (userType == "2")
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Text(
+                            'Mobile No.: Loading...',
+                            style: AppStyles.titleTextStyle(context).copyWith(
+                              color: AppColors.textWhiteColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: appSize(context) / 80,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Text(
-                          'License No.: Loading...',
-                          // Replace with actual user name
-                          style: AppStyles.titleTextStyle(context).copyWith(
-                            color: AppColors.textWhiteColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: appSize(context) / 80,
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Text(
+                            'License No.: Loading...',
+                            // Replace with actual user name
+                            style: AppStyles.titleTextStyle(context).copyWith(
+                              color: AppColors.textWhiteColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: appSize(context) / 80,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Text(
-                          'license Expiry On : Loading...',
-                          // Replace with actual user name
-                          style: AppStyles.titleTextStyle(context).copyWith(
-                            color: AppColors.textWhiteColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: appSize(context) / 80,
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Text(
+                            'license Expiry On : Loading...',
+                            // Replace with actual user name
+                            style: AppStyles.titleTextStyle(context).copyWith(
+                              color: AppColors.textWhiteColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: appSize(context) / 80,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          )
+              ],
+            )
         ],
       ),
     );

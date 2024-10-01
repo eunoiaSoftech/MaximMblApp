@@ -3,11 +3,14 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/state_manager.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:logistics_app/features/home/presentation/ui/widgets/common_page_appbar.dart';
 
 import '../../../core/res/app_colors.dart';
 import '../../../core/res/app_functions.dart';
+import '../../../core/res/app_storage.dart';
 import '../../../core/res/app_styles.dart';
 import '../../../core/shared/widgets/app_button.dart';
 import '../../../core/shared/widgets/app_textfield_with_title.dart';
@@ -22,6 +25,8 @@ class DailyLogScreen extends StatefulWidget {
 
 class _DailyLogScreenState extends State<DailyLogScreen> {
   TextEditingController vehicleController = TextEditingController();
+  TextEditingController driverNameController = TextEditingController();
+  TextEditingController logDateController = TextEditingController();
   final ImagePicker imagePicker = ImagePicker();
   List<XFile>? imageFileList = [];
 
@@ -50,7 +55,8 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                       blurRadius: 2,
                     )
                   ],
-                  borderRadius: BorderRadius.circular(22), // Optional: round corners
+                  borderRadius:
+                      BorderRadius.circular(22), // Optional: round corners
                 ),
                 child: DropdownMenu<DailyLogModel>(
                   trailingIcon: const Icon(Icons.keyboard_arrow_down_rounded,
@@ -58,8 +64,10 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   enabled: true,
                   inputDecorationTheme: const InputDecorationTheme(
                     border: InputBorder.none, // Removes underline
-                    focusedBorder: InputBorder.none, // Removes focused underline
-                    enabledBorder: InputBorder.none, // Removes enabled underline
+                    focusedBorder:
+                        InputBorder.none, // Removes focused underline
+                    enabledBorder:
+                        InputBorder.none, // Removes enabled underline
                   ),
                   expandedInsets: const EdgeInsets.symmetric(horizontal: 0),
                   textStyle: const TextStyle(color: Colors.black),
@@ -69,7 +77,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   enableFilter: true,
                   menuStyle: MenuStyle(
                     backgroundColor:
-                    MaterialStateProperty.all<Color>(AppColors.textColor),
+                        MaterialStateProperty.all<Color>(AppColors.textColor),
                   ),
                   label: const Text(
                     'Select Vehicle',
@@ -79,17 +87,19 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                     // Handle selected item
                   },
                   dropdownMenuEntries:
-                  vehicleList.map<DropdownMenuEntry<DailyLogModel>>((menu) {
+                      vehicleList.map<DropdownMenuEntry<DailyLogModel>>((menu) {
                     return DropdownMenuEntry(
                       value: menu,
                       label: menu.lrNo,
                       labelWidget: Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 0, vertical: 4),
                             decoration: const BoxDecoration(
                                 border: Border(
-                                    bottom: BorderSide(color: Colors.white, width: 0.8))),
+                                    bottom: BorderSide(
+                                        color: Colors.white, width: 0.8))),
                             width: appSize(context) / 4,
                             child: Text(
                               menu.lrNo,
@@ -104,16 +114,16 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                 ),
               ),
             ),
-
             SizedBox(height: appSize(context) / 70),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
               child: AppTextFieldWithTitle(
-                assestImage: "assets/icons/user.png",
+                  assestImage: "assets/icons/user.png",
                   inputType: TextInputType.text,
                   textFieldHeight: appSize(context) / 22,
                   hint: "Enter Driver Name",
                   readOnly: false,
+                  controller: driverNameController,
                   textFieldName: "Driver Name",
                   maxLines: 1),
             ),
@@ -122,7 +132,6 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
               child: AppTextFieldWithTitle(
                   assestImage: "assets/icons/Icon Group.png",
-
                   inputType: TextInputType.text,
                   textFieldHeight: appSize(context) / 22,
                   hint: "Enter From Location",
@@ -131,7 +140,6 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   maxLines: 1),
             ),
             SizedBox(height: appSize(context) / 80),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
               child: AppTextFieldWithTitle(
@@ -143,10 +151,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   textFieldName: "To Location",
                   maxLines: 1),
             ),
-
             SizedBox(height: appSize(context) / 80),
-
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
               child: Row(
@@ -154,8 +159,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   Expanded(
                     child: AppTextFieldWithTitle(
                         assestImage: "assets/icons/Group 10013.png",
-
-                        inputType: TextInputType.text,
+                        inputType: TextInputType.number,
                         textFieldHeight: appSize(context) / 22,
                         hint: "Enter Start Km",
                         readOnly: false,
@@ -168,8 +172,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   Expanded(
                     child: AppTextFieldWithTitle(
                         assestImage: "assets/icons/Group 10014.png",
-
-                        inputType: TextInputType.text,
+                        inputType: TextInputType.number,
                         textFieldHeight: appSize(context) / 22,
                         hint: "Enter End Km",
                         readOnly: false,
@@ -186,6 +189,16 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                 children: [
                   Expanded(
                     child: AppTextFieldWithTitle(
+                      onTap: () async {
+                        logDateController.text = await selectDate(context) ?? '';
+                        setState(() {
+
+                        });
+                        if (logDateController.text.isNotEmpty) {
+                          print('Selected Date: ${logDateController.text}');
+                        }
+                      },
+                        controller: logDateController,
                         assestImage: "assets/icons/Group 9720.png",
                         inputType: TextInputType.text,
                         textFieldHeight: appSize(context) / 22,
@@ -200,8 +213,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   Expanded(
                     child: AppTextFieldWithTitle(
                         assestImage: "assets/icons/Group 10015.png",
-
-                        inputType: TextInputType.text,
+                        inputType: TextInputType.number,
                         textFieldHeight: appSize(context) / 22,
                         hint: "Enter Opening Km",
                         readOnly: false,
@@ -212,13 +224,11 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
               ),
             ),
             SizedBox(height: appSize(context) / 80),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
               child: AppTextFieldWithTitle(
                   assestImage: "assets/icons/Group 10015.png",
-
-                  inputType: TextInputType.text,
+                  inputType: TextInputType.number,
                   textFieldHeight: appSize(context) / 22,
                   hint: "Total km",
                   readOnly: false,
@@ -226,12 +236,10 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   maxLines: 1),
             ),
             SizedBox(height: appSize(context) / 80),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
               child: AppTextFieldWithTitle(
                   assestImage: "assets/icons/Group 10017.png",
-
                   inputType: TextInputType.text,
                   textFieldHeight: appSize(context) / 22,
                   hint: "Enter Reason for trip",
@@ -249,7 +257,12 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                     children: [
                       const Padding(
                         padding: EdgeInsets.only(right: 10, left: 20),
-                        child: Image(image: AssetImage("assets/icons/Group 10020.png",), height: 18,),
+                        child: Image(
+                          image: AssetImage(
+                            "assets/icons/Group 10020.png",
+                          ),
+                          height: 18,
+                        ),
                       ),
                       Text("Upload",
                           style: AppStyles.hintTextStyle(context).copyWith()),
@@ -268,19 +281,17 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                           blurRadius: 2,
                         )
                       ],
-                      borderRadius: BorderRadius.circular(22), // Optional: round corners
+                      borderRadius:
+                          BorderRadius.circular(22), // Optional: round corners
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-
-
                         Text("Upload File",
                             style: AppStyles.hintTextStyle(context).copyWith()),
                         Spacer(),
-
                         GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             openCamera();
                           },
                           child: Container(
@@ -294,25 +305,36 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                                   blurRadius: 2,
                                 )
                               ],
-                              borderRadius: BorderRadius.circular(22), // Optional: round corners
+                              borderRadius: BorderRadius.circular(
+                                  22), // Optional: round corners
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 10),
                               child: Row(
                                 children: [
-                                  const Image(image: AssetImage("assets/icons/Group 10021.png",), height: 15,),
-                                  const SizedBox(width: 10,),
+                                  const Image(
+                                    image: AssetImage(
+                                      "assets/icons/Group 10021.png",
+                                    ),
+                                    height: 15,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
                                   Text("Camera",
-                                      style: AppStyles.hintTextStyle(context).copyWith(fontSize: 13)),
+                                      style: AppStyles.hintTextStyle(context)
+                                          .copyWith(fontSize: 13)),
                                 ],
                               ),
                             ),
                           ),
                         ),
-
-                        const SizedBox(width: 10,),
+                        const SizedBox(
+                          width: 10,
+                        ),
                         GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             selectImages();
                           },
                           child: Container(
@@ -326,16 +348,26 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                                   blurRadius: 2,
                                 )
                               ],
-                              borderRadius: BorderRadius.circular(22), // Optional: round corners
+                              borderRadius: BorderRadius.circular(
+                                  22), // Optional: round corners
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 10),
                               child: Row(
                                 children: [
-                                  const Image(image: AssetImage("assets/icons/Group 10022.png",), height: 15,),
-                                  const SizedBox(width: 10,),
+                                  const Image(
+                                    image: AssetImage(
+                                      "assets/icons/Group 10022.png",
+                                    ),
+                                    height: 15,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
                                   Text("Photo",
-                                      style: AppStyles.hintTextStyle(context).copyWith(fontSize: 13)),
+                                      style: AppStyles.hintTextStyle(context)
+                                          .copyWith(fontSize: 13)),
                                 ],
                               ),
                             ),
@@ -478,6 +510,17 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
     );
   }
 
+  @override
+  void initState() {
+    super.initState();
+    var userDetails = AppStorage().getUserDetails;
+
+    driverNameController.text = userDetails['name'];
+    setState(() {});
+    print('check user data ${userDetails}');
+
+  }
+
   _pickImage() => Container(
         height: 80,
         width: 80,
@@ -568,10 +611,36 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
         ),
       );
 
+  Future<String?> selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(), // Current date as the initial date
+      firstDate: DateTime(2000), // Earliest date the user can pick
+      lastDate: DateTime(2100), // Latest date the user can pick
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+          ),
+          child: Container(
+            color: Colors.white, // Set the background color to white
+            child: child!,
+          ),
+        );
+      },
+    );
+
+    if (pickedDate != null) {
+      // Format the picked date in the format dd-MM-yyyy
+      String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+      return formattedDate;
+    }
+
+    return null; // Return null if no date was selected
+  }
+
+
   void selectImages() async {
-    final List<XFile> selectedImages = await imagePicker
-        .pickMultiImage()
-        .whenComplete(() => Navigator.pop(context));
+    final List<XFile> selectedImages = await imagePicker.pickMultiImage();
     if (selectedImages.isNotEmpty) {
       imageFileList!.addAll(selectedImages);
     }
@@ -580,9 +649,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
   }
 
   void openCamera() async {
-    final XFile? img = await imagePicker
-        .pickImage(source: ImageSource.camera)
-        .whenComplete(() => Navigator.pop(context));
+    final XFile? img = await imagePicker.pickImage(source: ImageSource.camera);
     if (img != null) {
       imageFileList!.add(img);
     }

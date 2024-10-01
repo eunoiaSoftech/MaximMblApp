@@ -13,6 +13,7 @@ class AppTextFieldWithTitle extends StatelessWidget {
       this.controller,
       this.errorText,
       this.onChanged,
+      this.keyboardType,
       this.maxLength,
       this.contentPadding = const EdgeInsets.fromLTRB(20, 12, 20, 12),
       this.iconHorizontalPadding = 20,
@@ -61,6 +62,7 @@ class AppTextFieldWithTitle extends StatelessWidget {
   final FocusNode? focusNode;
   final Color? fillColor;
   final Color? titleColor;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +93,8 @@ class AppTextFieldWithTitle extends StatelessWidget {
           children: [
             Expanded(
                 child: AppTextField(
+                  onTap: onTap,
+                   keyboardType: inputType,
                     height: textFieldHeight,
                     controller: controller,
                     hintText: hint)),

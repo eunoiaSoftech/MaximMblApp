@@ -39,7 +39,7 @@ class AppTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height,
+      height: 60,
       padding: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
           color: Colors.white,

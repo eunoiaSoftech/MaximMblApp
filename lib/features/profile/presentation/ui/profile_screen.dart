@@ -14,9 +14,14 @@ import '../../../home/presentation/ui/widgets/drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/profile_bloc.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -141,24 +146,29 @@ class ProfileScreen extends StatelessWidget {
                                                                   80,
                                                         ),
                                                       ),
-                                                      Text(
-                                                        state.profileData[
-                                                                    'data1'][0]
-                                                                ['sUserCode'] ??
-                                                            '',
-                                                        style: AppStyles
-                                                                .titleTextStyle(
-                                                                    context)
-                                                            .copyWith(
-                                                          color: AppColors
-                                                              .textWhiteColor,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize:
-                                                              appSize(context) /
-                                                                  80,
+                                                      if (state.profileData[
+                                                                  'data1'][0]
+                                                              ['sUserCode'] !=
+                                                          null)
+                                                        Text(
+                                                          state.profileData[
+                                                                      'data1'][0]
+                                                                  [
+                                                                  'sUserCode'] ??
+                                                              '',
+                                                          style: AppStyles
+                                                                  .titleTextStyle(
+                                                                      context)
+                                                              .copyWith(
+                                                            color: AppColors
+                                                                .textWhiteColor,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: appSize(
+                                                                    context) /
+                                                                80,
+                                                          ),
                                                         ),
-                                                      ),
                                                     ],
                                                   )
                                                 ],
@@ -347,14 +357,15 @@ class ProfileScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           const SizedBox(height: 30),
-                          if (state is ProfileLoaded)
-                            buildDrawerItem(
-                                "Profile Details", AppIcons.kProfileIcons, () {
+                          buildDrawerItem(
+                              "Profile Details", AppIcons.kProfileIcons, () {
+                            if (state is ProfileLoaded) {
                               Navigator.of(context)
                                   .push(goToRoute(ProfileDetailsScreen(
                                 response: state.newProfileData,
                               )));
-                            }, context),
+                            }
+                          }, context),
                           const SizedBox(height: 15),
                           buildDrawerItem(
                               "Logout", "assets/images/new/Group 9720.png", () {
@@ -405,6 +416,17 @@ class ProfileScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  var userType;
+
+  @override
+  void initState() {
+    super.initState();
+
+    var userDetails = AppStorage().getUserDetails;
+
+    userType = userDetails['userType'];
   }
 
   Widget shimmerLoadingWidget(BuildContext context) {
@@ -501,32 +523,6 @@ class ProfileScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  Shimmer.fromColors(
-                                    baseColor: Colors.grey[300]!,
-                                    highlightColor: Colors.grey[100]!,
-                                    child: Text(
-                                      "loading...", // Replace with actual user name
-                                      style: AppStyles.titleTextStyle(context)
-                                          .copyWith(
-                                        color: AppColors.textWhiteColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: appSize(context) / 80,
-                                      ),
-                                    ),
-                                  ),
-                                  // Text(
-                                  //   '- Years', // Replace with actual user name
-                                  //   style:
-                                  //       AppStyles.titleTextStyle(
-                                  //               context)
-                                  //           .copyWith(
-                                  //     color: AppColors
-                                  //         .textWhiteColor,
-                                  //     fontWeight: FontWeight.bold,
-                                  //     fontSize:
-                                  //         appSize(context) / 80,
-                                  //   ),
-                                  // ),
                                 ],
                               )
                             ],
@@ -574,58 +570,64 @@ class ProfileScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                'License No.:', // Replace with actual user name
-                                style:
-                                    AppStyles.titleTextStyle(context).copyWith(
-                                  color: AppColors.textWhiteColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: appSize(context) / 80,
+                              if (userType == '2')
+                                const SizedBox(
+                                  height: 10,
                                 ),
-                              ),
-                              Shimmer.fromColors(
-                                baseColor: Colors.grey[300]!,
-                                highlightColor: Colors.grey[100]!,
-                                child: Text(
-                                  'loading...', // Replace with actual user name
+                              if (userType == '2')
+                                Text(
+                                  'License No.:', // Replace with actual user name
                                   style: AppStyles.titleTextStyle(context)
                                       .copyWith(
-                                    color: AppColors.textWhiteColor
-                                        .withOpacity(0.65),
+                                    color: AppColors.textWhiteColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: appSize(context) / 80,
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                'license Expiry On :', // Replace with actual user name
-                                style:
-                                    AppStyles.titleTextStyle(context).copyWith(
-                                  color: AppColors.textWhiteColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: appSize(context) / 80,
+                              if (userType == '2')
+                                Shimmer.fromColors(
+                                  baseColor: Colors.grey[300]!,
+                                  highlightColor: Colors.grey[100]!,
+                                  child: Text(
+                                    'loading...', // Replace with actual user name
+                                    style: AppStyles.titleTextStyle(context)
+                                        .copyWith(
+                                      color: AppColors.textWhiteColor
+                                          .withOpacity(0.65),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: appSize(context) / 80,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              Shimmer.fromColors(
-                                baseColor: Colors.grey[300]!,
-                                highlightColor: Colors.grey[100]!,
-                                child: Text(
-                                  "loading...", // Replace with actual user name
+                              if (userType == '2')
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                              if (userType == '2')
+                                Text(
+                                  'license Expiry On :', // Replace with actual user name
                                   style: AppStyles.titleTextStyle(context)
                                       .copyWith(
-                                    color: AppColors.textWhiteColor
-                                        .withOpacity(0.65),
+                                    color: AppColors.textWhiteColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: appSize(context) / 80,
                                   ),
                                 ),
-                              ),
+                              if (userType == '2')
+                                Shimmer.fromColors(
+                                  baseColor: Colors.grey[300]!,
+                                  highlightColor: Colors.grey[100]!,
+                                  child: Text(
+                                    "loading...", // Replace with actual user name
+                                    style: AppStyles.titleTextStyle(context)
+                                        .copyWith(
+                                      color: AppColors.textWhiteColor
+                                          .withOpacity(0.65),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: appSize(context) / 80,
+                                    ),
+                                  ),
+                                ),
                             ],
                           ),
                         ),
