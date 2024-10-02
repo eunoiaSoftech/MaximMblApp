@@ -55,9 +55,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         var newProfileResponse = await ApiService().get(
             "/api/api/GetProfileDetails?Fk_DriverId=${userDetails['userId']}&iFK_UserTypeId=${userDetails['userType'] ?? ''}");
 
-        print('check response ${response}');
-        print('check response ${newProfileResponse}');
-
         if (response.statusCode == 200 &&
             newProfileResponse.statusCode == 200) {
           emit(ProfileLoaded(response.data, newProfileResponse.data));

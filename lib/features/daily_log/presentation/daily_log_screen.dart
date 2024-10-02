@@ -1,19 +1,24 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:logistics_app/core/constants/constants.dart';
 import 'package:logistics_app/features/home/presentation/ui/widgets/common_page_appbar.dart';
-
 import '../../../core/res/app_colors.dart';
 import '../../../core/res/app_functions.dart';
 import '../../../core/res/app_storage.dart';
 import '../../../core/res/app_styles.dart';
+import '../../../core/shared/data/user.dart';
 import '../../../core/shared/widgets/app_button.dart';
 import '../../../core/shared/widgets/app_textfield_with_title.dart';
+import '../data/daily_log_bloc.dart';
+import 'package:http/http.dart' as http;
+import '../data/daily_log_vehicle_list_event.dart';
+import '../data/daily_log_vehicle_list_state.dart';
 import '../models/daily_log_model.dart';
 
 class DailyLogScreen extends StatefulWidget {
@@ -27,8 +32,192 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
   TextEditingController vehicleController = TextEditingController();
   TextEditingController driverNameController = TextEditingController();
   TextEditingController logDateController = TextEditingController();
+  TextEditingController startKmController = TextEditingController();
+  TextEditingController endKmController = TextEditingController();
+  TextEditingController totalKmController = TextEditingController();
+
+  TextEditingController fromLocationController = TextEditingController();
+  TextEditingController toLocationController = TextEditingController();
+  TextEditingController openingKmController = TextEditingController();
+  TextEditingController reasonForTripController = TextEditingController();
+
   final ImagePicker imagePicker = ImagePicker();
   List<XFile>? imageFileList = [];
+
+  List<dynamic> commonList = [];
+
+  late DailyLogVehicleResponse _vehicleListResponse;
+  final Completer<void> _completer = Completer<void>();
+
+  Future<void> _processApi() async {
+    context.read<DailyLogBloc>().add(DailyLogVehicleListEvent(
+          AppStorage().getUserId,
+          User.fromJson(AppStorage().getUserDetails).userType ?? 0,
+        ));
+
+    context.read<DailyLogBloc>().stream.listen((state) {
+      if (state is DailyLogVehicleListLoaded) {
+        setState(() {
+          _vehicleListResponse = state.resp;
+        });
+
+        setState(() {
+          vehicleList = _vehicleListResponse.data1!;
+        });
+
+        _completer.complete();
+      } else if (state is DailyLogVehicleListError) {
+        // Handle the error state
+        print("Error: ${state.error}");
+        _completer.complete();
+      }
+    });
+
+    await _completer.future;
+  }
+
+  List<Vehicle> vehicleList = [];
+
+  bool _validateControllers() {
+    List<TextEditingController> controllers = [
+      vehicleController,
+      driverNameController,
+      logDateController,
+      startKmController,
+      endKmController,
+      totalKmController,
+      fromLocationController,
+      toLocationController,
+      openingKmController,
+      reasonForTripController,
+    ];
+
+    // Check for empty fields
+    bool hasEmptyFields = false;
+    for (var controller in controllers) {
+      if (controller.text.isEmpty) {
+        hasEmptyFields = true;
+        break; // Exit the loop if any field is empty
+      }
+    }
+
+    // Show a warning if any controller is empty
+    if (hasEmptyFields) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in all fields'),
+          backgroundColor: Colors.white,
+        ),
+      );
+      return false;
+    }
+
+    return true; // All fields are filled
+  }
+
+  void _clearControllers() {
+    vehicleController.clear();
+    driverNameController.clear();
+    logDateController.clear();
+    startKmController.clear();
+    endKmController.clear();
+    totalKmController.clear();
+    fromLocationController.clear();
+    toLocationController.clear();
+    openingKmController.clear();
+    reasonForTripController.clear();
+    setState(() {
+
+    });
+  }
+
+  void _calculateTotalKm() {
+    double? startKm = double.tryParse(startKmController.text);
+    double? endKm = double.tryParse(endKmController.text);
+
+    if (startKm != null && endKm != null) {
+      setState(() {
+        totalKmController.text = (endKm - startKm).toString();
+      });
+    } else {
+      setState(() {
+        totalKmController.text = '0';
+      });
+    }
+  }
+
+  Future<void> saveDailyLog() async {
+    // Define your API URL
+    const String url = Urls.postDailyLog;
+
+    final String vehicleId = vehicleController.text;
+    final String driverName = driverNameController.text;
+    final String fromLocation = fromLocationController.text;
+    final String toLocation = toLocationController.text;
+    final String logDate = logDateController.text;
+    final String startKm = startKmController.text;
+    final String endKm = endKmController.text;
+    final String openingKm = openingKmController.text;
+    final String totalKm = totalKmController.text;
+    final String reason = reasonForTripController.text;
+
+    final Uri uri = Uri.parse(url).replace(queryParameters: {
+      'iFk_VehicleId': vehicleId,
+      'sDriverName': driverName,
+      'sFromLocation': fromLocation,
+      'sToLocation': toLocation,
+      'dStartKm': startKm,
+      'dEndKm': endKm,
+      'sLogDate': logDate,
+      'dOpeningKm': openingKm,
+      'dTotalKm': totalKm,
+      'sReason': reason,
+    });
+
+    try {
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        _clearControllers();
+        showCupertinoDialog(
+            context: context,
+            builder: (context) {
+              return Material(
+                child: Center(
+                  child: Container(
+                    color: Colors.white,
+                    margin:
+                        EdgeInsets.symmetric(horizontal: appSize(context) / 80),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 12),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset("assets/gifs/success.gif"),
+                        SizedBox(height: 12),
+                        Text("Daily log added successfully",
+                            style: AppStyles.titleTextStyle(context)),
+                        SizedBox(height: 12),
+                        AppButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            text: "Okay")
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            });
+      } else {
+        // Handle the error response
+        print('Error: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      // Handle any exceptions
+      print('An error occurred: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,19 +244,16 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                       blurRadius: 2,
                     )
                   ],
-                  borderRadius:
-                      BorderRadius.circular(22), // Optional: round corners
+                  borderRadius: BorderRadius.circular(22),
                 ),
-                child: DropdownMenu<DailyLogModel>(
+                child: DropdownMenu<Vehicle>(
                   trailingIcon: const Icon(Icons.keyboard_arrow_down_rounded,
                       color: Colors.black87),
                   enabled: true,
                   inputDecorationTheme: const InputDecorationTheme(
                     border: InputBorder.none, // Removes underline
-                    focusedBorder:
-                        InputBorder.none, // Removes focused underline
-                    enabledBorder:
-                        InputBorder.none, // Removes enabled underline
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
                   ),
                   expandedInsets: const EdgeInsets.symmetric(horizontal: 0),
                   textStyle: const TextStyle(color: Colors.black),
@@ -83,14 +269,16 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                     'Select Vehicle',
                     style: TextStyle(color: Colors.black87),
                   ),
-                  onSelected: (DailyLogModel? menu) {
-                    // Handle selected item
+                  onSelected: (Vehicle? menu) {
+                    setState(() {
+                      vehicleController.text = menu!.pkVehicleId.toString();
+                    });
                   },
                   dropdownMenuEntries:
-                      vehicleList.map<DropdownMenuEntry<DailyLogModel>>((menu) {
+                      vehicleList.map<DropdownMenuEntry<Vehicle>>((menu) {
                     return DropdownMenuEntry(
                       value: menu,
-                      label: menu.lrNo,
+                      label: menu.vehicleNo,
                       labelWidget: Row(
                         children: [
                           Container(
@@ -102,7 +290,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                                         color: Colors.white, width: 0.8))),
                             width: appSize(context) / 4,
                             child: Text(
-                              menu.lrNo,
+                              menu.vehicleNo,
                               maxLines: 2,
                               style: AppStyles.titleTextStyle(context),
                             ),
@@ -136,6 +324,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   textFieldHeight: appSize(context) / 22,
                   hint: "Enter From Location",
                   readOnly: false,
+                  controller: fromLocationController,
                   textFieldName: "From Location",
                   maxLines: 1),
             ),
@@ -148,6 +337,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   textFieldHeight: appSize(context) / 22,
                   hint: "Enter To Location",
                   readOnly: false,
+                  controller: toLocationController,
                   textFieldName: "To Location",
                   maxLines: 1),
             ),
@@ -160,8 +350,12 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                     child: AppTextFieldWithTitle(
                         assestImage: "assets/icons/Group 10013.png",
                         inputType: TextInputType.number,
+                        controller: startKmController,
                         textFieldHeight: appSize(context) / 22,
                         hint: "Enter Start Km",
+                        onChanged: (val) {
+                          _calculateTotalKm();
+                        },
                         readOnly: false,
                         textFieldName: "Start Km",
                         maxLines: 1),
@@ -173,8 +367,12 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                     child: AppTextFieldWithTitle(
                         assestImage: "assets/icons/Group 10014.png",
                         inputType: TextInputType.number,
+                        controller: endKmController,
                         textFieldHeight: appSize(context) / 22,
                         hint: "Enter End Km",
+                        onChanged: (val) {
+                          _calculateTotalKm();
+                        },
                         readOnly: false,
                         textFieldName: "End Km",
                         maxLines: 1),
@@ -189,15 +387,14 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                 children: [
                   Expanded(
                     child: AppTextFieldWithTitle(
-                      onTap: () async {
-                        logDateController.text = await selectDate(context) ?? '';
-                        setState(() {
-
-                        });
-                        if (logDateController.text.isNotEmpty) {
-                          print('Selected Date: ${logDateController.text}');
-                        }
-                      },
+                        onTap: () async {
+                          logDateController.text =
+                              await selectDate(context) ?? '';
+                          setState(() {});
+                          if (logDateController.text.isNotEmpty) {
+                            print('Selected Date: ${logDateController.text}');
+                          }
+                        },
                         controller: logDateController,
                         assestImage: "assets/icons/Group 9720.png",
                         inputType: TextInputType.text,
@@ -217,6 +414,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                         textFieldHeight: appSize(context) / 22,
                         hint: "Enter Opening Km",
                         readOnly: false,
+                        controller: openingKmController,
                         textFieldName: "Opening Km",
                         maxLines: 1),
                   )
@@ -232,6 +430,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   textFieldHeight: appSize(context) / 22,
                   hint: "Total km",
                   readOnly: false,
+                  controller: totalKmController,
                   textFieldName: "Total Km",
                   maxLines: 1),
             ),
@@ -242,6 +441,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   assestImage: "assets/icons/Group 10017.png",
                   inputType: TextInputType.text,
                   textFieldHeight: appSize(context) / 22,
+                  controller: reasonForTripController,
                   hint: "Enter Reason for trip",
                   readOnly: false,
                   textFieldName: "Reason for trip",
@@ -468,38 +668,9 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 22),
               child: AppButton(
                   onPressed: () async {
-                    await Future.delayed(const Duration(milliseconds: 1000));
-                    showCupertinoDialog(
-                        context: context,
-                        builder: (context) {
-                          return Material(
-                            child: Center(
-                              child: Container(
-                                color: Colors.white,
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: appSize(context) / 80),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 12),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Image.asset("assets/gifs/success.gif"),
-                                    SizedBox(height: 12),
-                                    Text("Expense booking successfully done",
-                                        style:
-                                            AppStyles.titleTextStyle(context)),
-                                    SizedBox(height: 12),
-                                    AppButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        text: "Okay")
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        }).then((value) => Navigator.pop(context));
+                    if (_validateControllers()) {
+                      saveDailyLog();
+                    }
                   },
                   text: "Submit"),
             ),
@@ -514,11 +685,11 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
   void initState() {
     super.initState();
     var userDetails = AppStorage().getUserDetails;
+    _processApi();
 
     driverNameController.text = userDetails['name'];
     setState(() {});
     print('check user data ${userDetails}');
-
   }
 
   _pickImage() => Container(
@@ -619,8 +790,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
       lastDate: DateTime(2100), // Latest date the user can pick
       builder: (BuildContext context, Widget? child) {
         return Theme(
-          data: ThemeData.light().copyWith(
-          ),
+          data: ThemeData.light().copyWith(),
           child: Container(
             color: Colors.white, // Set the background color to white
             child: child!,
@@ -637,7 +807,6 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
 
     return null; // Return null if no date was selected
   }
-
 
   void selectImages() async {
     final List<XFile> selectedImages = await imagePicker.pickMultiImage();

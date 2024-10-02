@@ -94,6 +94,7 @@ class AppTextFieldWithTitle extends StatelessWidget {
             Expanded(
                 child: AppTextField(
                   onTap: onTap,
+                    onChanged: onChanged,
                    keyboardType: inputType,
                     height: textFieldHeight,
                     controller: controller,

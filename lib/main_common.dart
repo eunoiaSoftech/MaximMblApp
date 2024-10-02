@@ -16,6 +16,9 @@ import 'package:logistics_app/features/branches_n_locations/data/datasources/bra
 import 'package:logistics_app/features/branches_n_locations/data/repositories/branch_repos.dart';
 import 'package:logistics_app/features/branches_n_locations/presentation/bloc/branch_bloc.dart';
 import 'package:logistics_app/features/branches_n_locations/presentation/bloc/location_list_bloc.dart';
+import 'package:logistics_app/features/daily_log/data/daily_log_bloc.dart';
+import 'package:logistics_app/features/daily_log/data/daily_log_remote_datasource.dart';
+import 'package:logistics_app/features/daily_log/data/daily_log_repository.dart';
 import 'package:logistics_app/features/legals/data/datasources/home_remote_datasource.dart';
 import 'package:logistics_app/features/legals/data/repositories/legals_repo.dart';
 import 'package:logistics_app/features/legals/presentation/blocs/blocs/legal_document_list_bloc.dart';
@@ -36,11 +39,13 @@ Future mainCommon() async {
   final branchRemoteDataSource = BranchRemoteDataSource(BaseApi(Dio()));
   final legalRemoteDataSource = LegalsRemoteDataSource(BaseApi(Dio()));
   final approvalsRemoteDataSource = ApprovalsRemoteDataSource(BaseApi(Dio()));
+  final dailyLogRemoteDataSource = DailyLogRemoteDataSource(BaseApi(Dio()));
 
   final authRepository = AuthRepository(authRemoteDataSource);
   final branchRepository = BranchRepository(branchRemoteDataSource);
   final legalRepository = LegalsRepository(legalRemoteDataSource);
   final approvalsRepository = ApprovalsRepository(approvalsRemoteDataSource);
+  final dailyLogRepository = DailyLogRepository(dailyLogRemoteDataSource);
 
   runApp(
     MultiBlocProvider(
@@ -51,8 +56,8 @@ Future mainCommon() async {
         BlocProvider(
             create: (context) => LegalDocumentListBloc(legalRepository)),
         BlocProvider(create: (context) => ApprovalsBloc(approvalsRepository)),
-
         BlocProvider(create: (context) => LocationListBloc()),
+        BlocProvider(create: (context) => DailyLogBloc(dailyLogRepository)),
       ],
       child: const MyApp(),
     ),

@@ -18,6 +18,7 @@ class AppTextField extends StatelessWidget {
       this.prefix,
       this.keyboardType,
       this.hintTextStyle,
+      this.onChanged,
       this.contentPadding,
       this.inputTextStyle});
 
@@ -33,6 +34,8 @@ class AppTextField extends StatelessWidget {
   final TextStyle? hintTextStyle;
   final TextStyle? inputTextStyle;
   final Function()? onTap;
+  final Function(String s)? onChanged;
+
 
   final double circular = 22.0;
 
@@ -59,6 +62,7 @@ class AppTextField extends StatelessWidget {
           prefix ?? const SizedBox.shrink(),
           Expanded(
             child: TextFormField(
+              onChanged: onChanged,
               enabled: enabled ?? true,
               obscureText: obscureText ?? false,
               onTap: onTap,
