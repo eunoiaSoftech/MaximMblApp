@@ -23,7 +23,7 @@ class AppTextFieldWithTitle extends StatelessWidget {
       this.obscureText = false,
       this.sIcon,
       this.suffix,
-      this.borderCircular = 6,
+      this.borderCircular = 22,
       this.maxLines = 1,
       this.minLines = 1,
       required this.textFieldName,
@@ -75,13 +75,16 @@ class AppTextFieldWithTitle extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-
-            if(assestImage != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 10, left: 20),
-              child: Image(image: AssetImage(assestImage!,), height: 18,),
-            ),
-
+            if (assestImage != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 10, left: 20),
+                child: Image(
+                  image: AssetImage(
+                    assestImage!,
+                  ),
+                  height: 18,
+                ),
+              ),
             Text(
               textFieldName,
               style: AppStyles.titleTextStyle(context),
@@ -93,9 +96,10 @@ class AppTextFieldWithTitle extends StatelessWidget {
           children: [
             Expanded(
                 child: AppTextField(
-                  onTap: onTap,
+                    circular: borderCircular,
+                    onTap: onTap,
                     onChanged: onChanged,
-                   keyboardType: inputType,
+                    keyboardType: inputType,
                     height: textFieldHeight,
                     controller: controller,
                     hintText: hint)),

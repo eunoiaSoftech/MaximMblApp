@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -135,13 +137,16 @@ class StatsWidget extends StatelessWidget {
                       Row(
                         children: [
                           _statsButton(context, "START", AppColors.greenLight,
-                              AppColors.textWhiteColor, () {}),
+                              AppColors.textWhiteColor, () {
+                            log("start ");
+                              }),
                           const SizedBox(width: 12),
                           _statsButton(
                               context,
                               "EXPENSE",
                               AppColors.newLightBlue.withOpacity(.3),
                               AppColors.textBlackColor, () {
+                            log("message");
                             Navigator.of(context)
                                 .push(goToRoute(const ExpenseBookingScreen()));
                           }),
@@ -205,9 +210,10 @@ class StatsWidget extends StatelessWidget {
     );
   }
 
-  _statsButton(BuildContext context, btnTitle, btnColor, textColor, onTap) =>
+  Widget _statsButton(BuildContext context, btnTitle, btnColor, textColor,
+          Function() onTap) =>
       InkWell(
-        onTap: onTap,
+        onTap: () => onTap(),
         borderRadius: BorderRadius.circular(22),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),

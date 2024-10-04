@@ -41,13 +41,13 @@ class ExpenseTypeModel {
 
 List<ExpenseMenuModel> expenseTypeList = [
   ExpenseMenuModel(
-      srNo: 1, name: 'Meal', image: "assets/icons/meal.png", selected: false),
+      srNo: 1, name: 'Meal', image: "assets/images/new/food_hot.png", selected: false),
   ExpenseMenuModel(
-      srNo: 2, name: 'Toll', image: "assets/icons/toll.png", selected: false),
+      srNo: 2, name: 'Toll', image: "assets/images/new/toll_pass.png", selected: false),
   ExpenseMenuModel(
       srNo: 3,
       name: 'Others',
-      image: "assets/icons/other.png",
+      image: "assets/images/new/wallet_open.png",
       selected: false),
 ];
 
