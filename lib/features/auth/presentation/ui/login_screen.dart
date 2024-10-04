@@ -24,6 +24,7 @@ import 'package:logistics_app/features/auth/presentation/bloc/auth_states/login_
 import 'package:logistics_app/features/auth/presentation/bloc/auth_states/loginwith_otp_states.dart';
 import 'package:logistics_app/features/branches_n_locations/presentation/ui/select_branch_screen.dart';
 import 'package:logistics_app/features/home/presentation/ui/home_screen.dart';
+import 'package:logistics_app/features/home/presentation/ui/main_screen.dart';
 import 'package:pinput/pinput.dart';
 import 'dart:math' as math;
 
@@ -694,7 +695,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         Future.delayed(const Duration(milliseconds: 2000), () {
                           Navigator.of(context)
-                              .pushReplacement(goToRoute(const HomeScreen()));
+                              .pushReplacement(goToRoute(const MainScreen()));
                         });
                       }
                     },

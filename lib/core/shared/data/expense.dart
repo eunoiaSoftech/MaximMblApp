@@ -15,15 +15,15 @@ List<ExpenseMenuModel> expenseMenuList = [
   ExpenseMenuModel(
       srNo: 1,
       name: 'Operation',
-      image: "assets/icons/repair-service.png",
+      image: "assets/images/new/truck_yellow.png",
       selected: false),
   ExpenseMenuModel(
       srNo: 2,
       name: 'Maintenance',
-      image: "assets/icons/maintenance.png",
+      image: "assets/images/new/garage.png",
       selected: false),
   ExpenseMenuModel(
-      srNo: 3, name: 'Tyre', image: "assets/icons/shop.png", selected: false),
+      srNo: 3, name: 'Tyre', image: "assets/images/new/tyre.png", selected: false),
 ];
 
 class ExpenseTypeModel {

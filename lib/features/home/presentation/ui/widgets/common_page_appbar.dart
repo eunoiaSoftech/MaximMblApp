@@ -8,33 +8,49 @@ import 'package:logistics_app/core/res/app_styles.dart';
 import 'package:logistics_app/core/shared/widgets/app_textfield.dart';
 
 class CommonPageAppBar extends StatelessWidget implements PreferredSizeWidget {
-  CommonPageAppBar({super.key, required this.title});
+  const CommonPageAppBar(
+      {super.key,
+      required this.title,
+      this.bottomLeftCurve,
+      this.height,
+      this.stackedWidget});
 
-  String title;
+  final String title;
+  final double? bottomLeftCurve;
+  final double? height;
+  final Widget? stackedWidget;
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50))),
-      // surfaceTintColor: Colors.blue,
-      backgroundColor: AppColors.newLightBlue,
-      leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back),
-          color: Colors.white,
-          iconSize: appSize(context) / 40),
-      centerTitle: false,
-      title: Text(title,
-          style: AppStyles.titleTextStyle(
-            context,
-          ).copyWith(
-              color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18)),
+    return Stack(
+      children: [
+        AppBar(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(bottomLeftCurve ?? 50))),
+          // surfaceTintColor: Colors.blue,
+          backgroundColor: AppColors.newLightBlue,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_back),
+              color: Colors.white,
+              iconSize: appSize(context) / 40),
+          centerTitle: false,
+          title: Text(title,
+              style: AppStyles.titleTextStyle(
+                context,
+              ).copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18)),
+        ),
+        stackedWidget ?? const SizedBox.shrink()
+      ],
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 10);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight + (height ?? 10));
 }
