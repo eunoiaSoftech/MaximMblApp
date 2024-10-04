@@ -126,9 +126,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
     toLocationController.clear();
     openingKmController.clear();
     reasonForTripController.clear();
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   void _calculateTotalKm() {

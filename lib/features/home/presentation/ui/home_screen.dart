@@ -13,6 +13,8 @@ import 'package:logistics_app/features/legals/presentation/ui/legals_screen.dart
 import 'package:logistics_app/features/things_to_review/screen/things_to_review_screen.dart';
 import 'package:logistics_app/features/trip/presentation/ui/screen/my_trip_screen.dart';
 
+import '../../../../core/services/local_permission_services.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -55,36 +57,44 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Row(
                         children: [
-                          _tab("My Trip", AppIcons.kIconTruckTablet, () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const MyTripScreen()));
-                          }),
-                          _tab("Legal", AppIcons.kIconUpward, () {
-                            Navigator.push(
-                                context, goToRoute(const LegalScreen()));
-                          }),
-                          _tab("Salary", AppIcons.kIconWallet, () {}),
+                          if (PermissionService().hasPermission("My Trip"))
+                            _tab("My Trip", AppIcons.kIconTruckTablet, () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const MyTripScreen()));
+                            }),
+                          if (PermissionService().hasPermission("Legal"))
+                            _tab("Legal", AppIcons.kIconUpward, () {
+                              Navigator.push(
+                                  context, goToRoute(const LegalScreen()));
+                            }),
+                          if (PermissionService().hasPermission("Salary"))
+                            _tab("Salary", AppIcons.kIconWallet, () {}),
                         ],
                       ),
                       Row(
                         children: [
-                          _tab("Book\nExpenses", AppIcons.kIconLabelLocation,
-                              () {
-                            Navigator.of(context)
-                                .push(goToRoute(const ExpenseBookingScreen()));
-                          }),
-                          _tab("Things To \nReview", AppIcons.kIconNoIdeaTwo,
-                              () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ThingsToReviewScreen()));
-                          }),
-                          _tab("SOS", AppIcons.kIconNoIdeaOne, () {}),
+                          if (PermissionService()
+                              .hasPermission("Book Expenses"))
+                            _tab("Book\nExpenses", AppIcons.kIconLabelLocation,
+                                () {
+                              Navigator.of(context).push(
+                                  goToRoute(const ExpenseBookingScreen()));
+                            }),
+                          if (PermissionService()
+                              .hasPermission("Things To Review"))
+                            _tab("Things To \nReview", AppIcons.kIconNoIdeaTwo,
+                                () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ThingsToReviewScreen()));
+                            }),
+                          if (PermissionService().hasPermission("SOS"))
+                            _tab("SOS", AppIcons.kIconNoIdeaOne, () {}),
                         ],
                       ),
                     ],

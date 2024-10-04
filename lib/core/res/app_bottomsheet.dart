@@ -22,15 +22,17 @@ class AppBottomSheet {
         backgroundColor: color ?? Colors.white,
         showDragHandle: showDragHandle ?? true,
         context: context,
-        builder: (context) => Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(title ?? "",
-                    style: AppStyles.titleTextStyle(context).copyWith(
-                        color: titleColor ?? Colors.black,
-                        fontWeight: FontWeight.w700)),
-                isList ? Expanded(child: child) : child,
-              ],
-            )).then(then);
+        builder: (context) => SingleChildScrollView(
+          child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(title ?? "",
+                      style: AppStyles.titleTextStyle(context).copyWith(
+                          color: titleColor ?? Colors.black,
+                          fontWeight: FontWeight.w700)),
+                  isList ? Expanded(child: child) : child,
+                ],
+              ),
+        )).then(then);
   }
 }

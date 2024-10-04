@@ -25,6 +25,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(LoginLoading());
       try {
         LoginResponseModel resp = await authRepository.loginRepo(event.params);
+
+        print('check status code and response ${resp}');
+
         if (resp.statusCode == 0) {
           emit(LoginLoaded(resp));
         } else {

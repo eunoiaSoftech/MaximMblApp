@@ -1,3 +1,5 @@
+import 'login_resp_model.dart';
+
 class LoginWithOTPResp {
   int? statusCode;
   int? responseCode;
@@ -9,6 +11,7 @@ class LoginWithOTPResp {
   int? mobileOTP;
   int? emailOTP;
   String? userID;
+  List<Rights>? rights;
 
   LoginWithOTPResp(
       {this.statusCode,
@@ -20,7 +23,8 @@ class LoginWithOTPResp {
       this.status,
       this.mobileOTP,
       this.emailOTP,
-      this.userID});
+      this.userID,
+      this.rights});
 
   LoginWithOTPResp.fromJson(Map<String, dynamic> json) {
     statusCode = json['statusCode'];
@@ -38,6 +42,12 @@ class LoginWithOTPResp {
     mobileOTP = json['mobileOTP'];
     emailOTP = json['emailOTP'];
     userID = json['userID'].toString();
+    if (json['rights'] != null) {
+      rights = <Rights>[];
+      json['rights'].forEach((v) {
+        rights!.add(new Rights.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -54,6 +64,9 @@ class LoginWithOTPResp {
     data['mobileOTP'] = this.mobileOTP;
     data['emailOTP'] = this.emailOTP;
     data['userID'] = this.userID;
+    if (this.rights != null) {
+      data['rights'] = this.rights!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -67,6 +80,7 @@ class Data1 {
   String? sPhone;
   int? iPKUSRID;
   String? message;
+  Null? rightsDetails;
 
   Data1(
       {this.otp,
@@ -76,7 +90,8 @@ class Data1 {
       this.sEmail,
       this.sPhone,
       this.iPKUSRID,
-      this.message});
+      this.message,
+      this.rightsDetails});
 
   Data1.fromJson(Map<String, dynamic> json) {
     otp = json['otp'];
@@ -87,6 +102,7 @@ class Data1 {
     iPKUSRID = json['iPK_USRID'];
     message = json['message'];
     iBranchFlag = json['iBranchFlag'];
+    rightsDetails = json['rightsDetails'];
   }
 
   Map<String, dynamic> toJson() {
@@ -99,6 +115,7 @@ class Data1 {
     data['iPK_USRID'] = this.iPKUSRID;
     data['message'] = this.message;
     data['iBranchFlag'] = this.iBranchFlag;
+    data['rightsDetails'] = this.rightsDetails;
     return data;
   }
 }

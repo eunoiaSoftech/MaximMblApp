@@ -10,6 +10,7 @@ import '../../../../../core/res/app_functions.dart';
 import '../../../../../core/res/app_icons.dart';
 import '../../../../../core/res/app_storage.dart';
 import '../../../../../core/services/func_sertives.dart';
+import '../../../../../core/services/local_permission_services.dart';
 import '../../../../daily_log/presentation/daily_log_screen.dart';
 import '../../../../profile/presentation/bloc/profile_bloc.dart';
 
@@ -74,41 +75,68 @@ class _AppDrawerState extends State<AppDrawer> {
                 physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: [
-                    const SizedBox(height: 30),
-                    buildDrawerItem("Profile", AppIcons.kProfileIcons, () {
-                      mainController.index.value = 2;
-                      // Add any navigation logic here if needed
-                    }, context),
-                    const SizedBox(height: 15),
-                    buildDrawerItem("Daily Log", AppIcons.kIconWallet, () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const DailyLogScreen()));
-                    }, context),
-                    const SizedBox(height: 15),
-                    buildDrawerItem("Salary", AppIcons.kIconWallet, () {
-                      // Add any navigation logic here if needed
-                    }, context),
-                    const SizedBox(height: 15),
-                    buildDrawerItem(
-                        "Blacklist details", "assets/icons/Black loist.png",
-                        () {
-                      // Add any navigation logic here if needed
-                    }, context),
-                    const SizedBox(height: 15),
-                    buildDrawerItem("E-Challan", "assets/icons/E challan.png",
-                        () {
-                      // Add any navigation logic here if needed
-                    }, context),
-                    const SizedBox(height: 15),
-                    buildDrawerItem("Logout", AppIcons.kLogoutIcon, () {
-                      // Logout logic
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => const LoginScreen()),
-                      );
-                    }, context),
+                    // const SizedBox(height: 30),
+                    // buildDrawerItem("Profile", AppIcons.kProfileIcons, () {
+                    //   mainController.index.value = 2;
+                    //   // Add any navigation logic here if needed
+                    // }, context),
+                    if(PermissionService().hasPermission("Daily Log"))
+                    Column(
+                      children: [
+                        const SizedBox(height: 15),
+                        buildDrawerItem("Daily Log", AppIcons.kIconWallet, () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const DailyLogScreen()));
+                        }, context),
+                      ],
+                    ),
+                    if(PermissionService().hasPermission("Salary"))
+
+                      Column(
+                      children: [
+                        const SizedBox(height: 15),
+                        buildDrawerItem("Salary", AppIcons.kIconWallet, () {
+                          // Add any navigation logic here if needed
+                        }, context),
+                      ],
+                    ),
+                    if(PermissionService().hasPermission("Blacklist Details"))
+
+                      Column(
+                      children: [
+                        const SizedBox(height: 15),
+                        buildDrawerItem(
+                            "Blacklist details", "assets/icons/Black loist.png",
+                            () {
+                          // Add any navigation logic here if needed
+                        }, context),
+                      ],
+                    ),
+                    if(PermissionService().hasPermission("E-Challan"))
+
+                      Column(
+                      children: [
+                        const SizedBox(height: 15),
+                        buildDrawerItem("E-Challan", "assets/icons/E challan.png",
+                            () {
+                          // Add any navigation logic here if needed
+                        }, context),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const SizedBox(height: 15),
+                        buildDrawerItem("Logout", AppIcons.kLogoutIcon, () {
+                          // Logout logic
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context) => const LoginScreen()),
+                          );
+                        }, context),
+                      ],
+                    ),
                     const SizedBox(height: 15),
                   ],
                 ),
