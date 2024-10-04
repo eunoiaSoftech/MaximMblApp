@@ -204,6 +204,7 @@ class _SelectBranchScreenState extends State<SelectBranchScreen> {
                   });
             },
             child: AppTextField(
+              height: appSize(context) / 22,
               hintText: "Select Your Branch",
               controller: _branchTextController,
               prefix: _iconContainer(AppIcons.kIconSociety),
@@ -237,7 +238,7 @@ class _SelectBranchScreenState extends State<SelectBranchScreen> {
                   });
             },
             child: AppTextField(
-              contentPadding: const EdgeInsets.fromLTRB(22, 2, 12, 10),
+              height: appSize(context) / 22,
               hintText: "Select Your Location",
               controller: _locationTextController,
               prefix: _iconContainer(AppIcons.kIconLocation),
