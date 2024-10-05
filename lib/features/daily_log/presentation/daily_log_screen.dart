@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:logistics_app/core/constants/constants.dart';
@@ -145,7 +147,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
   }
 
   Future<void> saveDailyLog() async {
-    // Define your API URL
+    EasyLoading.show(status: 'loading...');
     const String url = Urls.postDailyLog;
 
     final String vehicleId = vehicleController.text;
@@ -173,10 +175,29 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
     });
 
     try {
-      final response = await http.get(uri);
+      var request = http.MultipartRequest('POST', uri);
 
-      if (response.statusCode == 200) {
+      // Add images to the request if there are any
+      if (imageFileList != null && imageFileList!.isNotEmpty) {
+        for (var image in imageFileList!) {
+          var multipartFile = await http.MultipartFile.fromPath(
+            'File',
+            image.path,
+            filename: image.path.split('/').last,
+          );
+          request.files.add(multipartFile); // Add file to the request
+        }
+      }
+
+      // Send the multipart request
+      var response = await request.send();
+
+      // Get the response body
+      var responseBody = await http.Response.fromStream(response);
+
+      if (responseBody.statusCode == 200) {
         _clearControllers();
+        EasyLoading.dismiss();
         showCupertinoDialog(
             context: context,
             builder: (context) {
@@ -208,11 +229,12 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
               );
             });
       } else {
+        EasyLoading.dismiss();
         // Handle the error response
         print('Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
-      // Handle any exceptions
+      EasyLoading.dismiss(); // Handle any exceptions
       print('An error occurred: $e');
     }
   }
@@ -398,7 +420,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                         inputType: TextInputType.text,
                         textFieldHeight: appSize(context) / 22,
                         hint: "Enter Log Date",
-                        readOnly: false,
+                        readOnly: true,
                         textFieldName: "Log Date",
                         maxLines: 1),
                   ),
@@ -574,90 +596,71 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                       ],
                     ),
                   ),
-
-                  // Container(
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(12),
-                  //     border:
-                  //     Border.all(color: Colors.grey.withOpacity(.3)),
-                  //   ),
-                  //   child: Stack(
-                  //     children: [
-                  //       Container(
-                  //         margin: const EdgeInsets.all(6),
-                  //         child: SingleChildScrollView(
-                  //           reverse: true,
-                  //           scrollDirection: Axis.horizontal,
-                  //           padding: const EdgeInsets.only(left: 88),
-                  //           child: Row(
-                  //             crossAxisAlignment:
-                  //             CrossAxisAlignment.center,
-                  //             // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //             children: [
-                  //               ...List.generate(
-                  //                   imageFileList?.length ?? 0, (index) {
-                  //                 return Stack(
-                  //                   children: [
-                  //                     GestureDetector(
-                  //                       onTap: () {
-                  //                         showCupertinoDialog(
-                  //                             barrierDismissible: true,
-                  //                             context: context,
-                  //                             builder: (context) {
-                  //                               return Container(
-                  //                                 child: Image.file(File(
-                  //                                     imageFileList?[
-                  //                                     index]
-                  //                                         .path ??
-                  //                                         "")),
-                  //                               );
-                  //                             });
-                  //                       },
-                  //                       child: Container(
-                  //                         height: 80,
-                  //                         width: 80,
-                  //                         margin:
-                  //                         const EdgeInsets.symmetric(
-                  //                             horizontal: 3),
-                  //                         decoration: BoxDecoration(
-                  //                             borderRadius:
-                  //                             BorderRadius.circular(
-                  //                                 12),
-                  //                             border: Border.all(
-                  //                                 color: Colors.grey),
-                  //                             image: DecorationImage(
-                  //                                 image: FileImage(File(
-                  //                                     imageFileList?[
-                  //                                     index]
-                  //                                         .path ??
-                  //                                         "")),
-                  //                                 fit: BoxFit.cover)),
-                  //                       ),
-                  //                     ),
-                  //                     GestureDetector(
-                  //                       onTap: () {
-                  //                         imageFileList?.removeAt(index);
-                  //                         setState(() {});
-                  //                       },
-                  //                       child: CircleAvatar(
-                  //                         radius: appSize(context) / 100,
-                  //                         backgroundColor: Colors.red,
-                  //                         child: Icon(Icons.close_rounded,
-                  //                             color: Colors.white,
-                  //                             size:
-                  //                             appSize(context) / 80),
-                  //                       ),
-                  //                     )
-                  //                   ],
-                  //                 );
-                  //               })
-                  //             ],
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
+                  if (imageFileList!.isNotEmpty)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 16,
+                        ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          physics: BouncingScrollPhysics(),
+                          child: Row(
+                            children: List.generate(imageFileList?.length ?? 0,
+                                (index) {
+                              return Stack(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      showCupertinoDialog(
+                                          barrierDismissible: true,
+                                          context: context,
+                                          builder: (context) {
+                                            return Container(
+                                              child: Image.file(File(
+                                                  imageFileList?[index].path ??
+                                                      "")),
+                                            );
+                                          });
+                                    },
+                                    child: Container(
+                                      height: 80,
+                                      width: 80,
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 3),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          border:
+                                              Border.all(color: Colors.grey),
+                                          image: DecorationImage(
+                                              image: FileImage(File(
+                                                  imageFileList?[index].path ??
+                                                      "")),
+                                              fit: BoxFit.cover)),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      imageFileList?.removeAt(index);
+                                      setState(() {});
+                                    },
+                                    child: CircleAvatar(
+                                      radius: appSize(context) / 100,
+                                      backgroundColor: Colors.red,
+                                      child: Icon(Icons.close_rounded,
+                                          color: Colors.white,
+                                          size: appSize(context) / 80),
+                                    ),
+                                  )
+                                ],
+                              );
+                            }),
+                          ),
+                        )
+                      ],
+                    )
                 ],
               ),
             ),

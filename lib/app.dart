@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:logistics_app/core/res/app_theme.dart';
 import 'package:logistics_app/features/splash.dart';
@@ -10,6 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      builder: EasyLoading.init(),
       title: 'MAXIM',
       theme: appTheme,
       debugShowCheckedModeBanner: false,
