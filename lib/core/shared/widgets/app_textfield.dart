@@ -20,7 +20,8 @@ class AppTextField extends StatelessWidget {
       this.hintTextStyle,
       this.onChanged,
       this.contentPadding,
-      this.inputTextStyle});
+      this.inputTextStyle,
+      this.circular});
 
   final TextEditingController? controller;
   final EdgeInsetsGeometry? contentPadding;
@@ -36,17 +37,16 @@ class AppTextField extends StatelessWidget {
   final Function()? onTap;
   final Function(String s)? onChanged;
 
-
-  final double circular = 22.0;
+  final double? circular;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
+      height: height ?? 90,
       padding: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(circular),
+          borderRadius: BorderRadius.circular(circular ?? 22),
           // border: Border.all(color: AppColors.borderColor),
           boxShadow: [
             BoxShadow(
@@ -70,8 +70,8 @@ class AppTextField extends StatelessWidget {
               // selectionHeightStyle:BoxHeightStyle.includeLineSpacingMiddle,
               controller: controller,
               decoration: InputDecoration(
-                contentPadding:
-                    contentPadding ?? const EdgeInsets.fromLTRB(22, 12, 12, 10),
+                contentPadding: contentPadding ??
+                    const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
                 // prefix: prefix,
                 // prefixIcon: prefix,
                 suffixIcon: Row(

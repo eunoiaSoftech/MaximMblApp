@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logistics_app/core/res/app_colors.dart';
 import 'package:logistics_app/core/res/app_functions.dart';
@@ -9,6 +10,7 @@ import 'package:logistics_app/core/res/app_styles.dart';
 import 'package:logistics_app/core/shared/data/expense.dart';
 import 'package:logistics_app/core/shared/widgets/app_button.dart';
 import 'package:logistics_app/core/shared/widgets/app_textfield_with_title.dart';
+import 'package:logistics_app/features/home/presentation/ui/widgets/common_page_appbar.dart';
 import 'package:logistics_app/features/home/presentation/ui/widgets/menu_appbar.dart';
 
 class ExpenseBookingScreen extends StatefulWidget {
@@ -26,372 +28,366 @@ class _ExpenseBookingScreenState extends State<ExpenseBookingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MenuAppbar(
-        title: "Expense Booking",
-        // titleWidget: Row(
-        //   children: [
-        //     Expanded(
-        //       // color: Colors.black,
-        //       child: Container(
-        //         // color: Colors.amber,
-        //         child: DropdownMenu<MenuItem>(
-        //           enabled: true,
-        //           inputDecorationTheme: const InputDecorationTheme(
-        //             // border: UnderlineInputBorder(),
-        //             focusedBorder: UnderlineInputBorder(
-        //               // borderRadius: BorderRadius.circular(12),
-        //                 borderSide: BorderSide(color: Colors.white38)),
-        //             enabledBorder: UnderlineInputBorder(
-        //                 borderSide: BorderSide(color: Colors.white38)),
-        //             // outlineBorder: BorderSide(color: Colors.black)
-        //           ),
-        //           expandedInsets: const EdgeInsets.symmetric(horizontal: 0),
-        //           textStyle: const TextStyle(color: Colors.white),
-        //           //initialSelection: menuItems.first,
-        //           controller: menuController,
-        //           width: width,
-        //           hintText: "Search vehicle No.",
-        //           requestFocusOnTap: true,
-        //           enableFilter: true,
-        //           menuStyle: MenuStyle(
-        //             backgroundColor:
-        //             MaterialStateProperty.all<Color>(AppColors.textColor),
-        //           ),
-        //
-        //           label: const Text(
-        //             'Select Vehicle',
-        //             style: TextStyle(color: Colors.white70),
-        //           ),
-        //           onSelected: (MenuItem? menu) {
-        //             setState(() {
-        //               selectedMenu = menu;
-        //               menuController.text = menu?.label ?? "";
-        //             });
-        //           },
-        //           dropdownMenuEntries: menuItems
-        //               .map<DropdownMenuEntry<MenuItem>>((MenuItem menu) {
-        //             return DropdownMenuEntry<MenuItem>(
-        //                 value: menu, label: menu.label);
-        //           }).toList(),
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: appSize(context) / 40),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-              ...List.generate(
-                  expenseMenuList.length,
-                  (index) => _menuContainer(
-                      bgColor: (expenseMenuList[index].selected)
-                          ? AppColors.newBlue.withOpacity(.3)
-                          : Colors.transparent,
-                      imgAsset: expenseMenuList[index].image,
-                      title: expenseMenuList[index].name,
-                      onTap: () {
-                        setState(() {
-                          // expenseMenuList[index].selected =
-                          //     !expenseMenuList[index].selected;
-                          if (index == 0) {
-                            expenseMenuList[0].selected = true;
-                            expenseMenuList[1].selected = false;
-                            expenseMenuList[2].selected = false;
-                          }
-                          if (index == 1) {
-                            expenseMenuList[0].selected = false;
-                            expenseMenuList[1].selected = true;
-                            expenseMenuList[2].selected = false;
-                          }
-                          if (index == 2) {
-                            expenseMenuList[1].selected = false;
-                            expenseMenuList[2].selected = true;
-                            expenseMenuList[0].selected = false;
-                          }
-                        });
-                      }))
-            ]),
-            SizedBox(height: appSize(context) / 70),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: DropdownMenu<TripsModel>(
-                trailingIcon: const Icon(Icons.keyboard_arrow_down_rounded,
-                    color: Colors.black87),
-                enabled: true,
-                inputDecorationTheme: const InputDecorationTheme(
-                  // border: UnderlineInputBorder(),
-                  focusedBorder: UnderlineInputBorder(
-                      // borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.black38)),
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black38)),
-                  // outlineBorder: BorderSide(color: Colors.black)
-                ),
-                expandedInsets: const EdgeInsets.symmetric(horizontal: 0),
-                textStyle: const TextStyle(color: Colors.black),
-                //initialSelection: menuItems.first,
-                controller: tripTextController,
-                // width: width,
-                hintText: "Search TRIP",
-                requestFocusOnTap: true,
-                enableFilter: true,
-                menuStyle: MenuStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(AppColors.textColor),
-                ),
-
-                label: const Text(
-                  'Select TRIP',
-                  style: TextStyle(color: Colors.black87),
-                ),
-                onSelected: (TripsModel? menu) {
-                  // setState(() {
-                  //   selectedMenu = menu;
-                  //   menuController.text = menu?.label ?? "";
-                  // });
-                },
-                dropdownMenuEntries:
-                    tripsList.map<DropdownMenuEntry<TripsModel>>((menu) {
-                  return DropdownMenuEntry(
-                      value: menu,
-                      label: menu.lrNo,
-                      labelWidget: Row(
-                        children: [
-                          Container(
-                            // color: Colors.pink,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 0, vertical: 4),
-                            decoration: const BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
-                                        color: Colors.white, width: 0.8))),
-                            width: appSize(context) / 3.5,
-                            child: Text(
-                              menu.lrNo,
-                              maxLines: 2,
-                              style: AppStyles.titleTextStyle(context),
-                            ),
-                          ),
-                        ],
-                      ));
-                }).toList(),
-              ),
-            ),
-            SizedBox(height: appSize(context) / 70),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Type of Expense:",
-                      style: AppStyles.hintTextStyle(context).copyWith()),
-                  SizedBox(height: appSize(context) / 100),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ...List.generate(
-                            expenseTypeList.length,
-                            (index) => _expenseTypeWidget(
-                                    expenseTypeList[index].image,
-                                    expenseTypeList[index].name,
-                                    expenseTypeList[index].selected, () {
-                                  setState(() {
-                                    expenseTypeList[index].selected =
-                                        !expenseTypeList[index].selected;
-                                  });
-                                })),
-                      ],
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: CommonPageAppBar(
+            title: "Expense Booking",
+            height: appSize(context) / 30,
+            bottomLeftCurve: 90,
+            // stackedWidget:
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: appSize(context) / 40),
+                // Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                //   ...List.generate(
+                //       expenseMenuList.length,
+                //       (index) => _menuContainer(
+                //           bgColor: (expenseMenuList[index].selected)
+                //               ? AppColors.newBlue.withOpacity(.3)
+                //               : Colors.white,
+                //           imgAsset: expenseMenuList[index].image,
+                //           title: expenseMenuList[index].name,
+                //           onTap: () {
+                //             setState(() {
+                //               // expenseMenuList[index].selected =
+                //               //     !expenseMenuList[index].selected;
+                //               if (index == 0) {
+                //                 expenseMenuList[0].selected = true;
+                //                 expenseMenuList[1].selected = false;
+                //                 expenseMenuList[2].selected = false;
+                //               }
+                //               if (index == 1) {
+                //                 expenseMenuList[0].selected = false;
+                //                 expenseMenuList[1].selected = true;
+                //                 expenseMenuList[2].selected = false;
+                //               }
+                //               if (index == 2) {
+                //                 expenseMenuList[1].selected = false;
+                //                 expenseMenuList[2].selected = true;
+                //                 expenseMenuList[0].selected = false;
+                //               }
+                //             });
+                //           }))
+                // ]),
+                SizedBox(height: appSize(context) / 70),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 22),
+                  padding: const EdgeInsets.only(left: 22),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(33),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(.3),
+                            offset: const Offset(2, 2),
+                            spreadRadius: 1,
+                            blurRadius: 2)
+                      ]),
+                  child: DropdownMenu<TripsModel>(
+                    trailingIcon: const Icon(Icons.keyboard_arrow_down_rounded,
+                        color: Colors.black87),
+                    enabled: true,
+                    inputDecorationTheme: const InputDecorationTheme(
+                        border: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent)),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent)),
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent)),
+                        outlineBorder: BorderSide(color: Colors.transparent)),
+                    expandedInsets: const EdgeInsets.symmetric(horizontal: 0),
+                    textStyle: const TextStyle(color: Colors.black),
+                    //initialSelection: menuItems.first,
+                    controller: tripTextController,
+                    // width: width,
+                    hintText: "Search TRIP",
+                    requestFocusOnTap: true,
+                    enableFilter: true,
+                    menuStyle: MenuStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(AppColors.textColor),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: appSize(context) / 70),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
-              child: AppTextFieldWithTitle(
-                  inputType: TextInputType.number,
-                  textFieldHeight: appSize(context) / 22,
-                  hint: "Enter Total Amount",
-                  readOnly: false,
-                  textFieldName: "Enter Amount",
-                  maxLines: 1),
-            ),
-            SizedBox(height: appSize(context) / 70),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
-              child: AppTextFieldWithTitle(
-                  textFieldHeight: appSize(context) / 10,
-                  hint: "Enter Expenses in detail",
-                  readOnly: false,
-                  textFieldName: "Expenses Details",
-                  maxLines: 5),
-            ),
-            SizedBox(height: appSize(context) / 70),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Click Photos:",
-                      style: AppStyles.hintTextStyle(context).copyWith()),
-                  SizedBox(height: appSize(context) / 100),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            border:
-                                Border.all(color: Colors.grey.withOpacity(.3)),
-                          ),
-                          child: Stack(
+
+                    // label: const Text(
+                    //   'Select TRIP',
+                    //   style: TextStyle(color: Colors.black87),
+                    // ),
+                    onSelected: (TripsModel? menu) {
+                      // setState(() {
+                      //   selectedMenu = menu;
+                      //   menuController.text = menu?.label ?? "";
+                      // });
+                    },
+                    dropdownMenuEntries:
+                        tripsList.map<DropdownMenuEntry<TripsModel>>((menu) {
+                      return DropdownMenuEntry(
+                          value: menu,
+                          label: menu.lrNo,
+                          labelWidget: Row(
                             children: [
                               Container(
-                                margin: const EdgeInsets.all(6),
-                                child: SingleChildScrollView(
-                                  reverse: true,
-                                  scrollDirection: Axis.horizontal,
-                                  padding: const EdgeInsets.only(left: 88),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      ...List.generate(
-                                          imageFileList?.length ?? 0, (index) {
-                                        return Stack(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                showCupertinoDialog(
-                                                    barrierDismissible: true,
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return Container(
-                                                        child: Image.file(File(
-                                                            imageFileList?[
-                                                                        index]
-                                                                    .path ??
-                                                                "")),
-                                                      );
-                                                    });
-                                              },
-                                              child: Container(
-                                                height: 80,
-                                                width: 80,
-                                                margin:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 3),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                    border: Border.all(
-                                                        color: Colors.grey),
-                                                    image: DecorationImage(
-                                                        image: FileImage(File(
-                                                            imageFileList?[
-                                                                        index]
-                                                                    .path ??
-                                                                "")),
-                                                        fit: BoxFit.cover)),
-                                              ),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                imageFileList?.removeAt(index);
-                                                setState(() {});
-                                              },
-                                              child: CircleAvatar(
-                                                radius: appSize(context) / 100,
-                                                backgroundColor: Colors.red,
-                                                child: Icon(Icons.close_rounded,
-                                                    color: Colors.white,
-                                                    size:
-                                                        appSize(context) / 80),
-                                              ),
-                                            )
-                                          ],
-                                        );
-                                      })
-                                    ],
-                                  ),
+                                // color: Colors.pink,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 0, vertical: 4),
+                                decoration: const BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.white, width: 0.8))),
+                                width: appSize(context) / 3.5,
+                                child: Text(
+                                  menu.lrNo,
+                                  maxLines: 2,
+                                  style: AppStyles.titleTextStyle(context),
                                 ),
                               ),
-                              _pickImage()
+                            ],
+                          ));
+                    }).toList(),
+                  ),
+                ),
+                // SizedBox(height: appSize(context) / 70),
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 22, vertical: 22),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 22, vertical: 22),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(22),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(.3),
+                            offset: const Offset(1, 1),
+                            spreadRadius: 1,
+                            blurRadius: 2)
+                      ]),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Type of Expense:",
+                          style: AppStyles.hintTextStyle(context).copyWith()),
+                      SizedBox(height: appSize(context) / 100),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          ...List.generate(
+                              expenseTypeList.length,
+                              (index) => _expenseTypeWidget(
+                                      expenseTypeList[index].image,
+                                      expenseTypeList[index].name,
+                                      expenseTypeList[index].selected, () {
+                                    setState(() {
+                                      expenseTypeList[index].selected =
+                                          !expenseTypeList[index].selected;
+                                    });
+                                  })),
+                        ],
+                      ),
+                      SizedBox(height: appSize(context) / 50),
+                      Stack(
+                        alignment: Alignment.topLeft,
+                        children: [
+                          AppTextFieldWithTitle(
+                              borderCircular: 33,
+                              inputType: TextInputType.number,
+                              textFieldHeight: appSize(context) / 22,
+                              hint: "Enter Total Amount",
+                              readOnly: false,
+                              textFieldName: "        Enter Amount",
+                              maxLines: 1),
+                          Image.asset("assets/images/new/dollar_circle.png",
+                              width: appSize(context) / 55)
+                        ],
+                      ),
+                      SizedBox(height: appSize(context) / 50),
+                      // AppTextFieldWithTitle(
+                      //     textFieldHeight: appSize(context) / 10,
+                      //     hint: "Enter Expenses in detail",
+                      //     readOnly: false,
+                      //     textFieldName: "Expenses Details",
+                      //     maxLines: 5),
+                      // SizedBox(height: appSize(context) / 70),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Image.asset("assets/images/new/file_up.png",
+                                  width: appSize(context) / 65),
+                              const SizedBox(width: 10),
+                              Text("Add Expenses:",
+                                  style: AppStyles.hintTextStyle(context)
+                                      .copyWith()),
                             ],
                           ),
-                        ),
+                          SizedBox(height: appSize(context) / 100),
+                          _addExpensesWidget()
+                        ],
                       ),
+                      SizedBox(height: appSize(context) / 30),
+                      AppButton(
+                          verticalPadding: 10,
+                          onPressed: () async {
+                            await Future.delayed(
+                                const Duration(milliseconds: 1000));
+                            showCupertinoDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Material(
+                                    child: Center(
+                                      child: Container(
+                                        color: Colors.white,
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: appSize(context) / 80),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12, horizontal: 12),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Image.asset(
+                                                "assets/gifs/success.gif"),
+                                            SizedBox(height: 12),
+                                            Text(
+                                                "Expense booking successfully done",
+                                                style: AppStyles.titleTextStyle(
+                                                    context)),
+                                            SizedBox(height: 12),
+                                            AppButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                text: "Okay")
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).then((value) => Navigator.pop(context));
+                          },
+                          text: "Submit"),
+                      SizedBox(height: appSize(context) / 70),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            SizedBox(height: appSize(context) / 30),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22),
-              child: AppButton(
-                  onPressed: () async {
-                    await Future.delayed(const Duration(milliseconds: 1000));
-                    showCupertinoDialog(
-                        context: context,
-                        builder: (context) {
-                          return Material(
-                            child: Center(
-                              child: Container(
-                                color: Colors.white,
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: appSize(context) / 80),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 12),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Image.asset("assets/gifs/success.gif"),
-                                    SizedBox(height: 12),
-                                    Text("Expense booking successfully done",
-                                        style:
-                                            AppStyles.titleTextStyle(context)),
-                                    SizedBox(height: 12),
-                                    AppButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        text: "Okay")
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        }).then((value) => Navigator.pop(context));
-                  },
-                  text: "Submit"),
-            ),
-            SizedBox(height: appSize(context) / 70),
-          ],
+          ),
         ),
-      ),
+        Positioned(
+            left: 0,
+            right: 0,
+            top: appSize(context) / 10,
+            child: Material(
+                color: Colors.transparent, child: _expenseCategoryWidget())),
+      ],
     );
   }
 
+  Widget _addExpensesWidget() => Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(44),
+                  // border: Border.all(color: Colors.grey.withOpacity(.3)),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(.3),
+                        offset: const Offset(1, 1),
+                        spreadRadius: 1,
+                        blurRadius: 2)
+                  ]),
+              child: Stack(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(6),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(44),
+                      child: SingleChildScrollView(
+                        reverse: true,
+                        scrollDirection: Axis.horizontal,
+                        padding: EdgeInsets.only(left: appSize(context) / 15),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            ...List.generate(imageFileList?.length ?? 0,
+                                (index) {
+                              return Stack(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      showCupertinoDialog(
+                                          barrierDismissible: true,
+                                          context: context,
+                                          builder: (context) {
+                                            return Container(
+                                              child: Image.file(File(
+                                                  imageFileList?[index].path ??
+                                                      "")),
+                                            );
+                                          });
+                                    },
+                                    child: Container(
+                                      height: 70,
+                                      width: 70,
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 3),
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          // borderRadius: BorderRadius.circular(12),
+                                          border:
+                                              Border.all(color: Colors.grey),
+                                          image: DecorationImage(
+                                              image: FileImage(File(
+                                                  imageFileList?[index].path ??
+                                                      "")),
+                                              fit: BoxFit.cover)),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      imageFileList?.removeAt(index);
+                                      setState(() {});
+                                    },
+                                    child: CircleAvatar(
+                                      radius: appSize(context) / 120,
+                                      backgroundColor: Colors.red,
+                                      child: Icon(Icons.close_rounded,
+                                          color: Colors.white,
+                                          size: appSize(context) / 80),
+                                    ),
+                                  )
+                                ],
+                              );
+                            })
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  _pickImage()
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+
   _pickImage() => Container(
-        height: 80,
-        width: 80,
-        padding: const EdgeInsets.all(22),
+        height: 70,
+        width: 70,
         margin: const EdgeInsets.all(6),
         decoration: BoxDecoration(
+          shape: BoxShape.circle,
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          // borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey),
         ),
         child: IconButton(
@@ -429,8 +425,9 @@ class _ExpenseBookingScreenState extends State<ExpenseBookingScreen> {
                                       border: Border.all(
                                           color: Colors.grey.withOpacity(.6)),
                                     ),
-                                    child: Icon(CupertinoIcons
-                                        .photo_fill_on_rectangle_fill),
+                                    child: Image.asset(
+                                        "assets/images/new/image.png",
+                                        height: appSize(context) / 50),
                                   ),
                                 ),
                                 Text("Gallery",
@@ -454,7 +451,9 @@ class _ExpenseBookingScreenState extends State<ExpenseBookingScreen> {
                                       border: Border.all(
                                           color: Colors.grey.withOpacity(.6)),
                                     ),
-                                    child: Icon(Icons.camera),
+                                    child: Image.asset(
+                                        "assets/images/new/camera.png",
+                                        height: appSize(context) / 50),
                                   ),
                                 ),
                                 Text("Camera",
@@ -474,34 +473,94 @@ class _ExpenseBookingScreenState extends State<ExpenseBookingScreen> {
         ),
       );
 
-  _expenseTypeWidget(asset, title, selected, onTap) => GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
-          margin: const EdgeInsets.symmetric(horizontal: 3),
-          decoration: BoxDecoration(
-              color: selected
-                  ? AppColors.newLightBlue.withOpacity(.3)
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(22),
-              border: Border.all(color: Colors.grey, width: 0.8)),
-          child: Row(
+  _expenseTypeWidget(asset, title, selected, onTap) => Expanded(
+        child: GestureDetector(
+          onTap: onTap,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              if (selected)
-                Icon(
+              Container(
+                // width: appSize(context)/15,
+                padding: const EdgeInsets.symmetric(vertical: 22),
+                margin: const EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(.3),
+                          offset: const Offset(1, 1),
+                          spreadRadius: 1,
+                          blurRadius: 2)
+                    ]),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        Image.asset(asset, height: appSize(context) / 60),
+                        const SizedBox(height: 10),
+                        Text(title,
+                            style: AppStyles.titleTextStyle(context).copyWith(
+                                color: Colors.black54,
+                                fontSize: appSize(context) / 95)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              // if (selected)
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black45),
+                    borderRadius: BorderRadius.circular(6)),
+                child: Icon(
                   Icons.check_circle,
-                  color: AppColors.green,
+                  color: selected ? AppColors.green : Colors.transparent,
                   size: appSize(context) / 80,
                 ),
-              if (selected) const SizedBox(width: 6),
-              Image.asset(asset, width: appSize(context) / 60),
-              const SizedBox(width: 6),
-              Text(title,
-                  style: AppStyles.titleTextStyle(context)
-                      .copyWith(color: Colors.black54)),
+              ),
             ],
           ),
         ),
+      );
+
+  Widget _expenseCategoryWidget() => Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+          ...List.generate(
+              expenseMenuList.length,
+              (index) => _menuContainer(
+                  bgColor: (expenseMenuList[index].selected)
+                      ? AppColors.newBlue
+                      : Colors.white,
+                  imgAsset: expenseMenuList[index].image,
+                  title: expenseMenuList[index].name,
+                  onTap: () {
+                    setState(() {
+                      // expenseMenuList[index].selected =
+                      //     !expenseMenuList[index].selected;
+                      if (index == 0) {
+                        expenseMenuList[0].selected = true;
+                        expenseMenuList[1].selected = false;
+                        expenseMenuList[2].selected = false;
+                      }
+                      if (index == 1) {
+                        expenseMenuList[0].selected = false;
+                        expenseMenuList[1].selected = true;
+                        expenseMenuList[2].selected = false;
+                      }
+                      if (index == 2) {
+                        expenseMenuList[1].selected = false;
+                        expenseMenuList[2].selected = true;
+                        expenseMenuList[0].selected = false;
+                      }
+                    });
+                  }))
+        ]),
       );
 
   _menuContainer(
@@ -509,27 +568,38 @@ class _ExpenseBookingScreenState extends State<ExpenseBookingScreen> {
           required String title,
           required Color bgColor,
           required Function()? onTap}) =>
-      Container(
-          height: appSize(context) / 14,
-          width: appSize(context) / 12,
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 3),
-          decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(22),
-              border: Border.all(color: Colors.grey.withOpacity(.3))),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                  onPressed: onTap, icon: Image.asset(imgAsset, width: 40)),
-              Text(title,
-                  style: AppStyles.titleTextStyle(context).copyWith(
-                      fontSize: appSize(context) / 90,
-                      height: 1,
-                      color: Colors.black))
-            ],
-          ));
+      Expanded(
+        child: GestureDetector(
+          onTap: onTap,
+          child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 3),
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              decoration: BoxDecoration(
+                  color: bgColor,
+                  borderRadius: BorderRadius.circular(22),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(.3),
+                        offset: const Offset(2, 2),
+                        spreadRadius: 0.5,
+                        blurRadius: 1)
+                  ]
+                  // border: Border.all(color: Colors.grey.withOpacity(.3)),
+                  ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(imgAsset, height: appSize(context) / 90),
+                  const SizedBox(width: 4),
+                  Text(title,
+                      style: AppStyles.titleTextStyle(context).copyWith(
+                          fontSize: appSize(context) / 100,
+                          color: Colors.black))
+                ],
+              )),
+        ),
+      );
 
   void selectImages() async {
     final List<XFile> selectedImages = await imagePicker
