@@ -128,6 +128,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
     toLocationController.clear();
     openingKmController.clear();
     reasonForTripController.clear();
+    imageFileList?.clear();
     setState(() {});
   }
 
@@ -277,7 +278,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   ),
                   expandedInsets: const EdgeInsets.symmetric(horizontal: 0),
                   textStyle: const TextStyle(color: Colors.black),
-                  controller: vehicleController,
+                  // controller: vehicleController,
                   hintText: "Search Vehicle",
                   requestFocusOnTap: true,
                   enableFilter: true,
@@ -690,7 +691,6 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
 
     driverNameController.text = userDetails['name'];
     setState(() {});
-    print('check user data ${userDetails}');
   }
 
   _pickImage() => Container(
