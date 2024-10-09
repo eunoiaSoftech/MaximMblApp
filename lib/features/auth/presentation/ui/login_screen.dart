@@ -193,6 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               controller: _usernameController,
               hintText: "Enter Username",
+              height: appSize(context) / 27,
               // inputType: TextInputType.text,
               // readOnly: false,
               // onChanged: (v) {
