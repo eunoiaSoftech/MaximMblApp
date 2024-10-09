@@ -18,9 +18,7 @@ class MyTripScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonPageAppBar(
-        title: "My Trips",
-      ),
+      appBar: const CommonPageAppBar(title: "My Trips"),
       body: BlocProvider(
         create: (context) =>
             TripsBloc(TripsRepository(TripsRemoteDataSource(BaseApi(Dio()))))

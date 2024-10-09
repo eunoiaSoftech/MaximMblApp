@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:logistics_app/core/res/app_functions.dart';
+import 'package:logistics_app/features/expense/presentation/ui/expense_booking_screen.dart';
 import '../../../../../core/res/app_colors.dart';
 import '../../../../../core/res/app_styles.dart';
 import '../../../data/models/trip_model.dart';
@@ -8,7 +10,7 @@ import 'custom_trip_button.dart';
 class BuildMyTripCard extends StatelessWidget {
   final Trip trip;
 
-  const BuildMyTripCard({required this.trip, Key? key}) : super(key: key);
+  const BuildMyTripCard({required this.trip, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +189,10 @@ class BuildMyTripCard extends StatelessWidget {
                 Expanded(
                   child: CustomButton(
                     text: "Expenses",
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(goToRoute(ExpenseBookingScreen(
+                          initialMenuItem: trip.lrNumber)));
+                    },
                     borderRadius: 50,
                     borderColor: Colors.transparent,
                     textColor: Colors.white,
