@@ -14,7 +14,10 @@ import 'package:logistics_app/features/home/presentation/ui/widgets/common_page_
 import 'package:logistics_app/features/home/presentation/ui/widgets/menu_appbar.dart';
 
 class ExpenseBookingScreen extends StatefulWidget {
-  const ExpenseBookingScreen({super.key});
+  const ExpenseBookingScreen({super.key, this.initialMenuItem, this.initialMenuItemSrNo});
+
+  final String? initialMenuItem;
+  final String? initialMenuItemSrNo;
 
   @override
   State<ExpenseBookingScreen> createState() => _ExpenseBookingScreenState();
@@ -22,18 +25,29 @@ class ExpenseBookingScreen extends StatefulWidget {
 
 class _ExpenseBookingScreenState extends State<ExpenseBookingScreen> {
   final tripTextController = TextEditingController();
-  late String selectedMenu;
+  // late String selectedMenu;
   final ImagePicker imagePicker = ImagePicker();
   List<XFile>? imageFileList = [];
 
+  _callApi() {
+    tripTextController.text = widget.initialMenuItem ?? "";
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _callApi();
+  }
+
   @override
   Widget build(BuildContext context) {
+    double size = MediaQuery.of(context).size.height / 22;
     return Stack(
       children: [
         Scaffold(
           appBar: CommonPageAppBar(
             title: "Expense Booking",
-            height: appSize(context) / 30,
+            height: size,
             bottomLeftCurve: 90,
             // stackedWidget:
           ),
@@ -91,6 +105,7 @@ class _ExpenseBookingScreenState extends State<ExpenseBookingScreen> {
                     trailingIcon: const Icon(Icons.keyboard_arrow_down_rounded,
                         color: Colors.black87),
                     enabled: true,
+                    width: appSize(context) / 3.9,
                     inputDecorationTheme: const InputDecorationTheme(
                         border: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.transparent)),
@@ -117,6 +132,8 @@ class _ExpenseBookingScreenState extends State<ExpenseBookingScreen> {
                     //   style: TextStyle(color: Colors.black87),
                     // ),
                     onSelected: (TripsModel? menu) {
+                      log("message   >> ${menu?.lrNo}");
+                      log("message   >> ${menu?.srNo}");
                       // setState(() {
                       //   selectedMenu = menu;
                       //   menuController.text = menu?.label ?? "";
@@ -127,24 +144,20 @@ class _ExpenseBookingScreenState extends State<ExpenseBookingScreen> {
                       return DropdownMenuEntry(
                           value: menu,
                           label: menu.lrNo,
-                          labelWidget: Row(
-                            children: [
-                              Container(
-                                // color: Colors.pink,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 0, vertical: 4),
-                                decoration: const BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: Colors.white, width: 0.8))),
-                                width: appSize(context) / 3.5,
-                                child: Text(
-                                  menu.lrNo,
-                                  maxLines: 2,
-                                  style: AppStyles.titleTextStyle(context),
-                                ),
-                              ),
-                            ],
+                          labelWidget: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 0, vertical: 4),
+                            decoration: const BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: Colors.white, width: 0.8))),
+                            width: appSize(context) / 3,
+                            child: Text(
+                              menu.lrNo,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppStyles.titleTextStyle(context),
+                            ),
                           ));
                     }).toList(),
                   ),
@@ -280,7 +293,7 @@ class _ExpenseBookingScreenState extends State<ExpenseBookingScreen> {
         Positioned(
             left: 0,
             right: 0,
-            top: appSize(context) / 10,
+            top: size + 60,
             child: Material(
                 color: Colors.transparent, child: _expenseCategoryWidget())),
       ],
