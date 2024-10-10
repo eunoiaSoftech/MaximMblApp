@@ -783,32 +783,6 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
         ),
       );
 
-  Future<String?> selectDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(), // Current date as the initial date
-      firstDate: DateTime(2000), // Earliest date the user can pick
-      lastDate: DateTime(2100), // Latest date the user can pick
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: ThemeData.light().copyWith(),
-          child: Container(
-            color: Colors.white, // Set the background color to white
-            child: child!,
-          ),
-        );
-      },
-    );
-
-    if (pickedDate != null) {
-      // Format the picked date in the format dd-MM-yyyy
-      String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
-      return formattedDate;
-    }
-
-    return null; // Return null if no date was selected
-  }
-
   void selectImages() async {
     final List<XFile> selectedImages = await imagePicker.pickMultiImage();
     if (selectedImages.isNotEmpty) {
@@ -827,3 +801,30 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
     setState(() {});
   }
 }
+
+Future<String?> selectDate(BuildContext context) async {
+  DateTime? pickedDate = await showDatePicker(
+    context: context,
+    initialDate: DateTime.now(), // Current date as the initial date
+    firstDate: DateTime(2000), // Earliest date the user can pick
+    lastDate: DateTime(2100), // Latest date the user can pick
+    builder: (BuildContext context, Widget? child) {
+      return Theme(
+        data: ThemeData.light().copyWith(),
+        child: Container(
+          color: Colors.white, // Set the background color to white
+          child: child!,
+        ),
+      );
+    },
+  );
+
+  if (pickedDate != null) {
+    // Format the picked date in the format dd-MM-yyyy
+    String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+    return formattedDate;
+  }
+
+  return null; // Return null if no date was selected
+}
+

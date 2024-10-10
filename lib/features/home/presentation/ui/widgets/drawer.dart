@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logistics_app/core/res/app_colors.dart';
 import 'package:logistics_app/core/res/app_styles.dart';
 import 'package:logistics_app/features/auth/presentation/ui/login_screen.dart';
+import 'package:logistics_app/features/fuel_slip/presentation/fuel_slip_screen.dart';
 import 'package:logistics_app/features/home/controller/main_controller.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../core/res/app_functions.dart';
@@ -92,6 +93,20 @@ class _AppDrawerState extends State<AppDrawer> {
                         }, context),
                       ],
                     ),
+
+                    // if(PermissionService().hasPermission("Daily Log"))
+                      Column(
+                        children: [
+                          const SizedBox(height: 15),
+                          buildDrawerItem("Fuel Slip", AppIcons.kIconWallet, () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const FuelSlipScreen()));
+                          }, context),
+                        ],
+                      ),
+
                     if(PermissionService().hasPermission("Salary"))
 
                       Column(

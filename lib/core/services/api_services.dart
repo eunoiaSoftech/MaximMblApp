@@ -21,7 +21,10 @@ class ApiService {
 
   Future<Response> get(String endpoint, {Map<String, dynamic>? params}) async {
     try {
+      print('base url - $endpoint');
+
       Response response = await _dio.get(endpoint, queryParameters: params);
+
       return response;
     } on DioException catch (e) {
       throw Exception(_handleError(e));
@@ -30,6 +33,8 @@ class ApiService {
 
   Future<Response> post(String endpoint, Map<String, dynamic> data) async {
     try {
+      print('base url - $endpoint');
+
       Response response = await _dio.post(endpoint, data: data);
       return response;
     } on DioException catch (e) {
