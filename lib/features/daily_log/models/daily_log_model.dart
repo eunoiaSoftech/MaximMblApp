@@ -26,16 +26,19 @@ class DailyLogVehicleResponse {
 class Vehicle {
   final int pkVehicleId;
   final String vehicleNo;
+  final double dOPKm;
 
   Vehicle({
     required this.pkVehicleId,
     required this.vehicleNo,
+    required this.dOPKm,
   });
 
   factory Vehicle.fromJson(Map<String, dynamic> json) {
     return Vehicle(
       pkVehicleId: json['pk_VehicleId'],
       vehicleNo: json['vehicleNo'],
+      dOPKm: json['dOPKm'],
     );
   }
 }

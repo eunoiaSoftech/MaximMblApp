@@ -77,6 +77,7 @@ class _FuelDetailScreenState extends State<FuelDetailScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       CupertinoIcons.qrcode_viewfinder,

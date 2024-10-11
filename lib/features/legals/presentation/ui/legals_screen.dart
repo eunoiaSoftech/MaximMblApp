@@ -301,7 +301,7 @@ class _LegalScreenState extends State<LegalScreen> {
                                 (index) => _vehicleDocListTile(
                                     driverList[index]["name"],
                                     driverList[index]["expiry"],
-                                    driverList[index]["days_left"]))
+                                    driverList[index]["days_left"], itemData: driverList[index]))
                           ]),
                         ],
                       ),
@@ -349,190 +349,38 @@ class _LegalScreenState extends State<LegalScreen> {
     );
   }
 
-  _vehicleDocListTile(title, expiry, days) => Container(
-      alignment: Alignment.center,
-      height: appSize(context) / 14,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.withOpacity(.3)),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.grey.withOpacity(.2),
-                blurRadius: 9,
-                offset: const Offset(0, 1),
-                spreadRadius: 6)
-          ]),
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-      // color: Colors.grey.withOpacity(.2),
-      child: Center(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _leadingWidget(days),
-            _body(title, expiry),
-            _trailingWidget(),
-          ],
-        ),
-      )
-      // ListTile(
-      //   leading: Container(
-      //     child: Stack(
-      //       alignment: Alignment.center,
-      //       children: [
-      //         Icon(CupertinoIcons.doc_text,
-      //             color: Colors.black12.withOpacity(.03),
-      //             size: appSize(context) / 20),
-      //         Column(
-      //           children: [
-      //             CircleAvatar(
-      //               backgroundColor: AppColors.borderColor,
-      //               child: Text(days,
-      //                   style: AppStyles.titleTextStyle(context).copyWith(
-      //                       color: Colors.white,
-      //                       fontWeight: FontWeight.w500,
-      //                       fontSize: appSize(context) / 60)),
-      //             ),
-      //             const SizedBox(height: 6),
-      //             Text("DAYS LEFT",
-      //                 textAlign: TextAlign.center,
-      //                 style: AppStyles.titleTextStyle(context).copyWith(
-      //                     height: 1,
-      //                     color: AppColors.darkViolet,
-      //                     fontWeight: FontWeight.w500,
-      //                     fontSize: appSize(context) / 120)),
-      //           ],
-      //         )
-      //       ],
-      //     ),
-      //   ),
-      //   // isThreeLine: true,
-      //   // tileColor: Colors.redAccent,
-      //   onTap: () {},
-      //   title: Text(title,
-      //       style: AppStyles.titleTextStyle(context).copyWith(
-      //           fontWeight: FontWeight.bold, color: Colors.black87)),
-      //   subtitle: Column(
-      //     mainAxisSize: MainAxisSize.min,
-      //     children: [
-      //       Row(
-      //         children: [
-      //           Row(
-      //             mainAxisSize: MainAxisSize.min,
-      //             children: [
-      //               Text("Expiry By:",
-      //                   style: TextStyle(color: AppColors.borderColor)),
-      //               SizedBox(width: 6),
-      //               Text(expiry,
-      //                   style: TextStyle(
-      //                       color: AppColors.borderColor,
-      //                       fontWeight: FontWeight.w700)),
-      //             ],
-      //           ),
-      //         ],
-      //       ),
-      //       const SizedBox(height: 8),
-      //       Row(
-      //         children: [
-      //           GestureDetector(
-      //             onTap: () async {
-      //               share();
-      //               // const url =
-      //               //     "https://morth.nic.in/sites/default/files/dd12-13_0.pdf"; // Replace with your file URL
-      //               // final response = await http.get(Uri.parse(url));
-      //               // // Example: Creating a temporary file to share
-      //               // // final Directory tempDir = await getTemporaryDirectory();
-      //               // // final File file = File('${tempDir.path}/example.txt');
-      //               // // await file.writeAsString('This is an example file to share.');
-      //               //
-      //               // // Share the file
-      //               // if (response.statusCode == 200) {
-      //               //   // Get the temporary directory
-      //               //   final Directory tempDir = await getTemporaryDirectory();
-      //               //   final File file = File('${tempDir.path}/file.pdf');
-      //               //
-      //               //   // Write the file to the temporary directory
-      //               //   await file.writeAsBytes(response.bodyBytes);
-      //               //
-      //               //   // Share the file
-      //               //   // Share.shareXFiles([XFile(file.path)],
-      //               //   //     text: 'Check out this file!');
-      //               // } else {
-      //               //   // Handle error
-      //               //   print('Failed to download file.');
-      //               // }
-      //             },
-      //             child: Container(
-      //               padding: const EdgeInsets.symmetric(
-      //                   horizontal: 6, vertical: 2),
-      //               decoration: BoxDecoration(
-      //                   borderRadius: BorderRadius.circular(22),
-      //                   color: AppColors.darkViolet),
-      //               child: Row(
-      //                 mainAxisSize: MainAxisSize.min,
-      //                 children: [
-      //                   const Icon(Icons.share_outlined, color: Colors.white),
-      //                   const SizedBox(width: 6),
-      //                   Text("Share",
-      //                       style: AppStyles.titleTextStyle(context).copyWith(
-      //                           color: Colors.white,
-      //                           fontSize: appSize(context) / 90))
-      //                 ],
-      //               ),
-      //             ),
-      //           ),
-      //           const SizedBox(width: 8),
-      //           // Container(
-      //           //   padding:
-      //           //       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      //           //   decoration: BoxDecoration(
-      //           //       borderRadius: BorderRadius.circular(22),
-      //           //       color: AppColors.darkViolet),
-      //           //   child: Row(
-      //           //     mainAxisSize: MainAxisSize.min,
-      //           //     children: [
-      //           //       const Icon(CupertinoIcons.download_circle_fill,
-      //           //           color: Colors.white),
-      //           //       const SizedBox(width: 6),
-      //           //       GestureDetector(
-      //           //         onTap: () {
-      //                     _launchURL(
-      //                         "https://morth.nic.in/sites/default/files/dd12-13_0.pdf");
-      //           //           // OpenFilex.open("assets/files/pdf.pdf");
-      //           //         },
-      //           //         child: Text("Download",
-      //           //             style: AppStyles.titleTextStyle(context).copyWith(
-      //           //                 color: Colors.white,
-      //           //                 fontSize: appSize(context) / 90)),
-      //           //       )
-      //           //     ],
-      //           //   ),
-      //           // ),
-      //         ],
-      //       ),
-      //     ],
-      //   ),
-      //   trailing: Row(
-      //     mainAxisSize: MainAxisSize.min,
-      //     children: [
-      //       IconButton(
-      //         // splashRadius: 2,
-      //         padding: EdgeInsets.zero,
-      //         onPressed: () {},
-      //         icon: const Icon(CupertinoIcons.download_circle_fill),
-      //         color: Colors.amber,
-      //       ),
-      //       IconButton(
-      //         padding: EdgeInsets.zero,
-      //
-      //         onPressed: () {},
-      //         icon: const Icon(CupertinoIcons.share_solid),
-      //         color: Colors.amber,
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      );
+  _vehicleDocListTile(title, expiry, days, {var itemData}) {
+
+    print('check data of ${itemData}');
+
+    return Container(
+        alignment: Alignment.center,
+        height: appSize(context) / 14,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.withOpacity(.3)),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey.withOpacity(.2),
+                  blurRadius: 9,
+                  offset: const Offset(0, 1),
+                  spreadRadius: 6)
+            ]),
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+        // color: Colors.grey.withOpacity(.2),
+        child: Center(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _leadingWidget(days),
+              _body(title, expiry),
+              _trailingWidget(),
+            ],
+          ),
+        )
+    );
+  }
 
   _body(title, expiry) => Expanded(
         child: Column(

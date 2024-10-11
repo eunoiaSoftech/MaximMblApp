@@ -15,6 +15,7 @@ class AppTextField extends StatelessWidget {
       this.onTap,
       this.obscureText,
       this.suffix,
+      this.readOnly,
       this.prefix,
       this.keyboardType,
       this.hintTextStyle,
@@ -29,6 +30,7 @@ class AppTextField extends StatelessWidget {
   final String? hintText;
   final double? height;
   final bool? obscureText;
+  final bool? readOnly;
   final bool? enabled;
   final Widget? suffix;
   final Widget? prefix;
@@ -63,6 +65,7 @@ class AppTextField extends StatelessWidget {
           Expanded(
             child: TextFormField(
               onChanged: onChanged,
+              readOnly: readOnly ?? false,
               enabled: enabled ?? true,
               obscureText: obscureText ?? false,
               onTap: onTap,

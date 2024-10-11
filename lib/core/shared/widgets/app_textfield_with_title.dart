@@ -99,6 +99,7 @@ class AppTextFieldWithTitle extends StatelessWidget {
                     circular: borderCircular,
                     onTap: onTap,
                     onChanged: onChanged,
+                    readOnly: readOnly,
                     keyboardType: inputType,
                     height: textFieldHeight,
                     controller: controller,

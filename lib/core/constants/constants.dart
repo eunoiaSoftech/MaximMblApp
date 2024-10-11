@@ -11,6 +11,7 @@ class Urls {
   static const String getLocationList = "$_baseUrl/api/GetLocListM";
   static const String trips = "$_baseUrl/api/GetMyTrips?Fk_DriverId=2806";
   static const String postDailyLog = "$_baseUrl/api/SaveDailyLog";
+  static const String saveFuelSlip = "$_baseUrl/api/SaveFuelSlip";
 
 // static const String apiKey = "58a8591c9aa4421ca6d73805240105";
 }

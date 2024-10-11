@@ -243,7 +243,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonPageAppBar(
+      appBar: const CommonPageAppBar(
         title: "Daily Log",
       ),
       body: SingleChildScrollView(
@@ -293,6 +293,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   onSelected: (Vehicle? menu) {
                     setState(() {
                       vehicleController.text = menu!.pkVehicleId.toString();
+                      openingKmController.text = menu!.dOPKm.toString();
                     });
                   },
                   dropdownMenuEntries:
@@ -434,7 +435,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                         inputType: TextInputType.number,
                         textFieldHeight: appSize(context) / 22,
                         hint: "Enter Opening Km",
-                        readOnly: false,
+                        readOnly: true,
                         controller: openingKmController,
                         textFieldName: "Opening Km",
                         maxLines: 1),
