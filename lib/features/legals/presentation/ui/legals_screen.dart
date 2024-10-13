@@ -1,5 +1,11 @@
 import 'dart:developer';
-
+import 'dart:io';
+import 'package:dio/dio.dart';
+import 'package:logistics_app/core/constants/constants.dart';
+import 'package:logistics_app/features/legals/data/datasources/getlegal_document_remote_datasource.dart';
+import 'package:logistics_app/features/legals/presentation/widgets/pdf_view.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path/path.dart' as path;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -24,6 +30,8 @@ import 'package:logistics_app/features/legals/presentation/blocs/legals_events/v
 import 'package:logistics_app/features/legals/presentation/blocs/legals_states/legal_document_list_states.dart';
 import 'package:logistics_app/features/legals/presentation/blocs/legals_states/legals.dart';
 import 'package:logistics_app/features/legals/presentation/blocs/legals_states/vehicle_list_states.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
@@ -52,8 +60,11 @@ class LegalScreen extends StatefulWidget {
 }
 
 class _LegalScreenState extends State<LegalScreen> {
+  Dio dio = Dio();
   final TextEditingController menuController = TextEditingController();
   Data1? selectedMenu;
+  String? _fileUrl;
+  bool _isLoading = true;
   List vehicleList = [
     {
       "name": "RC Copy",
@@ -137,40 +148,7 @@ class _LegalScreenState extends State<LegalScreen> {
                             onTap: state.resp.data1?.length == 1
                                 ? () {}
                                 : () {
-                                    AppBottomSheet.show(
-                                        context: context,
-                                        showDragHandle: true,
-                                        color: AppColors.textColor,
-                                        title: "Select Vehicle Number",
-                                        titleColor: Colors.white,
-                                        child: SingleChildScrollView(
-                                          child: Column(
-                                            children: state.resp.data1
-                                                    ?.map((e) => ListTile(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              selectedMenu = e;
-                                                            });
-                                                            context
-                                                                .read<
-                                                                    LegalDocumentListBloc>()
-                                                                .add(LegalDocumentListEvent(
-                                                                    e.pkVehicleId ??
-                                                                        0));
-
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                          title: Text(
-                                                              e.vehicleNo ??
-                                                                  ""),
-                                                        ))
-                                                    .toList() ??
-                                                [],
-                                          ),
-                                        ),
-                                        then: (v) {});
+                                    _renderVehicleList(state.resp.data1 ?? []);
                                   },
                             title: Text(selectedMenu != null
                                 ? selectedMenu?.vehicleNo ?? ""
@@ -270,7 +248,11 @@ class _LegalScreenState extends State<LegalScreen> {
                                         (index) => _vehicleDocListTile(
                                             state.resp.data1?[index].sName,
                                             "--/--/--",
-                                            "12"))
+                                            state.resp.data1?[index].noOfDays
+                                                .toString(),
+                                            selectedMenu?.pkVehicleId,
+                                            state.resp.data1?[index]
+                                                .iFkDocTypeId))
                                   ]);
                                 }
                                 if (state is LegalDocumentListError) {
@@ -301,7 +283,9 @@ class _LegalScreenState extends State<LegalScreen> {
                                 (index) => _vehicleDocListTile(
                                     driverList[index]["name"],
                                     driverList[index]["expiry"],
-                                    driverList[index]["days_left"], itemData: driverList[index]))
+                                    driverList[index]["days_left"],
+                                    selectedMenu?.pkVehicleId,
+                                    ""))
                           ]),
                         ],
                       ),
@@ -349,38 +333,220 @@ class _LegalScreenState extends State<LegalScreen> {
     );
   }
 
-  _vehicleDocListTile(title, expiry, days, {var itemData}) {
+  void _renderVehicleList(List<Data1> data) {
+    AppBottomSheet.show(
+        context: context,
+        showDragHandle: true,
+        color: AppColors.textColor,
+        title: "Select Vehicle Number",
+        titleColor: Colors.white,
+        child: SingleChildScrollView(
+          child: Column(
+            children: data
+                    .map((e) => ListTile(
+                          onTap: () {
+                            log("message ${e.pkVehicleId}");
+                            setState(() {
+                              selectedMenu = e;
+                            });
+                            context.read<LegalDocumentListBloc>().add(
+                                LegalDocumentListEvent(e.pkVehicleId ?? 0));
 
-    print('check data of ${itemData}');
-
-    return Container(
-        alignment: Alignment.center,
-        height: appSize(context) / 14,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.withOpacity(.3)),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.grey.withOpacity(.2),
-                  blurRadius: 9,
-                  offset: const Offset(0, 1),
-                  spreadRadius: 6)
-            ]),
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-        // color: Colors.grey.withOpacity(.2),
-        child: Center(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _leadingWidget(days),
-              _body(title, expiry),
-              _trailingWidget(),
-            ],
+                            Navigator.of(context).pop();
+                          },
+                          title: Text(e.vehicleNo ?? ""),
+                        ))
+                    .toList() ??
+                [],
           ),
-        )
-    );
+        ),
+        then: (v) {});
   }
+
+  _vehicleDocListTile(title, expiry, days, pkVehicleId, docTypeId) => Container(
+      alignment: Alignment.center,
+      height: appSize(context) / 14,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.withOpacity(.3)),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.withOpacity(.2),
+                blurRadius: 9,
+                offset: const Offset(0, 1),
+                spreadRadius: 6)
+          ]),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+      // color: Colors.grey.withOpacity(.2),
+      child: Center(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _leadingWidget(days),
+            _body(title, expiry),
+            _trailingWidget(pkVehicleId, docTypeId),
+          ],
+        ),
+      )
+      // ListTile(
+      //   leading: Container(
+      //     child: Stack(
+      //       alignment: Alignment.center,
+      //       children: [
+      //         Icon(CupertinoIcons.doc_text,
+      //             color: Colors.black12.withOpacity(.03),
+      //             size: appSize(context) / 20),
+      //         Column(
+      //           children: [
+      //             CircleAvatar(
+      //               backgroundColor: AppColors.borderColor,
+      //               child: Text(days,
+      //                   style: AppStyles.titleTextStyle(context).copyWith(
+      //                       color: Colors.white,
+      //                       fontWeight: FontWeight.w500,
+      //                       fontSize: appSize(context) / 60)),
+      //             ),
+      //             const SizedBox(height: 6),
+      //             Text("DAYS LEFT",
+      //                 textAlign: TextAlign.center,
+      //                 style: AppStyles.titleTextStyle(context).copyWith(
+      //                     height: 1,
+      //                     color: AppColors.darkViolet,
+      //                     fontWeight: FontWeight.w500,
+      //                     fontSize: appSize(context) / 120)),
+      //           ],
+      //         )
+      //       ],
+      //     ),
+      //   ),
+      //   // isThreeLine: true,
+      //   // tileColor: Colors.redAccent,
+      //   onTap: () {},
+      //   title: Text(title,
+      //       style: AppStyles.titleTextStyle(context).copyWith(
+      //           fontWeight: FontWeight.bold, color: Colors.black87)),
+      //   subtitle: Column(
+      //     mainAxisSize: MainAxisSize.min,
+      //     children: [
+      //       Row(
+      //         children: [
+      //           Row(
+      //             mainAxisSize: MainAxisSize.min,
+      //             children: [
+      //               Text("Expiry By:",
+      //                   style: TextStyle(color: AppColors.borderColor)),
+      //               SizedBox(width: 6),
+      //               Text(expiry,
+      //                   style: TextStyle(
+      //                       color: AppColors.borderColor,
+      //                       fontWeight: FontWeight.w700)),
+      //             ],
+      //           ),
+      //         ],
+      //       ),
+      //       const SizedBox(height: 8),
+      //       Row(
+      //         children: [
+      //           GestureDetector(
+      //             onTap: () async {
+      //               share();
+      //               // const url =
+      //               //     "https://morth.nic.in/sites/default/files/dd12-13_0.pdf"; // Replace with your file URL
+      //               // final response = await http.get(Uri.parse(url));
+      //               // // Example: Creating a temporary file to share
+      //               // // final Directory tempDir = await getTemporaryDirectory();
+      //               // // final File file = File('${tempDir.path}/example.txt');
+      //               // // await file.writeAsString('This is an example file to share.');
+      //               //
+      //               // // Share the file
+      //               // if (response.statusCode == 200) {
+      //               //   // Get the temporary directory
+      //               //   final Directory tempDir = await getTemporaryDirectory();
+      //               //   final File file = File('${tempDir.path}/file.pdf');
+      //               //
+      //               //   // Write the file to the temporary directory
+      //               //   await file.writeAsBytes(response.bodyBytes);
+      //               //
+      //               //   // Share the file
+      //               //   // Share.shareXFiles([XFile(file.path)],
+      //               //   //     text: 'Check out this file!');
+      //               // } else {
+      //               //   // Handle error
+      //               //   print('Failed to download file.');
+      //               // }
+      //             },
+      //             child: Container(
+      //               padding: const EdgeInsets.symmetric(
+      //                   horizontal: 6, vertical: 2),
+      //               decoration: BoxDecoration(
+      //                   borderRadius: BorderRadius.circular(22),
+      //                   color: AppColors.darkViolet),
+      //               child: Row(
+      //                 mainAxisSize: MainAxisSize.min,
+      //                 children: [
+      //                   const Icon(Icons.share_outlined, color: Colors.white),
+      //                   const SizedBox(width: 6),
+      //                   Text("Share",
+      //                       style: AppStyles.titleTextStyle(context).copyWith(
+      //                           color: Colors.white,
+      //                           fontSize: appSize(context) / 90))
+      //                 ],
+      //               ),
+      //             ),
+      //           ),
+      //           const SizedBox(width: 8),
+      //           // Container(
+      //           //   padding:
+      //           //       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      //           //   decoration: BoxDecoration(
+      //           //       borderRadius: BorderRadius.circular(22),
+      //           //       color: AppColors.darkViolet),
+      //           //   child: Row(
+      //           //     mainAxisSize: MainAxisSize.min,
+      //           //     children: [
+      //           //       const Icon(CupertinoIcons.download_circle_fill,
+      //           //           color: Colors.white),
+      //           //       const SizedBox(width: 6),
+      //           //       GestureDetector(
+      //           //         onTap: () {
+      //                     _launchURL(
+      //                         "https://morth.nic.in/sites/default/files/dd12-13_0.pdf");
+      //           //           // OpenFilex.open("assets/files/pdf.pdf");
+      //           //         },
+      //           //         child: Text("Download",
+      //           //             style: AppStyles.titleTextStyle(context).copyWith(
+      //           //                 color: Colors.white,
+      //           //                 fontSize: appSize(context) / 90)),
+      //           //       )
+      //           //     ],
+      //           //   ),
+      //           // ),
+      //         ],
+      //       ),
+      //     ],
+      //   ),
+      //   trailing: Row(
+      //     mainAxisSize: MainAxisSize.min,
+      //     children: [
+      //       IconButton(
+      //         // splashRadius: 2,
+      //         padding: EdgeInsets.zero,
+      //         onPressed: () {},
+      //         icon: const Icon(CupertinoIcons.download_circle_fill),
+      //         color: Colors.amber,
+      //       ),
+      //       IconButton(
+      //         padding: EdgeInsets.zero,
+      //
+      //         onPressed: () {},
+      //         icon: const Icon(CupertinoIcons.share_solid),
+      //         color: Colors.amber,
+      //       ),
+      //     ],
+      //   ),
+      // ),
+      );
 
   _body(title, expiry) => Expanded(
         child: Column(
@@ -407,7 +573,7 @@ class _LegalScreenState extends State<LegalScreen> {
         ),
       );
 
-  _trailingWidget() => Row(
+  _trailingWidget(pkVehicleId, docTypeId) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
@@ -420,10 +586,25 @@ class _LegalScreenState extends State<LegalScreen> {
                   // splashRadius: 2,
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    _launchURL(
-                        "https://morth.nic.in/sites/default/files/dd12-13_0.pdf");
+                    _fetchDocument(selectedMenu?.pkVehicleId, docTypeId);
+                    // _launchURL(
+                    //     "https://morth.nic.in/sites/default/files/dd12-13_0.pdf");
                   },
-                  icon: const Icon(CupertinoIcons.arrow_down_circle,
+                  icon: IconButton(
+                      icon: const Icon(CupertinoIcons.arrow_down_circle),
+                      onPressed: () {
+                        log("message");
+                        // log("${Urls.getLegalDocument}?iFK_VehicleId=${selectedMenu?.pkVehicleId}&iFk_DocTypeId=$pkVehicleId");
+
+                        /// here
+                        ///
+                        // Navigator.of(context)
+                        //     .push(goToRoute(const PdfViewerPage()));
+                        // downloadFileWithProgress(
+                        //     "${Urls.getLegalDocument}?iFK_VehicleId=${selectedMenu?.pkVehicleId}&iFk_DocTypeId=$pkVehicleId",
+                        //     "document.pdf");
+                        // GetLegalDocumentApiService().getLegalDocumentMediaResponse(pkVehicleId, selectedMenu?.pkVehicleId);
+                      },
                       color: AppColors.newLightBlue),
                   color: Colors.white,
                 ),
@@ -453,6 +634,87 @@ class _LegalScreenState extends State<LegalScreen> {
           ),
         ],
       );
+
+  Future<void> _fetchDocument(vehicleId, docTypeId) async {
+    final url =
+        'http://47.247.181.6:8089/api/api/GetLegalDocument?iFK_VehicleId=${vehicleId}&iFk_DocTypeId=${docTypeId}';
+    try {
+      final response = await http.post(Uri.parse(url));
+      if (response.statusCode == 200) {
+        setState(() {
+          _fileUrl = url;
+          _isLoading = false;
+        });
+
+        print('check _fileUrl ${_fileUrl}');
+        _downloadFile(vehicleId, docTypeId);
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        throw Exception('Failed to load document: ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _downloadFile(vehicleId, docTypeId) async {
+    if (_fileUrl == null) return;
+
+    // Request storage permission
+    var status = await Permission.storage.request();
+    if (status.isDenied) {
+      // If the permission is denied, show a message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Storage permission denied')),
+      );
+      return;
+    } else if (status.isPermanentlyDenied) {
+      // If the permission is permanently denied, you can show a dialog to open settings
+      await openAppSettings();
+      return;
+    }
+
+    try {
+      final response = await Dio().post(
+        _fileUrl!,
+        data: {
+          'iFK_VehicleId': vehicleId,
+          'iFk_DocTypeId': docTypeId,
+        },
+        options: Options(
+          responseType: ResponseType.bytes,
+        ),
+      );
+
+      final filePath =
+          '${(await getDownloadsDirectory())?.path}/downloaded_document.pdf';
+      final file = File(filePath);
+      await file.writeAsBytes(response.data);
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('File downloaded successfully!')),
+        );
+
+        // Open the downloaded file
+        OpenFile.open(filePath).then((result) {
+          print('File opened: ${result.message}');
+        });
+
+        // Print the file location
+        print('File location: $filePath');
+      }
+    } catch (error) {
+      print('Download error: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to download file')),
+      );
+    }
+  }
 
   _leadingWidget(String? days) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -637,6 +899,26 @@ class _LegalScreenState extends State<LegalScreen> {
     await launchUrl(Uri.parse(url));
     // } else {
     //   throw 'Could not launch $url';
+    // }
+  }
+
+  Future<void> downloadFileWithProgress(String url, String fileName) async {
+    // final directory = await getApplicationDocumentsDirectory();
+    // final filePath = path.join(directory.path, fileName);
+    //
+    // try {
+    //   await dio.post(
+    //     url,
+    //     // filePath,
+    //     onReceiveProgress: (received, total) {
+    //       if (total != -1) {
+    //         log('Download progress: ${(received / total * 100).toStringAsFixed(0)}%');
+    //       }
+    //     },
+    //   );
+    //   log('File downloaded to $filePath');
+    // } catch (e) {
+    //   log('Download error: $e');
     // }
   }
 }

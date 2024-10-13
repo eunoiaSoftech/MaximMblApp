@@ -14,7 +14,8 @@ import 'package:logistics_app/features/home/presentation/ui/widgets/common_page_
 import 'package:logistics_app/features/home/presentation/ui/widgets/menu_appbar.dart';
 
 class ExpenseBookingScreen extends StatefulWidget {
-  const ExpenseBookingScreen({super.key, this.initialMenuItem, this.initialMenuItemSrNo});
+  const ExpenseBookingScreen(
+      {super.key, this.initialMenuItem, this.initialMenuItemSrNo});
 
   final String? initialMenuItem;
   final String? initialMenuItemSrNo;
@@ -25,6 +26,7 @@ class ExpenseBookingScreen extends StatefulWidget {
 
 class _ExpenseBookingScreenState extends State<ExpenseBookingScreen> {
   final tripTextController = TextEditingController();
+
   // late String selectedMenu;
   final ImagePicker imagePicker = ImagePicker();
   List<XFile>? imageFileList = [];
