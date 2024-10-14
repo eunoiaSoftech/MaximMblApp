@@ -19,7 +19,7 @@ import 'package:logistics_app/features/branches_n_locations/presentation/bloc/lo
 import 'package:logistics_app/features/daily_log/data/daily_log_bloc.dart';
 import 'package:logistics_app/features/daily_log/data/daily_log_remote_datasource.dart';
 import 'package:logistics_app/features/daily_log/data/daily_log_repository.dart';
-import 'package:logistics_app/features/legals/data/datasources/home_remote_datasource.dart';
+import 'package:logistics_app/features/legals/data/datasources/legal_remote_datasource.dart';
 import 'package:logistics_app/features/legals/data/repositories/legals_repo.dart';
 import 'package:logistics_app/features/legals/presentation/blocs/blocs/legal_document_list_bloc.dart';
 import 'package:logistics_app/features/legals/presentation/blocs/legals_bloc.dart';

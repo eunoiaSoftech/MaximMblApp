@@ -1,4 +1,4 @@
-import 'package:logistics_app/features/legals/data/datasources/home_remote_datasource.dart';
+import 'package:logistics_app/features/legals/data/datasources/legal_remote_datasource.dart';
 import 'package:logistics_app/features/legals/data/models/legal_document_list_resp.dart';
 import 'package:logistics_app/features/legals/data/models/vehicle_list_resp.dart';
 

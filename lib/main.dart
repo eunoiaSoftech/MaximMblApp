@@ -13,7 +13,7 @@
 // import 'package:logistics_app/features/branches/data/datasources/branch_remote_datasource.dart';
 // import 'package:logistics_app/features/branches/data/repositories/branch_repos.dart';
 // import 'package:logistics_app/features/branches/presentation/bloc/branch_bloc.dart';
-// import 'package:logistics_app/features/legals/data/datasources/home_remote_datasource.dart';
+// import 'package:logistics_app/features/legals/data/datasources/legal_remote_datasource.dart';
 // import 'package:logistics_app/features/legals/data/repositories/legals_repo.dart';
 // import 'package:logistics_app/features/legals/presentation/blocs/blocs/legal_document_list_bloc.dart';
 // import 'package:logistics_app/features/legals/presentation/blocs/legals_bloc.dart';

@@ -7,7 +7,9 @@ class Urls {
   static const String vehicleList = "$_baseUrl/Api/GetVehicleDetailsM";
   static const String dailyLogVehicleList = "$_baseUrl/Api/GetOtherVehicleDetailsM";
   static const String approvalsListList = "$_baseUrl/Api/PoApprovalM";
-  static const String getLegalDocumentList = "$_baseUrl/api/GetLegalDocument";
+  static const String getLegalDocumentList = "$_baseUrl/api/GetLegalDocumentList";
+  static const String getLegalDocument = "$_baseUrl/api/GetLegalDocument";
+
   static const String getLocationList = "$_baseUrl/api/GetLocListM";
   static const String trips = "$_baseUrl/api/GetMyTrips?Fk_DriverId=2806";
   static const String postDailyLog = "$_baseUrl/api/SaveDailyLog";
