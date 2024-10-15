@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:logistics_app/core/constants/constants.dart';
 import 'package:logistics_app/features/legals/data/datasources/getlegal_document_remote_datasource.dart';
 import 'package:logistics_app/features/legals/presentation/widgets/pdf_view.dart';
@@ -65,20 +66,6 @@ class _LegalScreenState extends State<LegalScreen> {
   Data1? selectedMenu;
   String? _fileUrl;
   bool _isLoading = true;
-  List vehicleList = [
-    {
-      "name": "RC Copy",
-      "expiry": "27-09-2024",
-      "days_left": "27",
-      "file": "assets/files/pdf.pdf"
-    },
-    {
-      "name": "Tr Permit",
-      "expiry": "27-09-2024",
-      "days_left": "10",
-      "file": "assets/files/pdf.pdf"
-    },
-  ];
 
   List driverList = [
     {
@@ -134,6 +121,7 @@ class _LegalScreenState extends State<LegalScreen> {
                           setState(() {});
                         }
                       }
+                      setState(() {});
                     },
                     builder: (context, state) {
                       if (state is VehicleListLoaded) {
@@ -146,8 +134,14 @@ class _LegalScreenState extends State<LegalScreen> {
                             selected: true,
                             trailing: const Icon(Icons.arrow_drop_down),
                             onTap: state.resp.data1?.length == 1
-                                ? () {}
+                                ? () {
+                                    EasyLoading.show(status: 'Loading...');
+
+                                    _renderVehicleList(state.resp.data1 ?? []);
+                                  }
                                 : () {
+                                    EasyLoading.show(status: 'Loading...');
+
                                     _renderVehicleList(state.resp.data1 ?? []);
                                   },
                             title: Text(selectedMenu != null
@@ -233,27 +227,30 @@ class _LegalScreenState extends State<LegalScreen> {
                           BlocConsumer<LegalDocumentListBloc, LegalsState>(
                               builder: (context, state) {
                                 if (state is LegalDocumentListLoaded) {
-                                  return Column(children: [
-                                    const SizedBox(height: 22),
-                                    if (state.resp.data1?.isEmpty ?? true)
-                                      const Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(Icons.hourglass_empty),
-                                          Text("No Data")
-                                        ],
-                                      ),
-                                    ...List.generate(
-                                        state.resp.data1?.length ?? 0,
-                                        (index) => _vehicleDocListTile(
-                                            state.resp.data1?[index].sName,
-                                            "--/--/--",
-                                            state.resp.data1?[index].noOfDays
-                                                .toString(),
-                                            selectedMenu?.pkVehicleId,
-                                            state.resp.data1?[index]
-                                                .iFkDocTypeId))
-                                  ]);
+                                  return SingleChildScrollView(
+                                    child: Column(children: [
+                                      const SizedBox(height: 22),
+                                      if (state.resp.data1?.isEmpty ?? true)
+                                        const Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(Icons.hourglass_empty),
+                                            Text("No Data")
+                                          ],
+                                        ),
+                                      ...List.generate(
+                                          state.resp.data1?.length ?? 0,
+                                          (index) => _vehicleDocListTile(
+                                              state.resp.data1?[index].sName,
+                                              state.resp.data1?[index]
+                                                  .sExpiryDate,
+                                              state.resp.data1?[index].noOfDays
+                                                  .toString(),
+                                              selectedMenu?.pkVehicleId,
+                                              state.resp.data1?[index]
+                                                  .iFkDocTypeId))
+                                    ]),
+                                  );
                                 }
                                 if (state is LegalDocumentListError) {
                                   return Center(
@@ -334,6 +331,8 @@ class _LegalScreenState extends State<LegalScreen> {
   }
 
   void _renderVehicleList(List<Data1> data) {
+    EasyLoading.dismiss();
+
     AppBottomSheet.show(
         context: context,
         showDragHandle: true,
@@ -388,165 +387,7 @@ class _LegalScreenState extends State<LegalScreen> {
             _trailingWidget(pkVehicleId, docTypeId),
           ],
         ),
-      )
-      // ListTile(
-      //   leading: Container(
-      //     child: Stack(
-      //       alignment: Alignment.center,
-      //       children: [
-      //         Icon(CupertinoIcons.doc_text,
-      //             color: Colors.black12.withOpacity(.03),
-      //             size: appSize(context) / 20),
-      //         Column(
-      //           children: [
-      //             CircleAvatar(
-      //               backgroundColor: AppColors.borderColor,
-      //               child: Text(days,
-      //                   style: AppStyles.titleTextStyle(context).copyWith(
-      //                       color: Colors.white,
-      //                       fontWeight: FontWeight.w500,
-      //                       fontSize: appSize(context) / 60)),
-      //             ),
-      //             const SizedBox(height: 6),
-      //             Text("DAYS LEFT",
-      //                 textAlign: TextAlign.center,
-      //                 style: AppStyles.titleTextStyle(context).copyWith(
-      //                     height: 1,
-      //                     color: AppColors.darkViolet,
-      //                     fontWeight: FontWeight.w500,
-      //                     fontSize: appSize(context) / 120)),
-      //           ],
-      //         )
-      //       ],
-      //     ),
-      //   ),
-      //   // isThreeLine: true,
-      //   // tileColor: Colors.redAccent,
-      //   onTap: () {},
-      //   title: Text(title,
-      //       style: AppStyles.titleTextStyle(context).copyWith(
-      //           fontWeight: FontWeight.bold, color: Colors.black87)),
-      //   subtitle: Column(
-      //     mainAxisSize: MainAxisSize.min,
-      //     children: [
-      //       Row(
-      //         children: [
-      //           Row(
-      //             mainAxisSize: MainAxisSize.min,
-      //             children: [
-      //               Text("Expiry By:",
-      //                   style: TextStyle(color: AppColors.borderColor)),
-      //               SizedBox(width: 6),
-      //               Text(expiry,
-      //                   style: TextStyle(
-      //                       color: AppColors.borderColor,
-      //                       fontWeight: FontWeight.w700)),
-      //             ],
-      //           ),
-      //         ],
-      //       ),
-      //       const SizedBox(height: 8),
-      //       Row(
-      //         children: [
-      //           GestureDetector(
-      //             onTap: () async {
-      //               share();
-      //               // const url =
-      //               //     "https://morth.nic.in/sites/default/files/dd12-13_0.pdf"; // Replace with your file URL
-      //               // final response = await http.get(Uri.parse(url));
-      //               // // Example: Creating a temporary file to share
-      //               // // final Directory tempDir = await getTemporaryDirectory();
-      //               // // final File file = File('${tempDir.path}/example.txt');
-      //               // // await file.writeAsString('This is an example file to share.');
-      //               //
-      //               // // Share the file
-      //               // if (response.statusCode == 200) {
-      //               //   // Get the temporary directory
-      //               //   final Directory tempDir = await getTemporaryDirectory();
-      //               //   final File file = File('${tempDir.path}/file.pdf');
-      //               //
-      //               //   // Write the file to the temporary directory
-      //               //   await file.writeAsBytes(response.bodyBytes);
-      //               //
-      //               //   // Share the file
-      //               //   // Share.shareXFiles([XFile(file.path)],
-      //               //   //     text: 'Check out this file!');
-      //               // } else {
-      //               //   // Handle error
-      //               //   print('Failed to download file.');
-      //               // }
-      //             },
-      //             child: Container(
-      //               padding: const EdgeInsets.symmetric(
-      //                   horizontal: 6, vertical: 2),
-      //               decoration: BoxDecoration(
-      //                   borderRadius: BorderRadius.circular(22),
-      //                   color: AppColors.darkViolet),
-      //               child: Row(
-      //                 mainAxisSize: MainAxisSize.min,
-      //                 children: [
-      //                   const Icon(Icons.share_outlined, color: Colors.white),
-      //                   const SizedBox(width: 6),
-      //                   Text("Share",
-      //                       style: AppStyles.titleTextStyle(context).copyWith(
-      //                           color: Colors.white,
-      //                           fontSize: appSize(context) / 90))
-      //                 ],
-      //               ),
-      //             ),
-      //           ),
-      //           const SizedBox(width: 8),
-      //           // Container(
-      //           //   padding:
-      //           //       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      //           //   decoration: BoxDecoration(
-      //           //       borderRadius: BorderRadius.circular(22),
-      //           //       color: AppColors.darkViolet),
-      //           //   child: Row(
-      //           //     mainAxisSize: MainAxisSize.min,
-      //           //     children: [
-      //           //       const Icon(CupertinoIcons.download_circle_fill,
-      //           //           color: Colors.white),
-      //           //       const SizedBox(width: 6),
-      //           //       GestureDetector(
-      //           //         onTap: () {
-      //                     _launchURL(
-      //                         "https://morth.nic.in/sites/default/files/dd12-13_0.pdf");
-      //           //           // OpenFilex.open("assets/files/pdf.pdf");
-      //           //         },
-      //           //         child: Text("Download",
-      //           //             style: AppStyles.titleTextStyle(context).copyWith(
-      //           //                 color: Colors.white,
-      //           //                 fontSize: appSize(context) / 90)),
-      //           //       )
-      //           //     ],
-      //           //   ),
-      //           // ),
-      //         ],
-      //       ),
-      //     ],
-      //   ),
-      //   trailing: Row(
-      //     mainAxisSize: MainAxisSize.min,
-      //     children: [
-      //       IconButton(
-      //         // splashRadius: 2,
-      //         padding: EdgeInsets.zero,
-      //         onPressed: () {},
-      //         icon: const Icon(CupertinoIcons.download_circle_fill),
-      //         color: Colors.amber,
-      //       ),
-      //       IconButton(
-      //         padding: EdgeInsets.zero,
-      //
-      //         onPressed: () {},
-      //         icon: const Icon(CupertinoIcons.share_solid),
-      //         color: Colors.amber,
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      );
+      ));
 
   _body(title, expiry) => Expanded(
         child: Column(
@@ -583,55 +424,38 @@ class _LegalScreenState extends State<LegalScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  // splashRadius: 2,
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    _fetchDocument(selectedMenu?.pkVehicleId, docTypeId);
-                    // _launchURL(
-                    //     "https://morth.nic.in/sites/default/files/dd12-13_0.pdf");
-                  },
-                  icon: IconButton(
-                      icon: const Icon(CupertinoIcons.arrow_down_circle),
-                      onPressed: () {
-                        log("message");
-                        // log("${Urls.getLegalDocument}?iFK_VehicleId=${selectedMenu?.pkVehicleId}&iFk_DocTypeId=$pkVehicleId");
-
-                        /// here
-                        ///
-                        // Navigator.of(context)
-                        //     .push(goToRoute(const PdfViewerPage()));
-                        // downloadFileWithProgress(
-                        //     "${Urls.getLegalDocument}?iFK_VehicleId=${selectedMenu?.pkVehicleId}&iFk_DocTypeId=$pkVehicleId",
-                        //     "document.pdf");
-                        // GetLegalDocumentApiService().getLegalDocumentMediaResponse(pkVehicleId, selectedMenu?.pkVehicleId);
-                      },
-                      color: AppColors.newLightBlue),
-                  color: Colors.white,
-                ),
+                    icon: const Icon(CupertinoIcons.arrow_down_circle),
+                    onPressed: () {
+                      log("message_driver");
+                      log("selectedMenu?.pkVehicleId ${selectedMenu?.pkVehicleId}");
+                      log("docTypeId ${docTypeId}");
+                      _fetchDocument(selectedMenu?.pkVehicleId, docTypeId);
+                    },
+                    color: AppColors.newLightBlue),
               ],
             ),
           ),
-          Container(
-            // width: appSize(context) / 30,
-            decoration: const BoxDecoration(
-                // color: AppColors.green,
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(12),
-                    bottomRight: Radius.circular(12))),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    share();
-                  },
-                  icon: const Icon(Icons.share_outlined),
-                  color: AppColors.newLightBlue,
-                ),
-              ],
-            ),
-          ),
+          // Container(
+          //   // width: appSize(context) / 30,
+          //   decoration: const BoxDecoration(
+          //       // color: AppColors.green,
+          //       borderRadius: BorderRadius.only(
+          //           topRight: Radius.circular(12),
+          //           bottomRight: Radius.circular(12))),
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       IconButton(
+          //         padding: EdgeInsets.zero,
+          //         onPressed: () {
+          //           share();
+          //         },
+          //         icon: const Icon(Icons.share_outlined),
+          //         color: AppColors.newLightBlue,
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       );
 
@@ -639,6 +463,8 @@ class _LegalScreenState extends State<LegalScreen> {
     final url =
         'http://47.247.181.6:8089/api/api/GetLegalDocument?iFK_VehicleId=${vehicleId}&iFk_DocTypeId=${docTypeId}';
     try {
+      EasyLoading.show(status: 'downloading...');
+
       final response = await http.post(Uri.parse(url));
       if (response.statusCode == 200) {
         setState(() {
@@ -649,12 +475,15 @@ class _LegalScreenState extends State<LegalScreen> {
         print('check _fileUrl ${_fileUrl}');
         _downloadFile(vehicleId, docTypeId);
       } else {
+        EasyLoading.dismiss();
         setState(() {
           _isLoading = false;
         });
         throw Exception('Failed to load document: ${response.reasonPhrase}');
       }
     } catch (error) {
+      EasyLoading.dismiss();
+
       setState(() {
         _isLoading = false;
       });
@@ -665,20 +494,23 @@ class _LegalScreenState extends State<LegalScreen> {
     if (_fileUrl == null) return;
 
     // Request storage permission
-    var status = await Permission.storage.request();
-    if (status.isDenied) {
-      // If the permission is denied, show a message
+    var status = await Permission.manageExternalStorage.request();
+    if (status.isDenied || status.isPermanentlyDenied) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Storage permission denied')),
       );
+      EasyLoading.dismiss();
       return;
     } else if (status.isPermanentlyDenied) {
-      // If the permission is permanently denied, you can show a dialog to open settings
+      EasyLoading.dismiss();
       await openAppSettings();
       return;
     }
 
     try {
+      EasyLoading.show(status: 'Downloading...');
+
+      // Make the POST request to download the file
       final response = await Dio().post(
         _fileUrl!,
         data: {
@@ -690,12 +522,36 @@ class _LegalScreenState extends State<LegalScreen> {
         ),
       );
 
-      final filePath =
-          '${(await getDownloadsDirectory())?.path}/downloaded_document.pdf';
-      final file = File(filePath);
-      await file.writeAsBytes(response.data);
-
+      // Check for a successful response
       if (response.statusCode == 200) {
+        final now = DateTime.now();
+        final formattedDate =
+            '${now.year}-${now.month}-${now.day}_${now.hour}-${now.minute}-${now.second}';
+
+        // Determine the file extension based on the content type
+        String fileExtension = '';
+        String contentType = response.headers.value('Content-Type') ?? '';
+
+        if (contentType.contains('application/pdf')) {
+          fileExtension = 'pdf';
+        } else if (contentType.contains('image/jpeg')) {
+          fileExtension = 'jpg';
+        } else if (contentType.contains('image/png')) {
+          fileExtension = 'png';
+        } else {
+          fileExtension = 'bin'; // For unknown file types
+        }
+
+        // Construct the file path in the Downloads directory
+        final filePath =
+            '${(await getDownloadsDirectory())?.path}/downloaded_document_$formattedDate.$fileExtension';
+
+        // Save the downloaded file
+        final file = File(filePath);
+        await file.writeAsBytes(response.data);
+
+        // Show success message
+        EasyLoading.dismiss();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('File downloaded successfully!')),
         );
@@ -707,8 +563,14 @@ class _LegalScreenState extends State<LegalScreen> {
 
         // Print the file location
         print('File location: $filePath');
+      } else {
+        EasyLoading.dismiss();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to download file')),
+        );
       }
     } catch (error) {
+      EasyLoading.dismiss();
       print('Download error: $error');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to download file')),
@@ -755,170 +617,9 @@ class _LegalScreenState extends State<LegalScreen> {
         ),
       );
 
-  _driverDocList(title, String expiry, String days) => Container(
-        margin: const EdgeInsets.symmetric(vertical: 2),
-        color: Colors.grey.withOpacity(.2),
-        child: ListTile(
-          shape:
-              const Border(bottom: BorderSide(color: Colors.black54, width: 2)),
-          dense: true,
-          // isThreeLine: true,
-          // tileColor: Colors.redAccent,
-          onTap: () {},
-          title: Text(title,
-              style: AppStyles.titleTextStyle(context).copyWith(
-                  fontWeight: FontWeight.bold, color: Colors.black87)),
-          subtitle: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (expiry.isNotEmpty)
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 1),
-                      decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(.6),
-                          borderRadius: BorderRadius.circular(4)),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text("Date of expiry:"),
-                          SizedBox(width: 6),
-                          Text(expiry),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(22),
-                        color: AppColors.darkViolet),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.share_outlined, color: Colors.white),
-                        const SizedBox(width: 6),
-                        Text("Share",
-                            style: AppStyles.titleTextStyle(context).copyWith(
-                                color: Colors.white,
-                                fontSize: appSize(context) / 90))
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(22),
-                        color: AppColors.darkViolet),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(CupertinoIcons.download_circle_fill,
-                            color: Colors.white),
-                        const SizedBox(width: 6),
-                        GestureDetector(
-                          onTap: () {
-                            _launchURL(
-                                "https://morth.nic.in/sites/default/files/dd12-13_0.pdf");
-                            // OpenFilex.open("assets/files/pdf.pdf");
-                          },
-                          child: Text("Download",
-                              style: AppStyles.titleTextStyle(context).copyWith(
-                                  color: Colors.white,
-                                  fontSize: appSize(context) / 90)),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          trailing: (days.isNotEmpty)
-              ? Container(
-                  // decoration: BoxDecoration(
-                  //     color: Colors.grey.withOpacity(.6),
-                  //     borderRadius: BorderRadius.circular(6)),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(days,
-                          style: AppStyles.titleTextStyle(context).copyWith(
-                              color: Colors.black54,
-                              fontWeight: FontWeight.bold,
-                              fontSize: appSize(context) / 50)),
-                      Text("days left",
-                          textAlign: TextAlign.center,
-                          style: AppStyles.titleTextStyle(context).copyWith(
-                              height: 1,
-                              color: Colors.black87,
-                              fontSize: appSize(context) / 120)),
-                    ],
-                  ),
-                )
-              : const SizedBox.shrink(),
-          // trailing: Row(
-          //   mainAxisSize: MainAxisSize.min,
-          //   children: [
-          //     IconButton(
-          //         onPressed: () {},
-          //         icon: Icon(CupertinoIcons.download_circle_fill)),
-          //     IconButton(
-          //         onPressed: () {}, icon: Icon(CupertinoIcons.share_solid)),
-          //   ],
-          // ),
-        ),
-      );
-
   _tab(text) => Text(text,
       style: TextStyle(
           fontWeight: FontWeight.w700,
           color: AppColors.textColor,
           fontSize: appSize(context) / 90));
-
-  Future<void> share() async {
-    await FlutterShare.share(
-        title: 'Example share',
-        text: 'Example share text',
-        linkUrl: 'https://morth.nic.in/sites/default/files/dd12-13_0.pdf',
-        chooserTitle: 'Example Chooser Title');
-  }
-
-  _launchURL(String url) async {
-    // const url = 'https://flutter.dev/exapmle.pdf';
-    // if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
-    // } else {
-    //   throw 'Could not launch $url';
-    // }
-  }
-
-  Future<void> downloadFileWithProgress(String url, String fileName) async {
-    // final directory = await getApplicationDocumentsDirectory();
-    // final filePath = path.join(directory.path, fileName);
-    //
-    // try {
-    //   await dio.post(
-    //     url,
-    //     // filePath,
-    //     onReceiveProgress: (received, total) {
-    //       if (total != -1) {
-    //         log('Download progress: ${(received / total * 100).toStringAsFixed(0)}%');
-    //       }
-    //     },
-    //   );
-    //   log('File downloaded to $filePath');
-    // } catch (e) {
-    //   log('Download error: $e');
-    // }
-  }
 }

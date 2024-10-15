@@ -1,30 +1,28 @@
-import 'login_resp_model.dart';
-
 class LoginWithOTPResp {
   int? statusCode;
   int? responseCode;
   String? message;
   String? data;
   List<Data1>? data1;
-  String? userCode;
+  Null? userCode;
   int? status;
   int? mobileOTP;
   int? emailOTP;
-  String? userID;
+  Null? userID;
   List<Rights>? rights;
 
   LoginWithOTPResp(
       {this.statusCode,
-      this.responseCode,
-      this.message,
-      this.data,
-      this.data1,
-      this.userCode,
-      this.status,
-      this.mobileOTP,
-      this.emailOTP,
-      this.userID,
-      this.rights});
+        this.responseCode,
+        this.message,
+        this.data,
+        this.data1,
+        this.userCode,
+        this.status,
+        this.mobileOTP,
+        this.emailOTP,
+        this.userID,
+        this.rights});
 
   LoginWithOTPResp.fromJson(Map<String, dynamic> json) {
     statusCode = json['statusCode'];
@@ -37,11 +35,11 @@ class LoginWithOTPResp {
         data1!.add(new Data1.fromJson(v));
       });
     }
-    userCode = json['userCode'].toString();
+    userCode = json['userCode'];
     status = json['status'];
     mobileOTP = json['mobileOTP'];
     emailOTP = json['emailOTP'];
-    userID = json['userID'].toString();
+    userID = json['userID'];
     if (json['rights'] != null) {
       rights = <Rights>[];
       json['rights'].forEach((v) {
@@ -80,20 +78,25 @@ class Data1 {
   String? sPhone;
   int? iPKUSRID;
   String? message;
-  Null? rightsDetails;
+  int? iFkUserType;
+  Null? sLicsNumber;
+  Null? licExp;
 
   Data1(
-      {this.otp,
-      this.iBranchFlag,
-      this.sUSRCode,
-      this.name,
-      this.sEmail,
-      this.sPhone,
-      this.iPKUSRID,
-      this.message,
-      this.rightsDetails});
+      {this.iBranchFlag,
+        this.otp,
+        this.sUSRCode,
+        this.name,
+        this.sEmail,
+        this.sPhone,
+        this.iPKUSRID,
+        this.message,
+        this.iFkUserType,
+        this.sLicsNumber,
+        this.licExp});
 
   Data1.fromJson(Map<String, dynamic> json) {
+    iBranchFlag = json['iBranchFlag'];
     otp = json['otp'];
     sUSRCode = json['sUSRCode'];
     name = json['name'];
@@ -101,12 +104,14 @@ class Data1 {
     sPhone = json['sPhone'];
     iPKUSRID = json['iPK_USRID'];
     message = json['message'];
-    iBranchFlag = json['iBranchFlag'];
-    rightsDetails = json['rightsDetails'];
+    iFkUserType = json['iFk_UserType'];
+    sLicsNumber = json['sLicsNumber'];
+    licExp = json['licExp'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['iBranchFlag'] = this.iBranchFlag;
     data['otp'] = this.otp;
     data['sUSRCode'] = this.sUSRCode;
     data['name'] = this.name;
@@ -114,8 +119,31 @@ class Data1 {
     data['sPhone'] = this.sPhone;
     data['iPK_USRID'] = this.iPKUSRID;
     data['message'] = this.message;
-    data['iBranchFlag'] = this.iBranchFlag;
-    data['rightsDetails'] = this.rightsDetails;
+    data['iFk_UserType'] = this.iFkUserType;
+    data['sLicsNumber'] = this.sLicsNumber;
+    data['licExp'] = this.licExp;
+    return data;
+  }
+}
+
+class Rights {
+  int? iSubMenuId;
+  String? sSubmenuName;
+  int? isRights;
+
+  Rights({this.iSubMenuId, this.sSubmenuName, this.isRights});
+
+  Rights.fromJson(Map<String, dynamic> json) {
+    iSubMenuId = json['iSubMenuId'];
+    sSubmenuName = json['sSubmenuName'];
+    isRights = json['isRights'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['iSubMenuId'] = this.iSubMenuId;
+    data['sSubmenuName'] = this.sSubmenuName;
+    data['isRights'] = this.isRights;
     return data;
   }
 }
