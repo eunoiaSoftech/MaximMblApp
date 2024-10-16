@@ -117,7 +117,12 @@ class _LegalScreenState extends State<LegalScreen> {
                     listener: (context, state) {
                       if (state is VehicleListLoaded) {
                         if (state.resp.data1?.length == 1) {
-                          selectedMenu = state.resp.data1?.first;
+                          selectedMenu = state.resp.data1?[0];
+
+                          context.read<LegalDocumentListBloc>().add(
+                              LegalDocumentListEvent(
+                                  selectedMenu?.pkVehicleId ?? 0));
+
                           setState(() {});
                         }
                       }
@@ -240,7 +245,10 @@ class _LegalScreenState extends State<LegalScreen> {
                                         ),
                                       ...List.generate(
                                           state.resp.data1?.length ?? 0,
-                                          (index) => _vehicleDocListTile(
+                                          (index) {
+                                        if (state.resp.data1?[index].iType ==
+                                            1) {
+                                          return _vehicleDocListTile(
                                               state.resp.data1?[index].sName,
                                               state.resp.data1?[index]
                                                   .sExpiryDate,
@@ -248,7 +256,11 @@ class _LegalScreenState extends State<LegalScreen> {
                                                   .toString(),
                                               selectedMenu?.pkVehicleId,
                                               state.resp.data1?[index]
-                                                  .iFkDocTypeId))
+                                                  .iFkDocTypeId);
+                                        } else {
+                                          return Container();
+                                        }
+                                      })
                                     ]),
                                   );
                                 }
@@ -275,14 +287,54 @@ class _LegalScreenState extends State<LegalScreen> {
                           // ]),
                           Column(children: [
                             const SizedBox(height: 22),
-                            ...List.generate(
-                                driverList.length,
-                                (index) => _vehicleDocListTile(
-                                    driverList[index]["name"],
-                                    driverList[index]["expiry"],
-                                    driverList[index]["days_left"],
-                                    selectedMenu?.pkVehicleId,
-                                    ""))
+                            BlocConsumer<LegalDocumentListBloc, LegalsState>(
+                                builder: (context, state) {
+                                  if (state is LegalDocumentListLoaded) {
+                                    return SingleChildScrollView(
+                                      child: Column(children: [
+                                        const SizedBox(height: 22),
+                                        if (state.resp.data1?.isEmpty ?? true)
+                                          const Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(Icons.hourglass_empty),
+                                              Text("No Data")
+                                            ],
+                                          ),
+                                        ...List.generate(
+                                            state.resp.data1?.length ?? 0,
+                                            (index) {
+                                          if (state.resp.data1?[index].iType ==
+                                              2) {
+                                            return _vehicleDocListTile(
+                                                state.resp.data1?[index].sName,
+                                                state.resp.data1?[index]
+                                                    .sExpiryDate,
+                                                state
+                                                    .resp.data1?[index].noOfDays
+                                                    .toString(),
+                                                selectedMenu?.pkVehicleId,
+                                                state.resp.data1?[index]
+                                                    .iFkDocTypeId);
+                                          } else {
+                                            return Container();
+                                          }
+                                        })
+                                      ]),
+                                    );
+                                  }
+                                  if (state is LegalDocumentListError) {
+                                    return Center(
+                                        child: Icon(Icons.error,
+                                            color: Colors.redAccent,
+                                            size: appSize(context) / 20));
+                                  }
+                                  return const Center(
+                                    child: CircularProgressIndicator(
+                                        color: AppColors.newBlue),
+                                  );
+                                },
+                                listener: (context, state) {}),
                           ]),
                         ],
                       ),
@@ -462,6 +514,9 @@ class _LegalScreenState extends State<LegalScreen> {
   Future<void> _fetchDocument(vehicleId, docTypeId) async {
     final url =
         'http://47.247.181.6:8089/api/api/GetLegalDocument?iFK_VehicleId=${vehicleId}&iFk_DocTypeId=${docTypeId}';
+
+    print('check driver document url ${url}');
+
     try {
       EasyLoading.show(status: 'downloading...');
 

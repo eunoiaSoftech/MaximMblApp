@@ -79,8 +79,8 @@ class Data1 {
   int? iPKUSRID;
   String? message;
   int? iFkUserType;
-  Null? sLicsNumber;
-  Null? licExp;
+  String? sLicsNumber;
+  String? licExp;
 
   Data1(
       {this.iBranchFlag,

@@ -609,7 +609,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                           email: state.resp.data1?.first.sEmail,
                                           phone: state.resp.data1?.first.sPhone,
                                           userId:
-                                              state.resp.data1?.first.iPKUSRID);
+                                              state.resp.data1?.first.iPKUSRID,
+                                          userType: state
+                                              .resp.data1?.first.iFkUserType);
                                       otp = state.resp.data1?.first.otp;
                                     });
                                     Future.delayed(

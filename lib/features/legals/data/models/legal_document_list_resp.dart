@@ -67,14 +67,21 @@ class Data1 {
   int? noOfDays;
   String? sExpiryDate;
   int? iFkDocTypeId;
+  int? iType;
 
-  Data1({this.sName, this.noOfDays, this.sExpiryDate, this.iFkDocTypeId});
+  Data1(
+      {this.sName,
+      this.noOfDays,
+      this.sExpiryDate,
+      this.iFkDocTypeId,
+      this.iType});
 
   Data1.fromJson(Map<String, dynamic> json) {
     sName = json['sName'];
     noOfDays = json['noOfDays'];
     sExpiryDate = json['sExpiryDate'];
     iFkDocTypeId = json['iFk_DocTypeId'];
+    iType = json['iType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -83,6 +90,7 @@ class Data1 {
     data['noOfDays'] = noOfDays;
     data['sExpiryDate'] = sExpiryDate;
     data['iFk_DocTypeId'] = iFkDocTypeId;
+    data['iType'] = iType;
     return data;
   }
 }
