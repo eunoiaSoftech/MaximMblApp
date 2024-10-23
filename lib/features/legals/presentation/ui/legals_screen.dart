@@ -383,35 +383,86 @@ class _LegalScreenState extends State<LegalScreen> {
   }
 
   void _renderVehicleList(List<Data1> data) {
+    TextEditingController searchController = TextEditingController();
+    List<Data1> filteredData = data; // Start with the full list
+
     EasyLoading.dismiss();
 
     AppBottomSheet.show(
-        context: context,
-        showDragHandle: true,
-        color: AppColors.textColor,
-        title: "Select Vehicle Number",
-        titleColor: Colors.white,
-        child: SingleChildScrollView(
-          child: Column(
-            children: data
-                    .map((e) => ListTile(
-                          onTap: () {
-                            log("message ${e.pkVehicleId}");
-                            setState(() {
-                              selectedMenu = e;
-                            });
-                            context.read<LegalDocumentListBloc>().add(
-                                LegalDocumentListEvent(e.pkVehicleId ?? 0));
+      enableDrag: true,
+      context: context,
+      showDragHandle: true,
+      isDismissible: true,
+      color: AppColors.textColor,
+      title: "Select Vehicle Number",
+      titleColor: Colors.white,
+      child: StatefulBuilder(
+        builder: (context, setState) {
+          return Container(
+            height: MediaQuery.of(context).size.height,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Search Bar
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: TextField(
+                      controller: searchController,
+                      onChanged: (value) {
+                        // Filter the list based on the search input
+                        setState(() {
+                          filteredData = data
+                              .where((element) =>
+                                  element.vehicleNo
+                                      ?.toLowerCase()
+                                      .contains(value.toLowerCase()) ??
+                                  false)
+                              .toList();
+                        });
+                      },
+                      style: const TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        hintText: "Search Vehicle Number",
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Colors.black,
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                  // List of vehicles
+                  Column(
+                    children: filteredData
+                        .map((e) => ListTile(
+                              onTap: () {
+                                log("Selected vehicle ID: ${e.pkVehicleId}");
+                                setState(() {
+                                  selectedMenu = e;
+                                });
+                                context.read<LegalDocumentListBloc>().add(
+                                    LegalDocumentListEvent(e.pkVehicleId ?? 0));
 
-                            Navigator.of(context).pop();
-                          },
-                          title: Text(e.vehicleNo ?? ""),
-                        ))
-                    .toList() ??
-                [],
-          ),
-        ),
-        then: (v) {});
+                                Navigator.of(context).pop();
+                                setState(() {});
+                              },
+                              title: Text(e.vehicleNo ?? ""),
+                            ))
+                        .toList(),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+      then: (v) {
+        setState(() {});
+      },
+    );
   }
 
   _vehicleDocListTile(title, expiry, days, pkVehicleId, docTypeId) => Container(

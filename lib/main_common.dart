@@ -24,6 +24,9 @@ import 'package:logistics_app/features/legals/data/repositories/legals_repo.dart
 import 'package:logistics_app/features/legals/presentation/blocs/blocs/legal_document_list_bloc.dart';
 import 'package:logistics_app/features/legals/presentation/blocs/legals_bloc.dart';
 
+import 'features/home/data/current_trip_bloc.dart';
+import 'features/home/presentation/ui/widgets/stats_widget.dart';
+
 Future mainCommon() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
@@ -58,6 +61,10 @@ Future mainCommon() async {
         BlocProvider(create: (context) => ApprovalsBloc(approvalsRepository)),
         BlocProvider(create: (context) => LocationListBloc()),
         BlocProvider(create: (context) => DailyLogBloc(dailyLogRepository)),
+        BlocProvider(
+          create: (context) => CurrentTripBloc(),
+          child: StatsWidget(),
+        ),
       ],
       child: const MyApp(),
     ),

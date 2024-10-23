@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:logistics_app/core/res/app_functions.dart';
 import 'package:logistics_app/core/res/app_styles.dart';
 import 'package:logistics_app/core/shared/widgets/app_textfield.dart';
@@ -12,6 +13,7 @@ class AppTextFieldWithTitle extends StatelessWidget {
       this.inputAction,
       this.controller,
       this.errorText,
+      this.inputFormatters,
       this.onChanged,
       this.keyboardType,
       this.maxLength,
@@ -47,6 +49,7 @@ class AppTextFieldWithTitle extends StatelessWidget {
   final Function(String s)? onChanged;
   final Function(String? s)? onSaved;
   final String Function(String? s)? validator;
+  final List<TextInputFormatter>? inputFormatters;
   final Function()? onTap;
   final String? errorText;
   final String textFieldName;
@@ -99,6 +102,7 @@ class AppTextFieldWithTitle extends StatelessWidget {
                     circular: borderCircular,
                     onTap: onTap,
                     onChanged: onChanged,
+                    inputFormatters: inputFormatters,
                     readOnly: readOnly,
                     keyboardType: inputType,
                     height: textFieldHeight,

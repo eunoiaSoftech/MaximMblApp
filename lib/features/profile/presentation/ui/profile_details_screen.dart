@@ -1,8 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:logistics_app/core/res/app_colors.dart';
+import 'package:http/http.dart' as http;
 import 'package:logistics_app/core/services/func_sertives.dart';
 import 'package:logistics_app/features/home/presentation/ui/widgets/common_page_appbar.dart';
 import 'package:logistics_app/features/profile/presentation/ui/widgets/expandable_tiles_widget.dart';
+import 'package:shimmer/shimmer.dart';
+
+import '../../../../core/res/app_storage.dart';
 
 class ProfileDetailsScreen extends StatefulWidget {
   ProfileDetailsScreen({super.key, required this.response});
@@ -13,6 +18,53 @@ class ProfileDetailsScreen extends StatefulWidget {
 }
 
 class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
+  Uint8List? _imageBytes;
+  bool _isLoading = true;
+  bool _hasError = false;
+  var userType;
+  var userId;
+
+  @override
+  void initState() {
+    super.initState();
+
+    var userDetails = AppStorage().getUserDetails;
+    userType = userDetails['userType'];
+    userId = userDetails['userId'];
+
+    _fetchProfileImage();
+  }
+
+  Future<void> _fetchProfileImage() async {
+    String apiUrl =
+        "http://47.247.181.6:8089/api/api/GetProfileImage?iFk_UserId=$userId";
+
+    try {
+      final response = await http.post(Uri.parse(apiUrl));
+
+      print('Status Code: ${response.statusCode}');
+      print('Response Length: ${response.contentLength}');
+
+      if (response.statusCode == 200) {
+        setState(() {
+          _imageBytes = response.bodyBytes;
+          _isLoading = false;
+          _hasError = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+          _hasError = true;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _hasError = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var userData = widget.response['data1'][0];
@@ -43,18 +95,33 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                   const SizedBox(
                     height: 15,
                   ),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Stack(
                         clipBehavior: Clip.none,
                         alignment: Alignment.center,
                         children: <Widget>[
-                          CircleAvatar(
-                            radius: 40, // Adjust size as necessary
-                            backgroundImage: NetworkImage(
-                                'https://randomuser.me/api/portraits/men/32.jpg'), // Use your asset
-                          ),
+                          _isLoading
+                              ? Shimmer.fromColors(
+                                  baseColor: Colors.grey[300]!,
+                                  highlightColor: Colors.grey[100]!,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey[
+                                            300], // Shimmer color while loading
+                                        shape: BoxShape.circle),
+                                    width: 70,
+                                    height: 70,
+                                  ),
+                                )
+                              : _hasError
+                                  ? const Icon(Icons.error)
+                                  : CircleAvatar(
+                                      radius: 40,
+                                      backgroundImage:
+                                          MemoryImage(_imageBytes!),
+                                    ),
                           // Positioned(
                           //   bottom: -0,
                           //   right: 3,

@@ -4,12 +4,14 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:logistics_app/core/constants/constants.dart';
 import 'package:logistics_app/features/home/presentation/ui/widgets/common_page_appbar.dart';
+import '../../../core/res/app_bottomsheet.dart';
 import '../../../core/res/app_colors.dart';
 import '../../../core/res/app_functions.dart';
 import '../../../core/res/app_storage.dart';
@@ -32,6 +34,7 @@ class DailyLogScreen extends StatefulWidget {
 
 class _DailyLogScreenState extends State<DailyLogScreen> {
   TextEditingController vehicleController = TextEditingController();
+  TextEditingController vehicleNumberController = TextEditingController();
   TextEditingController driverNameController = TextEditingController();
   TextEditingController logDateController = TextEditingController();
   TextEditingController startKmController = TextEditingController();
@@ -83,6 +86,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
   bool _validateControllers() {
     List<TextEditingController> controllers = [
       vehicleController,
+      vehicleNumberController,
       driverNameController,
       logDateController,
       startKmController,
@@ -119,6 +123,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
 
   void _clearControllers() {
     vehicleController.clear();
+    vehicleNumberController.clear();
     driverNameController.clear();
     logDateController.clear();
     startKmController.clear();
@@ -240,6 +245,89 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
     }
   }
 
+  void _renderVehicleList(List<Vehicle> data) {
+    TextEditingController searchController = TextEditingController();
+    List<Vehicle> filteredData = data; // Start with the full list
+
+    EasyLoading.dismiss();
+
+    AppBottomSheet.show(
+      enableDrag: true,
+      context: context,
+      showDragHandle: true,
+      isDismissible: true,
+      color: AppColors.textColor,
+      title: "Select Vehicle Number",
+      titleColor: Colors.white,
+      child: StatefulBuilder(
+        builder: (context, setState) {
+          return Container(
+            height: MediaQuery.of(context).size.height,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Search Bar
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: TextField(
+                      controller: searchController,
+                      onChanged: (value) {
+                        // Filter the list based on the search input
+                        setState(() {
+                          filteredData = data
+                              .where((element) =>
+                                  element.vehicleNo
+                                      ?.toLowerCase()
+                                      .contains(value.toLowerCase()) ??
+                                  false)
+                              .toList();
+                        });
+                      },
+                      style: const TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        hintText: "Search Vehicle Number",
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Colors.black,
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                  // List of vehicles
+                  Column(
+                    children: filteredData
+                        .map((e) => ListTile(
+                              onTap: () {
+                                log("Selected vehicle ID: ${e.pkVehicleId}");
+                                vehicleController.text =
+                                    e.pkVehicleId.toString();
+                                vehicleNumberController.text =
+                                    e.vehicleNo.toString();
+                                openingKmController.text = e.dOPKm.toString();
+                                startKmController.text = e.startKm.toString();
+                                Navigator.of(context).pop();
+                                setState(() {});
+                              },
+                              title: Text(e.vehicleNo ?? ""),
+                            ))
+                        .toList(),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+      then: (v) {
+        setState(() {});
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -251,78 +339,97 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
         child: Column(
           children: [
             SizedBox(height: appSize(context) / 70),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 20),
+            //   child: Container(
+            //     padding: EdgeInsets.symmetric(horizontal: 20),
+            //     decoration: BoxDecoration(
+            //       color: Colors.white,
+            //       boxShadow: [
+            //         BoxShadow(
+            //           color: Colors.grey.withOpacity(.5),
+            //           offset: const Offset(2, 2),
+            //           spreadRadius: 1,
+            //           blurRadius: 2,
+            //         )
+            //       ],
+            //       borderRadius: BorderRadius.circular(22),
+            //     ),
+            //     child: DropdownMenu<Vehicle>(
+            //       enableSearch: true,
+            //       trailingIcon: const Icon(Icons.keyboard_arrow_down_rounded,
+            //           color: Colors.black87),
+            //       enabled: true,
+            //       inputDecorationTheme: const InputDecorationTheme(
+            //         border: InputBorder.none, // Removes underline
+            //         focusedBorder: InputBorder.none,
+            //         enabledBorder: InputBorder.none,
+            //       ),
+            //       expandedInsets: const EdgeInsets.symmetric(horizontal: 0),
+            //       textStyle: const TextStyle(color: Colors.black),
+            //       // controller: vehicleController,
+            //       hintText: "Search Vehicle",
+            //       requestFocusOnTap: true,
+            //       enableFilter: true,
+            //       menuStyle: MenuStyle(
+            //         backgroundColor:
+            //             MaterialStateProperty.all<Color>(AppColors.textColor),
+            //       ),
+            //       label: const Text(
+            //         'Select Vehicle',
+            //         style: TextStyle(color: Colors.black87),
+            //       ),
+            //       onSelected: (Vehicle? menu) {
+            //         setState(() {
+            //           if (menu != null) {
+            //             vehicleController.text = menu.pkVehicleId.toString();
+            //             openingKmController.text = menu.dOPKm.toString();
+            //             startKmController.text = menu.startKm.toString();
+            //           }
+            //         });
+            //       },
+            //       dropdownMenuEntries:
+            //           vehicleList.map<DropdownMenuEntry<Vehicle>>((menu) {
+            //         return DropdownMenuEntry(
+            //           value: menu,
+            //           label: menu.vehicleNo,
+            //           labelWidget: Row(
+            //             children: [
+            //               Container(
+            //                 padding: const EdgeInsets.symmetric(
+            //                     horizontal: 0, vertical: 4),
+            //                 decoration: const BoxDecoration(
+            //                     border: Border(
+            //                         bottom: BorderSide(
+            //                             color: Colors.white, width: 0.8))),
+            //                 width: appSize(context) / 4,
+            //                 child: Text(
+            //                   menu.vehicleNo,
+            //                   maxLines: 2,
+            //                   style: AppStyles.titleTextStyle(context),
+            //                 ),
+            //               ),
+            //             ],
+            //           ),
+            //         );
+            //       }).toList(),
+            //     ),
+            //   ),
+            // ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(.5),
-                      offset: const Offset(2, 2),
-                      spreadRadius: 1,
-                      blurRadius: 2,
-                    )
-                  ],
-                  borderRadius: BorderRadius.circular(22),
-                ),
-                child: DropdownMenu<Vehicle>(
-                  trailingIcon: const Icon(Icons.keyboard_arrow_down_rounded,
-                      color: Colors.black87),
-                  enabled: true,
-                  inputDecorationTheme: const InputDecorationTheme(
-                    border: InputBorder.none, // Removes underline
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                  ),
-                  expandedInsets: const EdgeInsets.symmetric(horizontal: 0),
-                  textStyle: const TextStyle(color: Colors.black),
-                  // controller: vehicleController,
-                  hintText: "Search Vehicle",
-                  requestFocusOnTap: true,
-                  enableFilter: true,
-                  menuStyle: MenuStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(AppColors.textColor),
-                  ),
-                  label: const Text(
-                    'Select Vehicle',
-                    style: TextStyle(color: Colors.black87),
-                  ),
-                  onSelected: (Vehicle? menu) {
-                    setState(() {
-                      vehicleController.text = menu!.pkVehicleId.toString();
-                      openingKmController.text = menu!.dOPKm.toString();
-                    });
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
+              child: AppTextFieldWithTitle(
+                  inputType: TextInputType.text,
+                  textFieldHeight: appSize(context) / 22,
+                  hint: "Select Vehicle",
+                  readOnly: true,
+                  onTap: () async {
+                    _renderVehicleList(vehicleList);
+                    setState(() {});
                   },
-                  dropdownMenuEntries:
-                      vehicleList.map<DropdownMenuEntry<Vehicle>>((menu) {
-                    return DropdownMenuEntry(
-                      value: menu,
-                      label: menu.vehicleNo,
-                      labelWidget: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 0, vertical: 4),
-                            decoration: const BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
-                                        color: Colors.white, width: 0.8))),
-                            width: appSize(context) / 4,
-                            child: Text(
-                              menu.vehicleNo,
-                              maxLines: 2,
-                              style: AppStyles.titleTextStyle(context),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
+                  controller: vehicleNumberController,
+                  textFieldName: "Select vehicle",
+                  maxLines: 1),
             ),
             SizedBox(height: appSize(context) / 70),
             Padding(
@@ -350,6 +457,7 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   textFieldName: "From Location",
                   maxLines: 1),
             ),
+
             SizedBox(height: appSize(context) / 80),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
@@ -375,10 +483,14 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                         controller: startKmController,
                         textFieldHeight: appSize(context) / 22,
                         hint: "Enter Start Km",
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter
+                              .digitsOnly, // Allows only digits
+                        ],
                         onChanged: (val) {
                           _calculateTotalKm();
                         },
-                        readOnly: false,
+                        readOnly: true,
                         textFieldName: "Start Km",
                         maxLines: 1),
                   ),
@@ -392,6 +504,10 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                         controller: endKmController,
                         textFieldHeight: appSize(context) / 22,
                         hint: "Enter End Km",
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter
+                              .digitsOnly, // Allows only digits
+                        ],
                         onChanged: (val) {
                           _calculateTotalKm();
                         },
@@ -410,12 +526,12 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
                   Expanded(
                     child: AppTextFieldWithTitle(
                         onTap: () async {
-                          logDateController.text =
-                              await selectDate(context) ?? '';
-                          setState(() {});
-                          if (logDateController.text.isNotEmpty) {
-                            print('Selected Date: ${logDateController.text}');
-                          }
+                          // logDateController.text =
+                          //     await selectDate(context) ?? '';
+                          // setState(() {});
+                          // if (logDateController.text.isNotEmpty) {
+                          //   print('Selected Date: ${logDateController.text}');
+                          // }
                         },
                         controller: logDateController,
                         assestImage: "assets/icons/Group 9720.png",
@@ -672,7 +788,17 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
               child: AppButton(
                   onPressed: () async {
                     if (_validateControllers()) {
-                      saveDailyLog();
+                      if (double.parse(startKmController.text) >
+                          double.parse(endKmController.text)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Please enter valid start end km!'),
+                            backgroundColor: Colors.white,
+                          ),
+                        );
+                      } else {
+                        saveDailyLog();
+                      }
                     }
                   },
                   text: "Submit"),
@@ -691,6 +817,8 @@ class _DailyLogScreenState extends State<DailyLogScreen> {
     _processApi();
 
     driverNameController.text = userDetails['name'];
+    logDateController.text =
+        "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}";
     setState(() {});
   }
 
@@ -828,4 +956,3 @@ Future<String?> selectDate(BuildContext context) async {
 
   return null; // Return null if no date was selected
 }
-

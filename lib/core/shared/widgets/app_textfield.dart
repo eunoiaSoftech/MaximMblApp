@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:logistics_app/core/res/app_colors.dart';
 import 'package:logistics_app/core/res/app_styles.dart';
 
@@ -14,6 +15,7 @@ class AppTextField extends StatelessWidget {
       this.height = 40,
       this.onTap,
       this.obscureText,
+      this.inputFormatters,
       this.suffix,
       this.readOnly,
       this.prefix,
@@ -24,6 +26,7 @@ class AppTextField extends StatelessWidget {
       this.inputTextStyle,
       this.circular});
 
+  final List<TextInputFormatter>? inputFormatters;
   final TextEditingController? controller;
   final EdgeInsetsGeometry? contentPadding;
   final TextInputType? keyboardType;
@@ -72,6 +75,7 @@ class AppTextField extends StatelessWidget {
               keyboardType: keyboardType ?? TextInputType.text,
               // selectionHeightStyle:BoxHeightStyle.includeLineSpacingMiddle,
               controller: controller,
+    inputFormatters: inputFormatters,
               decoration: InputDecoration(
                 contentPadding: contentPadding ??
                     const EdgeInsets.symmetric(horizontal: 22, vertical: 10),

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,9 +32,47 @@ class _AppDrawerState extends State<AppDrawer> {
     var userDetails = AppStorage().getUserDetails;
 
     userType = userDetails['userType'];
+    userId = userDetails['userId'];
 
+    _fetchProfileImage();
     super.initState();
   }
+
+  Uint8List? _imageBytes;
+  bool _isLoading = true;
+  bool _hasError = false;
+  var userId;
+
+  Future<void> _fetchProfileImage() async {
+    String apiUrl =
+        "http://47.247.181.6:8089/api/api/GetProfileImage?iFk_UserId=$userId";
+
+    try {
+      final response = await http.post(Uri.parse(apiUrl));
+
+      print('Status Code: ${response.statusCode}');
+      print('Response Length: ${response.contentLength}');
+
+      if (response.statusCode == 200) {
+        setState(() {
+          _imageBytes = response.bodyBytes;
+          _isLoading = false;
+          _hasError = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+          _hasError = true;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _hasError = true;
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -293,25 +333,34 @@ class _AppDrawerState extends State<AppDrawer> {
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
             ),
-            child: ClipOval(
-              child: CachedNetworkImage(
-                imageUrl: "https://randomuser.me/api/portraits/men/32.jpg",
-                placeholder: (context, url) => Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(
-                    width: 80,
-                    height: 80,
-                    color: Colors.grey[300], // Shimmer color while loading
-                  ),
-                ),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-                imageBuilder: (context, imageProvider) => CircleAvatar(
-                  radius: 40,
-                  backgroundImage: imageProvider,
-                ),
+            child: _isLoading
+                ? Shimmer.fromColors(
+              baseColor:
+              Colors.grey[300]!,
+              highlightColor:
+              Colors.grey[100]!,
+              child: Container(
+                decoration:
+                BoxDecoration(
+                    color: Colors
+                        .grey[
+                    300], // Shimmer color while loading
+                    shape: BoxShape
+                        .circle),
+                width: 70,
+                height: 70,
               ),
+            )
+                : _hasError
+                ? const Icon(
+                Icons.error)
+                : CircleAvatar(
+              radius: 40,
+              backgroundImage:
+              MemoryImage(
+                  _imageBytes!),
             ),
+
           ),
           const SizedBox(height: 5),
           Text(

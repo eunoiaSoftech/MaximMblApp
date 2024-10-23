@@ -17,13 +17,14 @@ class AppBottomSheet {
     required FutureOr Function(dynamic value) then,
   }) {
     showModalBottomSheet(
+        isScrollControlled: true,
         enableDrag: enableDrag ?? true,
         isDismissible: isDismissible ?? true,
         backgroundColor: color ?? Colors.white,
         showDragHandle: showDragHandle ?? true,
         context: context,
         builder: (context) => SingleChildScrollView(
-          child: Column(
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(title ?? "",
@@ -33,6 +34,6 @@ class AppBottomSheet {
                   isList ? Expanded(child: child) : child,
                 ],
               ),
-        )).then(then);
+            )).then(then);
   }
 }
